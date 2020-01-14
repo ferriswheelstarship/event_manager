@@ -14,7 +14,7 @@ class AddColumnsUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('role_id')->unsigned()->after('password')->index();
+            $table->integer('role_id')->unsigned()->nullable()->after('password')->index();
             $table->integer('company_profile_id')->unsigned()->nullable()->after('role_id');
             $table->integer('profile_id')->unsigned()->nullable()->after('company_profile_id');
             $table->string('ruby')->nullable()->after('name');
