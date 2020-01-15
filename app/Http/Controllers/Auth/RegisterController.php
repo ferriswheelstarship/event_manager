@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Mail\EmailVerification;
 use App\User;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -83,5 +84,76 @@ class RegisterController extends Controller
         event(new Registered($user = $this->create( $request->all() )));
 
         return view('auth.registered');
-    }    
+    }
+    
+    public function showForm($email_token)
+    {
+        // 使用可能なトークンか
+        if ( !User::where('email_verify_token',$email_token)->exists() )
+        {
+            return view('auth.main.register')->with('message', '無効なトークンです。');
+        } else {
+            $user = User::where('email_verify_token', $email_token)->first();
+            // 本登録済みユーザーか
+            if ($user->status == config('const.USER_STATUS.REGISTER')) //REGISTER=1
+            {
+                logger("status". $user->status );
+                return view('auth.main.register')->with('message', 'すでに本登録されています。ログインして利用してください。');
+            }
+            // ユーザーステータス更新
+            $user->status = config('const.USER_STATUS.MAIL_AUTHED');
+            //$user->verify_at = Carbon::now();
+            if($user->save()) {
+                return view('auth.main.register', compact('email_token'));
+            } else{
+                return view('auth.main.register')->with('message', 'メール認証に失敗しました。再度、メールからリンクをクリックしてください。');
+            }
+        }
+    }
+    
+    public function mainCheck(Request $request)
+    {
+        $request->validate([
+          'password' => 'required|string|min:6|confirmed',
+          'name' => 'required|string',
+          'ruby' => 'required|string',
+          'birth_year' => 'required|numeric',
+          'birth_month' => 'required|numeric',
+          'birth_day' => 'required|numeric',
+        ]);
+        //データ保持用
+        $email_token = $request->email_token;
+    
+        $user = new User();
+        $user->password = $request->password;
+        $user->name = $request->name;
+        $user->ruby = $request->ruby;
+        $user->birth_year = $request->birth_year;
+        $user->birth_month = $request->birth_month;
+        $user->birth_day = $request->birth_day;
+        
+        // password マスキング
+        $password_mask = '******';
+    
+        return view('auth.main.register_check', compact('user','email_token','password_mask'));
+    }
+    
+    public function mainRegister(Request $request)
+    {
+        $user = User::whereNotNull('email_verify_token')
+                        ->where('email_verify_token',$request->email_token)
+                        ->first();
+
+        $user->password = bcrypt($request->password);
+        $user->status = config('const.USER_STATUS.REGISTER');
+        $user->name = $request->name;
+        $user->ruby = $request->ruby;
+        $user->birth_year = $request->birth_year;
+        $user->birth_month = $request->birth_month;
+        $user->birth_day = $request->birth_day;
+        $user->role_id = 3;
+        $user->save();
+    
+        return view('auth.main.registered');
+    }
 }
