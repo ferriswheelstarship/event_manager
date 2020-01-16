@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Auth;
+use App\Role;
 
 class HomeController extends Controller
 {
+
     /**
      * Create a new controller instance.
      *
@@ -23,6 +26,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $authLevel = Auth::user()->role_id;
+        return view('home',compact('authLevel'));
     }
 }

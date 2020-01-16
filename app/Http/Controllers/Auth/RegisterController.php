@@ -67,7 +67,6 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         $this->validator($data)->validate();
-        
         $user = User::create([
             'email' => $data['email'],
             'email_verify_token' => base64_encode($data['email'])
@@ -121,6 +120,7 @@ class RegisterController extends Controller
           'birth_month' => 'required|numeric',
           'birth_day' => 'required|numeric',
         ]);
+        
         //データ保持用
         $email_token = $request->email_token;
     
@@ -140,20 +140,30 @@ class RegisterController extends Controller
     
     public function mainRegister(Request $request)
     {
-        $user = User::whereNotNull('email_verify_token')
+        $action = $request->get('action','入力へ戻る');
+
+        $input = $request->except('action');
+        $email_token = $request->email_token;
+        
+
+        if($action === '本登録') {
+            $user = User::whereNotNull('email_verify_token')
                         ->where('email_verify_token',$request->email_token)
                         ->first();
-
-        $user->password = bcrypt($request->password);
-        $user->status = config('const.USER_STATUS.REGISTER');
-        $user->name = $request->name;
-        $user->ruby = $request->ruby;
-        $user->birth_year = $request->birth_year;
-        $user->birth_month = $request->birth_month;
-        $user->birth_day = $request->birth_day;
-        $user->role_id = 3;
-        $user->save();
-    
-        return view('auth.main.registered');
+            $user->password = bcrypt($request->password);
+            $user->status = config('const.USER_STATUS.REGISTER');
+            $user->name = $request->name;
+            $user->ruby = $request->ruby;
+            $user->birth_year = $request->birth_year;
+            $user->birth_month = $request->birth_month;
+            $user->birth_day = $request->birth_day;
+            $user->role_id = 3;
+            $user->save();
+            
+            return view('auth.main.registered');
+        } else {
+             return redirect('register/verify/'.$email_token)
+                ->withInput($input);
+        } 
     }
 }

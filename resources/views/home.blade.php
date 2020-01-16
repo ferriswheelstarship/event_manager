@@ -13,6 +13,8 @@
                             {{ session('status') }}
                         </div>
                     @endif
+                    
+                    {{ $authLevel }}<br />
 
                     You are logged in!
                 </div>

@@ -51,10 +51,11 @@
 
 
                         <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    本登録
-                                </button>
+                            <div class="col-md-2 offset-md-4">
+                                <input type="submit" name="action" value="本登録" class="btn btn-primary" />
+                            </div>
+                            <div class="col-md-2">
+                                <input type="submit" name="action" value="入力へ戻る" class="btn btn-primary" />
                             </div>
                         </div>
                     </form>
