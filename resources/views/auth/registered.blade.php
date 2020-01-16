@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">仮会員登録完了</div>
+                <div class="card-header">ユーザ仮登録完了</div>
 
                 <div class="card-body">
                     <p>この度は、ご登録いただき、誠にありがとうございます。</p>
