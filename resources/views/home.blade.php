@@ -14,9 +14,15 @@
                         </div>
                     @endif
                     
-                    {{ $authLevel }}<br />
+                    {{ $authlevel }}<br />                    
 
-                    You are logged in!
+                    @can('system-only') {{-- 特権ユーザ権限のみに表示される --}}
+                    <p>あなたは特権管理者です。</p>
+                    @elsecan('admin-higher')　{{-- 法人ユーザ権限以上に表示される --}}
+                    <p>あなたは法人権限です。</p>
+                    @elsecan('user-higher')　{{-- 個人ユーザ権限以上（全ユーザ）に表示される --}}
+                    <p>あなたは個人ユーザです。</p>
+                    @endcan
                 </div>
             </div>
         </div>

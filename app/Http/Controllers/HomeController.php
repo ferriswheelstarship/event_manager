@@ -26,7 +26,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $authLevel = Auth::user()->role_id;
-        return view('home',compact('authLevel'));
+        $user_role_id = Auth::user()->role_id;
+        $authlevel = Role::find($user_role_id)->level;
+        return view('home',compact('authlevel'));
     }
 }
