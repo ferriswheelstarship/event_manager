@@ -8,7 +8,7 @@ class Profile extends Model
 {
     protected $fillable = ['job', 'serial_number'];
 
-    public function users(){
-        return $this->hasOne('App\Profile');
+    public function user(){
+        return $this->hasOne('App\User');
     }
 }
