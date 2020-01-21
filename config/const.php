@@ -9,4 +9,7 @@ return [
 
     // 0:仮登録 1:本登録 2:メール認証済 9:退会済
     'USER_STATUS' => ['PRE_REGISTER' => '0', 'REGISTER' => '1', 'MAIL_AUTHED' => '2', 'DEACTIVE' => '9',],
+    
+    // 1:特権管理者 5:法人ユーザ 10:個人ユーザ
+    'AUTH_STATUS' => ['ADMIN' => '1', 'COMPANY'=> '5', 'USER' => '10'],
 ];

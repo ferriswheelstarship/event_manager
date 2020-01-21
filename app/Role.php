@@ -9,6 +9,6 @@ class Role extends Model
     protected $fillable = ['level', 'display_name'];
     
     public function users(){
-        return $this->hasMany('App\Role');
+        return $this->hasMany('App\User');
     }
 }
