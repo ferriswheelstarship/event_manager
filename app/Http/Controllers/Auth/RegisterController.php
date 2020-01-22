@@ -54,10 +54,17 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'email' => 'required|string|email|max:255',
+            'email' => 'required|string|email|max:191|unique:users',
         ]);
     }
 
+    protected function validator_except_unique(array $data)
+    {
+        return Validator::make($data, [
+            'email' => 'required|string|email|max:191',
+        ]);
+    }
+    
     /**
      * Create a new user instance after a valid registration.
      *
@@ -66,29 +73,27 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $user_data = User::where('email',$data['email']);
-
-        if(条件)
-            $this->validate($request, [
-                'email' => 'required|string|email|max:191',
-            ]);
-        elseif
-            $this->validate($request, [
-                'email' => 'required|string|email|max:191|unique:users',
-            ]);
-        endif;
-
-        if(!$user_data->email || ($user_data->email && !$user_data->name)) {
+        if(User::where('email',$data['email'])->exists()) {
+            $user = User::where('email',$data['email'])->first();
+            if($user->name) {
+                $this->validator($data)->validate();
+            } else {
+                $this->validator_except_unique($data)->validate();
+                $email = new EmailVerification($user);
+                Mail::to($user->email)->send($email);
+            }
+        } else {
             $this->validator($data)->validate();
             $user = User::create([
-                'email' => $data['email'],
-                'email_verify_token' => base64_encode($data['email'])
+                    'email' => $data['email'],
+                    'email_verify_token' => base64_encode($data['email'])
             ]);
-            
+                
             $email = new EmailVerification($user);
             Mail::to($user->email)->send($email);
+
         }
-        
+
         return $user;
     }
     
