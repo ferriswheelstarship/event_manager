@@ -17,7 +17,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name', 'email', 'company_profile_id','profile_id',
-        'ruby','birthday','phone','zip','address',
+        'ruby','phone','zip','address',
         'email_verified', 'email_verify_token',
     ];
 

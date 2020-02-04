@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Mail\EmailVerification;
 use App\User;
+use App\Profile;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -33,7 +34,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/dashboard';
 
     /**
      * Create a new controller instance.
@@ -166,17 +167,22 @@ class RegisterController extends Controller
         
 
         if($action === '本登録') {
+
+            $profile = new Profile();
+            $profile->birth_year = $request->birth_year;
+            $profile->birth_month = $request->birth_month;
+            $profile->birth_day = $request->birth_day;
+            $profile->save();
+
             $user = User::whereNotNull('email_verify_token')
                         ->where('email_verify_token',$request->email_token)
                         ->first();
+            $user->profile_id = $profile->id;
             $user->password = bcrypt($request->password);
             $user->status = config('const.USER_STATUS.REGISTER');
             $user->name = $request->name;
             $user->ruby = $request->ruby;
-            $user->birth_year = $request->birth_year;
-            $user->birth_month = $request->birth_month;
-            $user->birth_day = $request->birth_day;
-            $user->role_id = 3;
+            $user->role_id = 4;
             $user->save();
             
             return view('auth.main.registered');

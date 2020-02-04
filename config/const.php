@@ -11,5 +11,5 @@ return [
     'USER_STATUS' => ['PRE_REGISTER' => '0', 'REGISTER' => '1', 'MAIL_AUTHED' => '2', 'DEACTIVE' => '9',],
     
     // 1:特権管理者 5:法人ユーザ 10:個人ユーザ
-    'AUTH_STATUS' => ['ADMIN' => '1', 'COMPANY'=> '5', 'USER' => '10'],
+    'AUTH_STATUS' => ['ADMIN' => '1','AREA' => '3','COMPANY'=> '5', 'USER' => '10'],
 ];

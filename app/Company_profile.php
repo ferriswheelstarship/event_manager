@@ -6,9 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Company_profile extends Model
 {
-    protected $fillable = ['company_name', 'company_ruby'];
+    protected $fillable = 
+                        [
+                            'area_name', 'branch_name','company_variation',
+                            'public_or_private','fax','kyokai_number'
+                        ];
 
     public function users(){
-        return $this->hasMany('App\Company_profile');
+        return $this->hasMany('App\User');
     }
 }

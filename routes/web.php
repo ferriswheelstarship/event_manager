@@ -16,8 +16,21 @@ Route::get('/', function () {
 });
 
 // make:auth利用
-Auth::routes();
-Route::get('/home', 'HomeController@index')->name('home');
+// Auth::routes();
+
+Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+Route::post('login', 'Auth\LoginController@login');
+Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+
+// Registration Routes...
+Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+Route::post('register', 'Auth\RegisterController@register');
+
+// Password Reset Routes...
+Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 
 // 仮ユーザ登録
 Route::post('register/pre_check', 'Auth\RegisterController@preCheck')->name('register.pre_check');
@@ -27,25 +40,45 @@ Route::post('register/main_check', 'Auth\RegisterController@mainCheck')->name('r
 Route::post('register/main_register', 'Auth\RegisterController@mainRegister')->name('register.main.registered');
 
 
+Route::get('/dashboard', 'HomeController@index')->name('dashboard');
+
+
 // 全ユーザ
 Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
-  // ユーザ編集
-  Route::get('/account/edit/{user_id}', 'UsersController@edit')->name('account.edit');
-  Route::post('/account/edit/{user_id}', 'UsersController@updateData')->name('account.edit');
 
-  // ユーザ削除
-  Route::post('/account/delete/{user_id}', 'UsersController@delete');
+  // ユーザ詳細
+  Route::get('/account/{user_id}', 'UsersController@show')->name('account.show');
+
 });
 
-// 管理者以上
+// 施設権限以上
 Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
-  // ユーザ登録
-  Route::get('/account/regist', 'UsersController@regist')->name('account.regist');
-  Route::post('/account/regist', 'UsersController@createData')->name('account.regist');
+
+  // ユーザ一覧
+  Route::get('/account', 'UsersController@index')->name('account.index');
+
+});
+
+
+// 支部ユーザ権限以上
+Route::group(['middleware' => ['auth', 'can:area-higher']], function () {
 
 });
 
 // システム管理者のみ
 Route::group(['middleware' => ['auth', 'can:system-only']], function () {
+
+  // ユーザ登録
+  Route::get('/account/regist/new', 'UsersController@regist')->name('account.regist');
+  Route::post('/account/regist/new', 'UsersController@firstPost')->name('account.firstPost');
+  Route::get('/account/regist/next', 'UsersController@registNext')->name('account.registNext');
+  Route::post('/account/regist/next', 'UsersController@create')->name('account.create');
+
+  // ユーザ編集
+  Route::get('/account/edit/{user_id}', 'UsersController@edit')->name('account.edit');
+  Route::post('/account/edit/{user_id}', 'UsersController@update')->name('account.post');
+
+  // ユーザ論理削除
+  Route::post('/account/delete/{user_id}', 'UsersController@delete');
 
 });

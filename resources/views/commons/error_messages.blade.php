@@ -5,3 +5,10 @@
         @endforeach
     </ul>
 @endif
+
+@if (Session::has('status'))
+     <!-- フラッシュメッセージ -->
+     <div class="flash_message bg-success">
+        {{ session('status') }}
+    </div>
+@endif
