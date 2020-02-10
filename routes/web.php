@@ -49,6 +49,10 @@ Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
   // ユーザ詳細
   Route::get('/account/{user_id}', 'UsersController@show')->name('account.show');
 
+  // ユーザ編集
+  Route::get('/account/edit/{user_id}', 'UsersController@edit')->name('account.edit');
+  Route::post('/account/edit/{user_id}', 'UsersController@update')->name('account.post');
+
 });
 
 // 施設権限以上
@@ -59,6 +63,13 @@ Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
 
 });
 
+// 施設権限のみ
+Route::group(['middleware' => ['auth', 'can:admin-only']], function () {
+
+  // 個人ユーザの所属解除
+  Route::get('/account/trimcompany/{user_id}', 'UsersController@trimcompany')->name('account.trimcompany');
+
+});
 
 // 支部ユーザ権限以上
 Route::group(['middleware' => ['auth', 'can:area-higher']], function () {
@@ -74,11 +85,11 @@ Route::group(['middleware' => ['auth', 'can:system-only']], function () {
   Route::get('/account/regist/next', 'UsersController@registNext')->name('account.registNext');
   Route::post('/account/regist/next', 'UsersController@create')->name('account.create');
 
-  // ユーザ編集
-  Route::get('/account/edit/{user_id}', 'UsersController@edit')->name('account.edit');
-  Route::post('/account/edit/{user_id}', 'UsersController@update')->name('account.post');
-
-  // ユーザ論理削除
-  Route::post('/account/delete/{user_id}', 'UsersController@delete');
+  // 論理削除
+  Route::delete('/account/delete/{user_id}', 'UsersController@destroy')->name('account.softDelete');
+  // 復元
+  Route::post('/account/restore/{user_id}', 'UsersController@restore')->name('account.restore');
+  // 物理削除
+  Route::delete('/account/forceDelete/{user_id}', 'UsersController@forceDelete')->name('account.forceDelete');
 
 });

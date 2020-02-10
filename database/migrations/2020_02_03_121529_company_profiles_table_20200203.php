@@ -26,7 +26,7 @@ class CompanyProfilesTable20200203 extends Migration
     public function down()
     {
         Schema::table('company_profiles', function (Blueprint $table) {
-            $table->timestamps();
+            $table->dropTimestamps();
         });
     }
 }

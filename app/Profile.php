@@ -6,7 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Profile extends Model
 {
-    protected $fillable = ['job', 'serial_number','birth_year','birth_month','birth_day'];
+    protected $fillable = 
+    [
+        'birth_year','birth_month','birth_day',
+        'childminder_status','childminder_number',
+        'other_facility_name','other_facility_zip','other_facility_address'
+    ];
 
     public function user(){
         return $this->hasOne('App\User');

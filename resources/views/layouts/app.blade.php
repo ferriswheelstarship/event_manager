@@ -7,27 +7,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
   <link href="{{ asset('css/navbar-fixed-left.min.css') }}" rel="stylesheet">
+  <style>
+    .footer {
+      position:absolute;
+      bottom:0;
+      width:100%;
+      display:block;
+      height:40px;
+      line-height:40px;
+      padding:.2em .5em;
+
+    }
+  </style>
+  @yield('each-css')
 </head>
-<body>
+<body style="min-height: 100vh; position:relative">
  
-<!-- ヘッダー -->
 @include('layouts.partials.header')
  
-<div class="">
-  <div class="" id="content">
-    @include('commons.error_messages')
+<div style="min-height: calc(100% - 60px); padding-bottom:60px">
+  <div class="mt-3">
+    <div id="content">
+    <!-- @include('commons.error_messages') -->
     @yield('content')
+    </div>
   </div>
+  @include('layouts.partials.footer')
 </div>
- 
-<!-- フッター -->
-@include('layouts.partials.footer')
- 
+
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
 <script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js"></script>
-
 @yield('each-js')
 
 </body>

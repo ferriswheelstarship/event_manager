@@ -1,6 +1,4 @@
 <!-- footer -->
-<footer class="footer">
-  <div class="">
-  <p class="text-muted text-center">Place sticky footer content here.</p>
-  </div>
+<footer class="footer mb-auto">
+  <div class="text-muted text-center">&copy project name</div>
 </footer>

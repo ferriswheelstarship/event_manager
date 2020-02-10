@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class EditProfilesTable20200203 extends Migration
+class CreateCareerupCurriculumsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,8 @@ class EditProfilesTable20200203 extends Migration
      */
     public function up()
     {
-        Schema::table('profiles', function (Blueprint $table) {
+        Schema::create('careerup_curriculums', function (Blueprint $table) {
+            $table->increments('id');
             $table->timestamps();
         });
     }
@@ -25,8 +26,6 @@ class EditProfilesTable20200203 extends Migration
      */
     public function down()
     {
-        Schema::table('profiles', function (Blueprint $table) {
-            $table->dropTimestamps();
-        });
+        Schema::dropIfExists('careerup_curriculums');
     }
 }

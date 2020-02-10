@@ -20,8 +20,8 @@
                                 <div class="form-group row">
                                     <label for="name" class="col-md-4 col-form-label text-md-right">権限</label>
                                     <div class="col-md-6">
-                                        <select id="role_id" class="form-control" name="role_id">
-                                            <option value="">----</option>
+                                        <select id="role_id" class="form-control{{ $errors->has('role_id') ? ' is-invalid' : '' }}" name="role_id">
+                                            <option value="0">----</option>
                                             @foreach ($role_array as $key => $val)
                                                 <option value="{{ $key }}"
                                                     @if(old('role_id') == $key) selected @endif>{{ $val }}</option>
