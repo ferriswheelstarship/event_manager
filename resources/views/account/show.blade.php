@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'ユーザ詳細')
+
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
@@ -28,7 +30,7 @@
                                     </tr>
                                     <tr>
                                         <th>電話番号</th>
-                                        <td>{{ $user->ruby }}</td>
+                                        <td>{{ $user->phone }}</td>
                                     </tr>
                                     @if ($user->role_id == 3)
                                     <tr>

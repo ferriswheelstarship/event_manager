@@ -11,9 +11,14 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('dashboard') }}">ダッシュボード</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link">イベント管理</a>
-            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">研修管理</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{{ route('event.index') }}">研修一覧</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ route('event.create') }}">研修登録</a>
+                </div>
+            </li>            
             <li class="nav-item">
                 <a class="nav-link">申込管理</a>
             </li>

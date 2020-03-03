@@ -20,9 +20,9 @@ class UsersController extends Controller
         $user_self = User::find(Auth::id());
 
         if(Gate::allows('system-only')){ // 特権ユーザのみ
-            $users = User::withTrashed()->orderBy('id', 'desc')->paginate(10);            
+            $users = User::withTrashed()->orderBy('id', 'desc')->paginate(20);            
         } elseif(Gate::allows('admin-only')){ // 法人ユーザのみ
-            $users = User::where('company_profile_id',$user_self->id)->orderBy('id', 'desc')->paginate(10);
+            $users = User::where('role_id',4)->where('company_profile_id',$user_self->company_profile_id)->orderBy('id', 'desc')->paginate(20);
         } else {
             return redirect('/account/edit/'.Auth::id());
         }
@@ -79,19 +79,18 @@ class UsersController extends Controller
 
         // 施設ユーザ
         $company = User::where('role_id','3')->get();
-
         // 地区名
         $area_name = config('const.AREA_NAME');
-
         // 支部名
         $branch_name = config('const.BRANCH_NAME');
-
         // 設置主体
         $company_variation = config('const.COMPANY_VARIATION');
-
         // こども園類型
         $category = config('const.CATEGORY');
-
+        // 都道府県
+        $pref = config('const.PREF');
+        // 職種
+        $job = config('const.JOB');
         // 保育士番号所持状況
         $childminder_status = config('const.CHILDMINDER_STATUS');
 
@@ -110,23 +109,28 @@ class UsersController extends Controller
                 'birth_month' => 'not_in:0',
                 'birth_day' => 'not_in:0',
                 'company_profile_id' => 'not_in:0',
-                'childminder_status' => 'not_in:0',
+                'job' => 'not_in:0'
             ];
 
             if($request->company_profile_id == "なし") {
                 $rules += [            
                     'other_facility_name' => 'required|string',
-                    'other_facility_zip' => 'required|string',
+                    'other_facility_pref' => 'required|string',
                     'other_facility_address' => 'required|string',
                 ];
             }
-
-            if($request->childminder_status == config('const.CHILDMINDER_STATUS.0')) {
+            if($request->job === config('const.JOB.0')) {//「保育士」の場合
                 $rules += [
-                    'childminder_number' => 'required|string',
+                    'childminder_status' => 'not_in:0'
                 ];
+                
+                if($request->childminder_status == config('const.CHILDMINDER_STATUS.0')) {// 保育士番号ありの場合
+                    $rules += [
+                        'childminder_number' => 'required|string'
+                    ];
+                }
+                        
             }
-
 
         } elseif($request->role_id == 3) { // 法人を選択時
             $rules = [
@@ -144,18 +148,30 @@ class UsersController extends Controller
 
 
         $user = new User;
+
         if($request->role_id == 4) { // 個人ユーザを選択時profiles生成
+
+            $company_profile_id = ($request->company_profile_id == "なし") ? null : $request->company_profile_id;
+            $other_facility_name = ($company_profile_id) ? $request->other_facility_name : null;
+            $other_facility_pref = ($company_profile_id) ? $request->other_facility_pref : null;
+            $other_facility_address = ($company_profile_id) ? $request->other_facility_address : null;
+            $childminder_status = ($request->job === config('const.JOB.0')) ? $request->childminder_status : null;
+            $childminder_number = ($request->childminder_status === config('const.CHILDMINDER_STATUS.0')) ? $request->childminder_number : null;
 
             $profile = Profile::create([
                 'birth_year' => $request['birth_year'],
                 'birth_month' => $request['birth_month'],
                 'birth_day' => $request['birth_day'],
+                'job' => $request['job'],
+                'other_facility_name' => $other_facility_name,
+                'other_facility_pref' => $other_facility_pref,
+                'other_facility_address' => $other_facility_address,
+                'childminder_status' => $childminder_status,
+                'childminder_number' => $childminder_number,
             ]);
             
             $user->profile_id = $profile->id;
-            if($request['company_profile_id'] && $request['company_profile_id'] != ""){
-                $user->company_profile_id = $request['company_profile_id'];
-            }
+            $user->company_profile_id = $company_profile_id;
             
         } elseif($request->role_id == 3) { // 法人ユーザを選択時company_profiles生成
             
@@ -206,14 +222,15 @@ class UsersController extends Controller
         }
 
         if($user->role_id == 4) {
-            $profile = Profile::find($user->id);
+            $profile = $user->profile()->first();
+            //dd($profile);
             if($user->company_profile_id) {
                 $companyUser = User::find($user->company_profile_id)->name;
             } else {
                 $companyUser = $profile->other_facility_name;
             }
         } elseif($user->role_id == 3) {
-            $profile = Company_profile::find($user->id);
+            $profile = $user->company_profile()->first();
             $companyUser = null;
         } else {
             $companyUser = null;
@@ -237,19 +254,23 @@ class UsersController extends Controller
         $company_variation = config('const.COMPANY_VARIATION');
         // こども園類型
         $category = config('const.CATEGORY');
+        // 都道府県
+        $pref = config('const.PREF');
+        // 職種
+        $job = config('const.JOB');
         // 保育士番号所持状況
         $childminder_status = config('const.CHILDMINDER_STATUS');
 
         if($user->role_id == 4) {
-            $profile = Profile::find($user->id);
+            $profile = $user->profile()->first();
         } elseif($user->role_id == 3) {
-            $profile = Company_profile::find($user->id);
+            $profile = $user->company_profile()->first();
         } else {
             $profile = [];
         }
 
         return view('account.edit', 
-            compact('user','profile','company','area_name','branch_name','company_variation','category','childminder_status')
+            compact('user','profile','company','area_name','branch_name','company_variation','category','job','pref','childminder_status')
         ); 
     }
 
@@ -277,21 +298,27 @@ class UsersController extends Controller
                 'birth_month' => 'not_in:0',
                 'birth_day' => 'not_in:0',
                 'company_profile_id' => 'not_in:0',
-                'childminder_status' => 'not_in:0',
+                'job' => 'not_in:0'
             ];
 
             if($request->company_profile_id === "なし") {
                 $rules += [            
                     'other_facility_name' => 'required|string',
-                    'other_facility_zip' => 'required|string',
+                    'other_facility_pref' => 'required|string',
                     'other_facility_address' => 'required|string',
                 ];
             }
-
-            if($request->childminder_status == config('const.CHILDMINDER_STATUS.0')) {
+            if($request->job === config('const.JOB.0')) {//「保育士」の場合
                 $rules += [
-                    'childminder_number' => 'required|string',
+                    'childminder_status' => 'not_in:0'
                 ];
+                
+                if($request->childminder_status == config('const.CHILDMINDER_STATUS.0')) {// 保育士番号ありの場合
+                    $rules += [
+                        'childminder_number' => 'required|string'
+                    ];
+                }
+                        
             }
 
         } elseif($user->role_id == 3) { // 法人ユーザ
@@ -307,28 +334,32 @@ class UsersController extends Controller
         $request->validate($rules);
         
         if($user->role_id == 4) {
-            $profile = Profile::find($user->id);
+            $profile = $user->profile()->first();
             $profile->birth_year = $request->birth_year;
             $profile->birth_month = $request->birth_month;
             $profile->birth_day = $request->birth_day;
-            $profile->childminder_status = $request->childminder_status;
+            $profile->job = $request->job;
 
             if($request->company_profile_id === "なし") {
                 $user->company_profile_id = null;
                 $profile->other_facility_name = $request->other_facility_name;
-                $profile->other_facility_zip = $request->other_facility_zip;
+                $profile->other_facility_pref= $request->other_facility_pref;
                 $profile->other_facility_address = $request->other_facility_address;
             } elseif($request->company_profile_id) {
                 $user->company_profile_id = $request->company_profile_id;
                 $profile->other_facility_name = null;
-                $profile->other_facility_zip = null;
+                $profile->other_facility_pref = null;
                 $profile->other_facility_address = null;
             }
-
-            if($profile->childminder_status === config('const.CHILDMINDER_STATUS.0')) {
-                $profile->childminder_number = $request->childminder_number;
+            if($profile->job === config('const.JOB.0')) {
+                $profile->childminder_status = $request->childminder_status;
+                if($profile->childminder_status === config('const.CHILDMINDER_STATUS.0')) {
+                    $profile->childminder_number = $request->childminder_number;
+                } else {
+                    $profile->childminder_number = null;
+                }
             } else {
-                $profile->childminder_number = null;
+                $profile->childminder_status = null;
             }
 
             $profile->save();
@@ -337,7 +368,7 @@ class UsersController extends Controller
             
             $public_or_private = ($request->company_variation === '市町村') ? '公' : '私';
 
-            $profile = Company_profile::find($user->id);
+            $profile = $user->company_profile()->first();
             $profile->area_name = $request->area_name;
             $profile->company_variation = $request->company_variation;
             $profile->public_or_private = $public_or_private;
@@ -348,11 +379,13 @@ class UsersController extends Controller
             $profile->save();
         }
 
+        $user->email = $request->email;
         $user->name = $request->name;
         $user->ruby = $request->ruby;
         $user->phone = $request->phone;
         $user->zip = $request->zip;
         $user->address = $request->address;
+        $user->email_verify_token = base64_encode($request->email);
         $user->save();
 
         //session()->flash('status', 'ユーザ情報の変更が完了しました。'); 

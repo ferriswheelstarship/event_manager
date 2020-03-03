@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('each-css')
+@section('each-head')
   <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css" rel="stylesheet" />
 @endsection
 
@@ -149,7 +149,7 @@
                                                 class="form-control{{ $errors->has('birth_year') ? ' is-invalid' : '' }}" 
                                                 name="birth_year">
                                                 <option value="0">----</option>
-                                                @for ($i = 1980; $i <= 2005; $i++)
+                                                @for ($i = 1930; $i <= 2005; $i++)
                                                     <option value="{{ $i }}"
                                                             @if(old('birth_year',$profile->birth_year) == $i ) selected @endif>{{ $i }}</option>
                                                 @endfor
@@ -218,8 +218,8 @@
                                         <option value="なし" 
                                         @if(old('company_profile_id') == "なし" || $user->company_profile_id == null) selected @endif >兵庫県下に所属なし</option>
                                         @foreach ($company as $key => $val)
-                                        <option value="{{ $val->id }}"
-                                            @if(old('company_profile_id',$user->company_profile_id) == $val->id) selected @endif>{{ $val->name }}</option>
+                                        <option value="{{ $val->company_profile_id }}"
+                                            @if(old('company_profile_id',$user->company_profile_id) == $val->company_profile_id) selected @endif>{{ $val->name }}</option>
                                         @endforeach
                                     </select>
 
@@ -254,14 +254,20 @@
                             <div class="form-group row">
                                 <label for="other_facility_name" class="col-md-4 col-form-label text-md-right">所属施設所在地(他府県下)</label>
                                 <div class="col-md-3">
-                                    <input
-                                        id="other_facility_zip" type="text"
-                                        class="form-control{{ $errors->has('other_facility_zip') ? ' is-invalid' : '' }}"
-                                        name="other_facility_zip" value="{{ old('other_facility_zip',$profile->other_facility_zip) }}" >
+                                    <select 
+                                    id="other_facility_pref" 
+                                    class="select-search form-control{{ $errors->has('other_facility_pref') ? ' is-invalid' : '' }}" 
+                                    name="other_facility_pref">
+                                        <option value="0">------------</option>
+                                        @foreach ($pref as $key => $val)
+                                        <option value="{{ $val }}"
+                                            @if(old('other_facility_pref',$profile->other_facility_pref) == $val) selected @endif>{{ $val }}</option>
+                                        @endforeach
+                                    </select>
 
-                                    @if ($errors->has('other_facility_zip'))
+                                    @if ($errors->has('other_facility_pref'))
                                         <span class="invalid-feedback">
-                                        <strong>{{ $errors->first('other_facility_zip') }}</strong>
+                                        <strong>{{ $errors->first('other_facility_pref') }}</strong>
                                         </span>
                                     @endif
                                 </div>

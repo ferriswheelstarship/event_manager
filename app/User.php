@@ -42,6 +42,9 @@ class User extends Authenticatable
     public function company_profile(){
         return $this->belongsTo('App\Company_profile');
     }
+    public function events(){
+        return $this->hasMany('App\Event');
+    }
 
     /**
      * パスワードリセット通知の送信をオーバーライド

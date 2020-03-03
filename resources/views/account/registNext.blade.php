@@ -118,14 +118,20 @@
                                 <div class="form-group row">
                                     <label for="other_facility_name" class="col-md-4 col-form-label text-md-right">所属施設所在地</label>
                                     <div class="col-md-6">
-                                        <input
-                                            id="other_facility_zip" type="text"
-                                            class="form-control{{ $errors->has('other_facility_zip') ? ' is-invalid' : '' }}"
-                                            name="other_facility_zip" value="{{ old('other_facility_zip') }}" >
+                                        <select 
+                                        id="other_facility_pref" 
+                                        class="select-search form-control{{ $errors->has('other_facility_pref') ? ' is-invalid' : '' }}" 
+                                        name="other_facility_pref">
+                                            <option value="0">------------</option>
+                                            @foreach ($pref as $key => $val)
+                                            <option value="{{ $val }}"
+                                                @if(old('other_facility_pref') == $val) selected @endif>{{ $val }}</option>
+                                            @endforeach
+                                        </select>
 
-                                        @if ($errors->has('other_facility_zip'))
+                                        @if ($errors->has('other_facility_pref'))
                                             <span class="invalid-feedback">
-                                            <strong>{{ $errors->first('other_facility_zip') }}</strong>
+                                            <strong>{{ $errors->first('other_facility_pref') }}</strong>
                                             </span>
                                         @endif
                                     </div>

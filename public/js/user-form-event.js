@@ -1,3 +1,13 @@
+function changeEventJob(value) {
+    var jobs = document.getElementById("only-nursery");
+
+    if (value == "保育士") {
+        jobs.style.display = "";
+    } else {
+        jobs.style.display = "none";
+    }
+}
+
 function changeEventFacility(value) {
     var facilities = document.getElementById("only-indivisual-user");
 

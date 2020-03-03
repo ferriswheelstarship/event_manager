@@ -7,10 +7,26 @@
                     <div class="card-header">ユーザ登録</div>
 
                     @isset($message)
-                        <div class="card-body">
-                            {{$message}}
-                        </div>
+                    <div class="card-body">
+                        <div class="alert alert-danger">
+                        {{$message}}
+                        </div>                        
+                    </div>
                     @endisset
+
+                    @if (count($errors) > 0)
+                    <div class="card-body">
+                        <div class="alert alert-danger" role="alert">入力エラーがあります。</div>
+                    </div>
+                    @endif
+
+                    @if (Session::has('status'))
+                    <div class="card-body">
+                        <div class="alert alert-success">
+                            {{ session('status') }}
+                        </div>                        
+                    </div>
+                    @endif
 
                     @empty($message)
                         <div class="card-body">
