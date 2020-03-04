@@ -146,7 +146,8 @@
                                         <input
                                             id="zip" type="text"
                                             class="form-control{{ $errors->has('zip') ? ' is-invalid' : '' }}"
-                                            name="zip" value="{{ old('zip') }}" required >
+                                            name="zip" value="{{ old('zip') }}" 
+                                            placeholder="651-0062" required >
 
                                         @if ($errors->has('zip'))
                                             <span class="invalid-feedback">
@@ -161,7 +162,8 @@
                                         <input
                                             id="address" type="text"
                                             class="form-control{{ $errors->has('address') ? ' is-invalid' : '' }}"
-                                            name="address" value="{{ old('address') }}" required>
+                                            name="address" value="{{ old('address') }}" 
+                                            placeholder="神戸市中央区坂口通2丁目1番1号" required>
 
                                         @if ($errors->has('address'))
                                             <span class="invalid-feedback">

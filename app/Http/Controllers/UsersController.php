@@ -95,7 +95,7 @@ class UsersController extends Controller
         $childminder_status = config('const.CHILDMINDER_STATUS');
 
         return view('account.registNext',
-            compact('postdata','company','area_name','branch_name','company_variation','category','childminder_status')
+            compact('postdata','company','area_name','branch_name','company_variation','category','pref','job','childminder_status')
         );
 
     }
@@ -146,15 +146,14 @@ class UsersController extends Controller
         }
         $request->validate($rules);
 
-
         $user = new User;
 
         if($request->role_id == 4) { // 個人ユーザを選択時profiles生成
 
-            $company_profile_id = ($request->company_profile_id == "なし") ? null : $request->company_profile_id;
-            $other_facility_name = ($company_profile_id) ? $request->other_facility_name : null;
-            $other_facility_pref = ($company_profile_id) ? $request->other_facility_pref : null;
-            $other_facility_address = ($company_profile_id) ? $request->other_facility_address : null;
+            $company_profile_id = ($request->company_profile_id === "なし") ? null : $request->company_profile_id;
+            $other_facility_name = ($company_profile_id) ? null : $request->other_facility_name;
+            $other_facility_pref = ($company_profile_id) ? null : $request->other_facility_pref;
+            $other_facility_address = ($company_profile_id) ? null : $request->other_facility_address;
             $childminder_status = ($request->job === config('const.JOB.0')) ? $request->childminder_status : null;
             $childminder_number = ($request->childminder_status === config('const.CHILDMINDER_STATUS.0')) ? $request->childminder_number : null;
 
@@ -164,12 +163,11 @@ class UsersController extends Controller
                 'birth_day' => $request['birth_day'],
                 'job' => $request['job'],
                 'other_facility_name' => $other_facility_name,
-                'other_facility_pref' => $other_facility_pref,
                 'other_facility_address' => $other_facility_address,
                 'childminder_status' => $childminder_status,
                 'childminder_number' => $childminder_number,
-            ]);
-            
+                'other_facility_pref' => $other_facility_pref,
+            ]);            
             $user->profile_id = $profile->id;
             $user->company_profile_id = $company_profile_id;
             
@@ -186,6 +184,7 @@ class UsersController extends Controller
                 'fax' => $request['fax'],
                 'kyokai_number' => $request['kyokai_number'],
             ]);
+            $user->company_profile_id = $company_profile->id;
 
         }
 

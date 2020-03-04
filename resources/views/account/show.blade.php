@@ -65,7 +65,7 @@
                                     @if ($user->role_id == 4 && $profile->other_facility_address)
                                     <tr>
                                         <th>所属施設所在地</th>
-                                        <td>〒{{ $profile->other_facility_zip }}　{{ $profile->other_facility_address }}</td>
+                                        <td>{{ $profile->other_facility_pref }}{{ $profile->other_facility_address }}</td>
                                     </tr>
                                     @endif
                                 

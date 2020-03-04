@@ -10,7 +10,7 @@ class Profile extends Model
     [
         'birth_year','birth_month','birth_day',
         'job','childminder_status','childminder_number',
-        'other_facility_name','other_facility_zip','other_facility_address'
+        'other_facility_name','other_facility_pref','other_facility_address'
     ];
 
     public function user(){

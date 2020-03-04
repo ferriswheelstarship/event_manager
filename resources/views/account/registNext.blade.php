@@ -1,4 +1,9 @@
 @extends('layouts.app')
+
+@section('each-head')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css" rel="stylesheet" />
+@endsection
+
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
@@ -27,7 +32,7 @@
                                             <div class="col-md-4">
                                                 <select id="birth_year" class="form-control{{ $errors->has('birth_year') ? ' is-invalid' : '' }}" name="birth_year">
                                                     <option value="0">----</option>
-                                                    @for ($i = 1980; $i <= 2005; $i++)
+                                                    @for ($i = 1930; $i <= 2005; $i++)
                                                         <option value="{{ $i }}"
                                                                 @if(old('birth_year') == $i) selected @endif>{{ $i }}</option>
                                                     @endfor
@@ -70,25 +75,21 @@
                                                 @endif
                                             </div>日
                                         </div>
-
-                                        <div class="row col-md-6 col-md-offset-4">
-                                            @if ($errors->has('birth'))
-                                                <span class="invalid-feedback">
-                                                    <strong>{{ $errors->first('birth') }}</strong>
-                                                </span>
-                                            @endif
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label for="company_profile_id" class="col-md-4 col-form-label text-md-right">所属施設</label>
                                     <div class="col-md-6">
-                                        <select id="company_profile_id" class="form-control{{ $errors->has('company_profile_id') ? ' is-invalid' : '' }}" name="company_profile_id">
+                                        <select 
+                                        id="company_profile_id" 
+                                        class="select-search form-control{{ $errors->has('company_profile_id') ? ' is-invalid' : '' }}" 
+                                        name="company_profile_id"
+                                        onchange="changeEventFacility(this.value)">
                                             <option value="0">----</option>
                                             <option value="なし" @if(old('company_profile_id') === "なし") selected @endif>兵庫県下に所属なし</option>
                                             @foreach ($company as $key => $val)
-                                            <option value="{{ $val->id }}"
-                                                @if(old('company_profile_id') == $val->id) selected @endif>{{ $val->name }}</option>
+                                            <option value="{{ $val->company_profile_id }}"
+                                                @if(old('company_profile_id') == $val->company_profile_id) selected @endif>{{ $val->name }}</option>
                                             @endforeach
                                         </select>
 
@@ -99,9 +100,14 @@
                                         @endif
                                     </div>
                                 </div>
-                                @if(old('company_profile_id') === "なし")
+                                <div 
+                                    id="only-indivisual-user"
+                                    style="display: 
+                                    @if(old('company_profile_id') != 'なし') 
+                                        none
+                                    @endif ">
                                 <div class="form-group row">
-                                    <label for="other_facility_name" class="col-md-4 col-form-label text-md-right">所属施設名</label>
+                                    <label for="other_facility_name" class="col-md-4 col-form-label text-md-right">所属施設名(他府県下)</label>
                                     <div class="col-md-6">
                                         <input
                                             id="other_facility_name" type="text"
@@ -116,7 +122,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="other_facility_name" class="col-md-4 col-form-label text-md-right">所属施設所在地</label>
+                                    <label for="other_facility_zip" class="col-md-4 col-form-label text-md-right">所属施設所在地(他府県下)</label>
                                     <div class="col-md-6">
                                         <select 
                                         id="other_facility_pref" 
@@ -134,6 +140,7 @@
                                             <strong>{{ $errors->first('other_facility_pref') }}</strong>
                                             </span>
                                         @endif
+
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -142,7 +149,8 @@
                                         <input
                                             id="other_facility_address" type="text"
                                             class="form-control{{ $errors->has('other_facility_address') ? ' is-invalid' : '' }}"
-                                            name="other_facility_address" value="{{ old('other_facility_address') }}" >
+                                            name="other_facility_address" value="{{ old('other_facility_address') }}" 
+                                            placeholder="市町村を入力してください">
 
                                         @if ($errors->has('other_facility_address'))
                                             <span class="invalid-feedback">
@@ -151,11 +159,42 @@
                                         @endif
                                     </div>
                                 </div>
-                                @endif
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="company_profile_id" class="col-md-4 col-form-label text-md-right">職種</label>
+                                    <div class="col-md-6">
+                                        <select 
+                                        id="job" 
+                                        class="form-control{{ $errors->has('job') ? ' is-invalid' : '' }}" 
+                                        name="job"
+                                        onchange="changeEventJob(this.value)">
+                                            <option value="0">----</option>
+                                            @foreach ($job as $key => $val)
+                                            <option value="{{ $val }}"
+                                                @if(old('job') == $val) selected @endif>{{ $val }}</option>
+                                            @endforeach
+                                        </select>
+
+                                        @if ($errors->has('job'))
+                                            <span class="invalid-feedback">
+                                            <strong>{{ $errors->first('job') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div id="only-nursery" 
+                                    style="display: 
+                                    @if(old('job') != '保育士') none 
+                                    @endif">
                                 <div class="form-group row">
                                     <label for="childminder_status" class="col-md-4 col-form-label text-md-right">保育士番号所持状況</label>
                                     <div class="col-md-6">
-                                        <select id="childminder_status" class="form-control{{ $errors->has('childminder_status') ? ' is-invalid' : '' }}" name="childminder_status">
+                                        <select id="childminder_status" 
+                                            class="form-control{{ $errors->has('childminder_status') ? ' is-invalid' : '' }}" 
+                                            name="childminder_status"
+                                            onchange="changeEventChildminder(this.value)">
                                             <option value="0">----</option>
                                             @foreach ($childminder_status as $key => $val)
                                             <option value="{{ $val }}"
@@ -170,8 +209,13 @@
                                         @endif
                                     </div>
                                 </div>
-                                @if(old('childminder_status') === $childminder_status[0])
-                                <div class="form-group row">
+                                <div 
+                                    class="form-group row" 
+                                    id="childminder-number-section" 
+                                    style="display: 
+                                    @if(old('childminder_status') != '保育士番号あり') 
+                                        none
+                                    @endif ">
                                     <label for="childminder_number" class="col-md-4 col-form-label text-md-right">保育士番号</label>
                                     <div class="col-md-6">
                                         <input
@@ -186,7 +230,6 @@
                                         @endif
                                     </div>
                                 </div>
-                                @endif
                                 
                                 @elseif ($postdata["role_id"] == 3)
                                 <!-- 法人ユーザ登録情報 -->
@@ -306,6 +349,7 @@
                                 <input type="hidden" name="email" value="{{ $postdata['email'] }}">
                                 <input type="hidden" name="password" value="{{ $postdata['password'] }}">
                                 <input type="hidden" name="name" value="{{ $postdata['name'] }}">
+                                <input type="hidden" name="ruby" value="{{ $postdata['ruby'] }}">
                                 <input type="hidden" name="role_id" value="{{ $postdata['role_id'] }}">
                                 <input type="hidden" name="phone" value="{{ $postdata['phone'] }}">
                                 <input type="hidden" name="zip" value="{{ $postdata['zip'] }}">
@@ -318,4 +362,11 @@
         </div>
     </div>
     </div>
+@endsection
+
+@section('each-js')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/i18n/ja.js"></script>
+<script src="{{ asset('js/select-search.js') }}" ></script>
+<script src="{{ asset('js/user-form-event.js') }}" ></script>
 @endsection
