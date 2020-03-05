@@ -37,7 +37,7 @@
                     </td>
                     <td>
                         @foreach ($event['event_dates'] as $key => $edate)
-                        {{ $edate->event_date->format('Y年m月d日') }}
+                        {{ $edate->event_date }}
                         @if(!$loop->last),@endif
                         @endforeach
                     </td>

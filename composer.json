@@ -11,7 +11,9 @@
         "flynsarmy/csv-seeder": "1.*",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
-        "laravelcollective/html": "5.5.*"
+        "laravelcollective/html": "5.5.*",
+        "kylekatarnls/laravel-carbon-2": "^1.0.0",
+        "nesbot/carbon": "2.0.0-beta.2 as 1.25.0"        
     },
     "require-dev": {
         "filp/whoops": "~2.0",

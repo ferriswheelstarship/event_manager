@@ -11,10 +11,13 @@ class Event extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'user_id','title','comment',
+        'general_or_carrerup','user_id','title','comment',
         'training_minute','capacity','place','notice'
     ];
-    protected $dates = ['view_start_date','view_end_date','entry_start_date','entry_end_date',];
+
+    protected $dates = [
+        'view_start_date','view_end_date','entry_start_date','entry_end_date'
+    ];
 
     public function user() {
       return $this->belongsTo('App\User');

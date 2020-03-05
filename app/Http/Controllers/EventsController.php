@@ -46,9 +46,6 @@ class EventsController extends Controller
             } 
 
             // 申込数
-
-
-            
             
             //
             $data[] = [
@@ -100,24 +97,17 @@ class EventsController extends Controller
         $request->validate($rules);
 
         // event
-        $user_id = $request->user()->id;
-        $event = Event::create([
-            'user_id' => $user_id,
-            'general_or_carrerup' => $request->general_or_carrerup,
-            'title' => $request->title,
-            'comment' => $request->comment,
-            'entry_start_date' => $request->entry_start_date,
-            'entry_end_date' => $request->entry_end_date,
-            'view_start_date' => $request->view_start_date,
-            'view_end_date' => $request->view_end_date,
-            'capacity' => $request->capacity,
-            'place' => $request->place,
-            'notice' => $request->notice
-        ]);
+        $event = New Event;
+        $event->user_id = $request->user()->id;
+        $event->view_start_date = $request->view_start_date.":00";
+        $event->view_end_date = $request->view_end_date.":00";
+        $event->entry_start_date = $request->entry_start_date.":00";
+        $event->entry_end_date = $request->entry_end_date.":00";
+        $event->fill($request->all())->save();
         
         // event_dates（開催日）
         foreach ($request->event_dates as $val) {
-            $event->event_dates()->create(['event_date' => $val]);
+            $event->event_dates()->create(['event_date' => $val." 00:00:00"]);
         }
 
         // event_uploads（アップロード）
