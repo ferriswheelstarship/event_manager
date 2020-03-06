@@ -17,6 +17,7 @@ class CreateRolesTable extends Migration
             $table->increments('id');
             $table->tinyinteger('level')->unsigned()->unique();
             $table->string('display_name');
+            $table->collation = 'utf8mb4_bin';
         });
     }
 

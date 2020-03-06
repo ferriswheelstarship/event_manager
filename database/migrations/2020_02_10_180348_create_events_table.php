@@ -31,6 +31,7 @@ class CreateEventsTable extends Migration
             $table->softDeletes();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->collation = 'utf8mb4_bin';
         });
     }
 

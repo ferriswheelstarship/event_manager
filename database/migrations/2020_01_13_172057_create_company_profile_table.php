@@ -17,6 +17,7 @@ class CreateCompanyProfileTable extends Migration
             $table->increments('id');
             $table->string('company_name');
             $table->string('company_ruby');
+            $table->collation = 'utf8mb4_bin';
         });
     }
 

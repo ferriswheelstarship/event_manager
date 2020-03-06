@@ -20,6 +20,7 @@ class CreateEventDatesTable extends Migration
             $table->timestamps();
 
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
+            $table->collation = 'utf8mb4_bin';
         });
     }
 
