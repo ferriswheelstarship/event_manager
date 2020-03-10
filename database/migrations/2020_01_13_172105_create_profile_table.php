@@ -15,7 +15,7 @@ class CreateProfileTable extends Migration
     {
         Schema::create('profiles', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('job')->nullable()->change();
+            $table->string('job')->nullable();
             $table->string('serial_number')->nullable();
             $table->collation = 'utf8mb4_bin';
         });

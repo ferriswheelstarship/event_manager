@@ -40,7 +40,7 @@
                         <div class="form-group row">
                             <label for="ruby" class="col-md-4 col-form-label text-md-right">電話番号</label>
                             <div class="col-md-6 pt-1">
-                                <span class="">{{$user->phone}} <</span>
+                                <span class="">{{$user->phone}}</span>
                                 <input type="hidden" name="phone" value="{{$user->phone}}">
                             </div>
                         </div>
@@ -48,7 +48,7 @@
                         <div class="form-group row">
                             <label for="address" class="col-md-4 col-form-label text-md-right">住所</label>
                             <div class="col-md-6 pt-1">
-                                <span class="">〒 {{$user->zip}} {{$user->address}}</span>
+                                <span class="">〒{{$user->zip}}　{{$user->address}}</span>
                                 <input type="hidden" name="zip" value="{{$user->zip}}">
                                 <input type="hidden" name="address" value="{{$user->address}}">
                             </div>
