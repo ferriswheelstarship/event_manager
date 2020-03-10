@@ -141,6 +141,7 @@ return [
         'job' => '職種',
         'childminder_status' => '保育士番号所持状況',
         'childminder_number' => '保育士番号',
+        'withdrawalreason' => '退会理由',
     ],
 
 ];

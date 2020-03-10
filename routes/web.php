@@ -39,12 +39,15 @@ Route::get('register/verify/{token}', 'Auth\RegisterController@showForm');
 Route::post('register/main_check', 'Auth\RegisterController@mainCheck')->name('register.main.check');
 Route::post('register/main_register', 'Auth\RegisterController@mainRegister')->name('register.main.registered');
 
+// 退会後表示
+Route::get('afterwithdrawal', 'PagesController@afterwithdrawal')->name('afterwithdrawal');
 
-Route::get('dashboard', 'HomeController@index')->name('dashboard');
 
 
 // 全ユーザ
 Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
+
+  Route::get('dashboard', 'HomeController@index')->name('dashboard');
 
   // ユーザ詳細
   Route::get('account/{user_id}', 'UsersController@show')->name('account.show');
@@ -52,6 +55,16 @@ Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
   // ユーザ編集
   Route::get('account/edit/{user_id}', 'UsersController@edit')->name('account.edit');
   Route::post('account/edit/{user_id}', 'UsersController@update')->name('account.post');
+
+});
+
+// ユーザのみ
+Route::group(['middleware' => ['auth', 'can:user-only']], function () {
+
+  // 論理削除確認（休止）
+  Route::get('account/withdrawal/confirm', 'UsersController@withdrawalconfirm')->name('account.withdrawalconfirm');
+  // 論理削除（休止）
+  Route::post('account/withdrawal/proceed', 'UsersController@withdrawal')->name('account.withdrawal');
 
 });
 

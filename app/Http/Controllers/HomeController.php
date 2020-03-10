@@ -31,4 +31,6 @@ class HomeController extends Controller
         $authlevel = Role::find($user_role_id)->level;
         return view('home',compact('authlevel'));
     }
+
+
 }

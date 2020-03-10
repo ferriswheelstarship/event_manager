@@ -403,18 +403,39 @@ class UsersController extends Controller
     {
         $user = User::find($id);
         $user->delete();
-        return redirect()->route('account.index')->with('status','指定ユーザのアカウントを休止しました。');
+        return redirect()->route('account.index')->with('status',"指定ユーザのアカウントを休止しました。");
     }
 
-    public function restore($id)
-    {
+    public function withdrawalconfirm() {
+        $user_self = User::find(Auth::id());
+        if($user_self->role_id == 4) {
+            return view('account.withdrawalconfirm',compact('user_self'));
+        } else {
+            return redirect()->route('account.index');
+        }                
+    }
+
+    public function withdrawal(Request $request) {
+
+        $rules = [
+            'withdrawalreason' => 'required|string',
+        ];
+        $request->validate($rules);
+
+        $user = User::find($request->id);
+        $user->withdrawalreason = $request->withdrawalreason;
+        $user->save();
+        $user->delete();
+        return redirect()->route('afterwithdrawal')->with('status',"退会が完了しました。");        
+    }
+
+    public function restore($id) {
         $user = User::onlyTrashed()->find($id);
         $user->restore();
         return redirect()->route('account.index')->with('status','指定ユーザのアカウントを復元しました。');
     }
 
-    public function forceDelete($id)
-    {
+    public function forceDelete($id) {
         $user = User::onlyTrashed()->find($id);
         $user->forceDelete();
         return redirect()->route('account.index')->with('status','指定ユーザのアカウントを削除しました。削除したユーザは復元できません。');

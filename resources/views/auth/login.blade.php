@@ -8,6 +8,15 @@
                 <div class="card-header">ログイン</div>
 
                 <div class="card-body">
+
+                    @if (Session::has('status'))
+                    <div class="card-body">
+                        <div class="alert alert-success">
+                            {{ session('status') }}
+                        </div>                        
+                    </div>
+                    @endif
+
                     <form class="form-horizontal" method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
 
