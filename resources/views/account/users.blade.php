@@ -21,7 +21,10 @@
                     <!-- <td>{{ $user->id }}</td> -->
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
-                    <td>{{ $role_array[$user->role_id] }}</td>
+                    <td>
+                    @if($user->role_id)
+                    {{ $role_array[$user->role_id] }}
+                    @endif</td>
                     <td>{{ $account_status[$account_status_val]}}</td>
                     <td>
                     @can('system-only')
