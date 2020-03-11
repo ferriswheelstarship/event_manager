@@ -20,9 +20,9 @@ class UsersController extends Controller
         $user_self = User::find(Auth::id());
 
         if(Gate::allows('system-only')){ // 特権ユーザのみ
-            $users = User::withTrashed()->where('status',1)->orderBy('id', 'desc')->paginate(20);            
+            $users = User::withTrashed()->where('status',1)->orderBy('id', 'desc')->get();
         } elseif(Gate::allows('admin-only')){ // 法人ユーザのみ
-            $users = User::where('role_id',4)->where('company_profile_id',$user_self->company_profile_id)->orderBy('id', 'desc')->paginate(20);
+            $users = User::where('role_id',4)->where('company_profile_id',$user_self->company_profile_id)->orderBy('id', 'desc')->get();
         } else {
             return redirect('/account/edit/'.Auth::id());
         }

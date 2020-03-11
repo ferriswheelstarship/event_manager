@@ -10,7 +10,7 @@
   <link href="{{ asset('css/navbar-fixed-left.min.css') }}" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
+<nav class="navbar navbar-expand-md navbar-dark bg-info fixed-top">
     <a class="navbar-brand" href="{{ route('dashboard') }}">兵庫県保育協会 - 研修管理システム </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
             aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">

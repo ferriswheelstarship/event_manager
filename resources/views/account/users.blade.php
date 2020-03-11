@@ -1,6 +1,6 @@
 @if (count($users) > 0)
     <div class="table-responsive">
-        <table class="table table-striped table-hover">
+        <table class="table table-striped table-hover" id="data-table">
             <thead>
                 <tr>
                     <!-- <th>ID</th> -->
@@ -57,5 +57,4 @@
             </tbody>
         </table>
     </div>
-    {{ $users->links('pagination::bootstrap-4') }}
 @endif

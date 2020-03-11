@@ -1,5 +1,11 @@
 @extends('layouts.app')
 @section('title', 'ユーザ一覧')
+
+@section('each-head')
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-3.3.1/dt-1.10.20/r-2.2.3/sp-1.0.1/datatables.min.css"/>
+  <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.3.1/dt-1.10.20/r-2.2.3/sp-1.0.1/datatables.min.js"></script>
+@endsection
+
 @section('content')
     <div class="container">
         <div class="row">
@@ -22,5 +28,8 @@
             </div>
         </div>
     </div>
-</div>
+@endsection
+
+@section('each-js')
+    <script src="{{ asset('js/datatables_base.js') }}" ></script>
 @endsection
