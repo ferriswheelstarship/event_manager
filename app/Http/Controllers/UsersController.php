@@ -26,7 +26,7 @@ class UsersController extends Controller
         } else {
             return redirect('/account/edit/'.Auth::id());
         }
-        $account_status = [1=>'有効',2=>'休止中'];
+        $account_status = [1=>'有効',2=>'退会'];
         $role_array = config('const.AUTH_STATUS_JP');
         return view('account.index',compact('users','role_array','account_status'));
     }
@@ -403,7 +403,7 @@ class UsersController extends Controller
     {
         $user = User::find($id);
         $user->delete();
-        return redirect()->route('account.index')->with('status',"指定ユーザのアカウントを休止しました。");
+        return redirect()->route('account.index')->with('status',"指定ユーザを退会にしました。");
     }
 
     public function withdrawalconfirm() {
@@ -432,7 +432,7 @@ class UsersController extends Controller
     public function restore($id) {
         $user = User::onlyTrashed()->find($id);
         $user->restore();
-        return redirect()->route('account.index')->with('status','指定ユーザのアカウントを復元しました。');
+        return redirect()->route('account.index')->with('status','指定ユーザを復元しました。');
     }
 
     public function forceDelete($id) {

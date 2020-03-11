@@ -28,6 +28,7 @@
             </div>
         </div>
     </div>
+
 @endsection
 
 @section('each-js')
