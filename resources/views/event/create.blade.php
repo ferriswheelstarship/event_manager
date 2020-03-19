@@ -33,17 +33,17 @@ $(function(){
                     @endisset
 
                     <div class="card-body">
-                    @empty($message)
+                    @empty($message)                    
                         <form method="POST" action="{{ route('event.store') }}" enctype="multipart/form-data">
                             {{ csrf_field() }}
-
-                            <div class="form-group row">
+                            <div class="form-group row ">
                                 <label for="general_or_carrerup" class="col-md-4 col-form-label text-md-right">研修種別</label>
                                 <div class="col-md-6">
                                     <select id="general_or_carrerup" 
                                         class="form-control{{ $errors->has('general_or_carrerup') ? ' is-invalid' : '' }}" 
-                                        name="general_or_carrerup">
-                                        <option value="0">----</option>
+                                        name="general_or_carrerup"
+                                        onchange="changeEventCarrerup(this.value)">
+                                        <option value="">----</option>
                                         @foreach ($general_or_carrerup as $key => $val)
                                             <option value="{{ $key }}"
                                                 @if(old('general_or_carrerup') == $key) selected @endif>{{ $val }}</option>
@@ -55,6 +55,89 @@ $(function(){
                                         </span>
                                     @endif
                                 </div>
+                            </div>
+
+                            <div 
+                                id="carrerup"
+                                style="display: 
+                                @if(old('general_or_carrerup') !='carrerup') 
+                                    none
+                                @endif ">
+
+                            <div class="form-group row">
+                                <label for="comment" class="col-md-4 col-form-label text-md-right">キャリアアップ研修詳細</label>
+                                <div class="col-md-6">
+                                    <div class="border-bottom mt-2">
+                                    親カテゴリ<br>
+                                    <select  
+                                        class="mb-2 form-control{{ $errors->has('carrerup.parent_curriculum.*') ? ' is-invalid' : '' }}" 
+                                        name="carrerup[parent_curriculum][]">
+                                        <option value="">----</option>
+                                        @foreach ($parent_curriculum as $i => $val)
+                                            <option value="{{ $val }}"
+                                                @if(old('carrerup.parent_curriculum.0') == $val) selected @endif>{{ $val }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('carrerup.parent_curriculum.*'))
+                                        <span class="invalid-feedback">
+                                            <strong>{{ $errors->first('carrerup.parent_curriculum.*') }}</strong>
+                                        </span>
+                                    @endif
+
+                                    子カテゴリ<br>
+                                    <select  
+                                        class="mb-2 form-control{{ $errors->has('carrerup.child_curriculum.*') ? ' is-invalid' : '' }}" 
+                                        name="carrerup[child_curriculum][]">
+                                        <option value="">----</option>
+                                        @foreach ($child_curriculum as $val)
+                                            <option value="{{ $val }}"
+                                                @if(old('carrerup.child_curriculum.0') == $val) selected @endif>{{ $val }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('carrerup.child_curriculum.*'))
+                                        <span class="invalid-feedback">
+                                            <strong>{{ $errors->first('carrerup.child_curriculum.*') }}</strong>
+                                        </span>
+                                    @endif
+
+                                    受講時間（分）<br>
+                                    <input
+                                        type="number" min="0" max="360" step="10" style=" width:80px"
+                                        class="mb-3 form-control{{ $errors->has('carrerup.training_minute.*') ? ' is-invalid' : '' }}"
+                                        name="carrerup[training_minute][]" value="{{ old('carrerup.training_minute.0') }}">
+                                    @if ($errors->has('carrerup.training_minute.*'))
+                                        <span class="invalid-feedback">
+                                            <strong>{{ $errors->first('carrerup.training_minute.*') }}</strong>
+                                        </span>
+                                    @endif
+
+                                    <input type="button" value="＋" class="col-md-2 add pluralBtn mb-2">
+                                    <input type="button" value="－" class="col-md-2 del pluralBtn mb-2">
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+
+                            <div 
+                                id="general"
+                                style="display: 
+                                @if(old('general_or_carrerup') != 'general') 
+                                    none
+                                @endif ">
+                            <div class="form-group row">
+                                <label for="title" class="col-md-4 col-form-label text-md-right">受講時間（分）</label>
+                                <div class="col-md-6">
+                                    <input
+                                        id="training_minute" type="number" min="10" max="360" step="10" style=" width:100px"
+                                        class="mb-3 form-control{{ $errors->has('training_minute') ? ' is-invalid' : '' }}"
+                                        name="training_minute" value="{{ old('training_minute') }}">
+                                    @if ($errors->has('training_minute'))
+                                        <span class="invalid-feedback">
+                                            <strong>{{ $errors->first('training_minute') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
                             </div>
 
                             <div class="form-group row">
@@ -90,19 +173,19 @@ $(function(){
                                 <label for="event_dates" class="col-md-4 col-form-label text-md-right">研修開催日</label>
                                 <div class="col-md-6">
                                     <div class="row">
-                                    <div class="col-md-8">
+                                    <div class="col-md-8 mb-2">
                                     <input
-                                        id="event_dates" type="text"
-                                        class="datepicker form-control{{ $errors->has('event_dates') ? ' is-invalid' : '' }}"
-                                        name="event_dates[]" value="{{ old('event_dates') }}" multiple>
-                                    </div>
-                                    <input type="button" value="＋" class="col-md-2 add pluralBtn">
-                                    <input type="button" value="－" class="col-md-2 del pluralBtn">
-                                    @if ($errors->has('event_dates'))
+                                        type="text"
+                                        class="datepicker form-control{{ $errors->has('event_dates.*') ? ' is-invalid' : '' }}"
+                                        name="event_dates[]" value="{{ old('event_dates.0') }}">
+                                    @if ($errors->has('event_dates.*'))
                                         <span class="invalid-feedback">
-                                            <strong>{{ $errors->first('event_dates') }}</strong>
+                                            <strong>{{ $errors->first('event_dates.*') }}</strong>
                                         </span>
                                     @endif
+                                    </div>
+                                    <input type="button" value="＋" class="col-md-2 add pluralBtn mb-2">
+                                    <input type="button" value="－" class="col-md-2 del pluralBtn mb-2">
                                     </div>                                    
                                 </div>                                
                             </div>
@@ -173,7 +256,7 @@ $(function(){
                                 <label for="capacity" class="col-md-4 col-form-label text-md-right">定員</label>
                                 <div class="col-md-6">
                                     <input
-                                        id="capacity" type="number" min="0" max="500" style=" width:80px"
+                                        id="capacity" type="number" min="1" max="500" style=" width:80px"
                                         class="form-control{{ $errors->has('capacity') ? ' is-invalid' : '' }}"
                                         name="capacity" value="{{ old('capacity') }}" required>
 
@@ -219,12 +302,12 @@ $(function(){
                                 <div class="col-md-6">
                                     <input
                                         id="files" type="file"
-                                        class="{{ $errors->has('place') ? 'is-invalid' : '' }}"
-                                        value="{{ old('place') }}" name="files[]" multiple>
+                                        class="form-control-file{{ $errors->has('files.*') ? ' is-invalid' : '' }}"
+                                        name="files[]" multiple>
 
-                                    @if ($errors->has('files'))
+                                    @if ($errors->has('files.*'))
                                         <span class="invalid-feedback">
-                                            <strong>{{ $errors->first('files') }}</strong>
+                                            <strong>{{ $errors->first('files.*') }}</strong>
                                         </span>
                                     @endif
                                 </div>
@@ -238,7 +321,7 @@ $(function(){
                                 </div>
                             </div>
                         </form>
-                        @endempty
+                    @endempty
                     </div>
                 </div>
             </div>
@@ -247,6 +330,7 @@ $(function(){
 @endsection
 
 @section('each-js')
+<script src="{{ asset('js/training-form-event.js') }}" ></script>
 <script>
 $(document).on("click", ".add", function() {
     $(this).parent().clone(true).insertAfter($(this).parent());

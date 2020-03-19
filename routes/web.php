@@ -44,6 +44,11 @@ Route::get('afterwithdrawal', 'PagesController@afterwithdrawal')->name('afterwit
 
 
 
+
+
+
+
+
 // 全ユーザ
 Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
 
@@ -56,14 +61,25 @@ Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
   Route::get('account/edit/{user_id}', 'UsersController@edit')->name('account.edit');
   Route::post('account/edit/{user_id}', 'UsersController@update')->name('account.post');
 
+  // 研修
+  // Route::get('event', 'EventsController@index')->name('event.index');
+  // Route::get('event/{id}', 'EventsController@show')->name('event.show');
+  // Route::get('event', 'EventsController@index')->name('event.index');
+  // Route::post('event', 'EventsController@store')->name('event.store'); 
+  // Route::put('event/{id}', 'EventsController@update')->name('event.update'); 
+  // Route::delete('event/{id}', 'EventsController@destroy')->name('event.destroy');
+  // Route::get('event/create', 'EventsController@create')->name('event.create'); 
+  // Route::get('event/{id}/edit', 'EventsController@edit')->name('event.edit');
+  Route::resource('event', 'EventsController');
+
 });
 
-// ユーザのみ
+// 個人ユーザのみ
 Route::group(['middleware' => ['auth', 'can:user-only']], function () {
 
-  // 論理削除確認（休止）
+  // ユーザ論理削除確認（休止）
   Route::get('account/withdrawal/confirm', 'UsersController@withdrawalconfirm')->name('account.withdrawalconfirm');
-  // 論理削除（休止）
+  // ユーザ論理削除（休止）
   Route::post('account/withdrawal/proceed', 'UsersController@withdrawal')->name('account.withdrawal');
 
 });
@@ -87,13 +103,12 @@ Route::group(['middleware' => ['auth', 'can:admin-only']], function () {
 // 支部ユーザ権限以上
 Route::group(['middleware' => ['auth', 'can:area-higher']], function () {
 
-  // Route::get('event', 'EventsController@index')->name('event.index');
-  // Route::post('event', 'EventsController@store')->name('event.store'); 
-  // Route::put('event/{id}', 'EventsController@update')->name('event.update'); 
-  // Route::delete('event/{id}', 'EventsController@destroy')->name('event.destroy');
-  // Route::get('event/create', 'EventsController@create')->name('event.create'); 
-  // Route::get('event/{id}/edit', 'EventsController@edit')->name('event.edit');
-  Route::resource('event', 'EventsController');
+  // 研修復元
+  Route::post('event/restore/{id}', 'EventsController@restore')->name('event.restore');
+  // 研修物理削除
+  Route::delete('event/forceDelete/{id}', 'EventsController@forceDelete')->name('event.forceDelete');
+  // 研修アップロードファイル削除
+  Route::delete('event/filedelete/{id}', 'EventsController@fileDelete')->name('event.fileDelete');
 
 });
 
@@ -106,11 +121,11 @@ Route::group(['middleware' => ['auth', 'can:system-only']], function () {
   Route::get('account/regist/next', 'UsersController@registNext')->name('account.registNext');
   Route::post('account/regist/next', 'UsersController@create')->name('account.create');
 
-  // 論理削除
+  // ユーザ論理削除
   Route::delete('account/delete/{user_id}', 'UsersController@destroy')->name('account.softDelete');
-  // 復元
+  // ユーザ復元
   Route::post('account/restore/{user_id}', 'UsersController@restore')->name('account.restore');
-  // 物理削除
+  // ユーザ物理削除
   Route::delete('account/forceDelete/{user_id}', 'UsersController@forceDelete')->name('account.forceDelete');
 
 });

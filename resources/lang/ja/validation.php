@@ -142,6 +142,12 @@ return [
         'childminder_status' => '保育士番号所持状況',
         'childminder_number' => '保育士番号',
         'withdrawalreason' => '退会理由',
+
+        'carrerup.parent_curriculum.*' => '親カテゴリ',
+        'carrerup.child_curriculum.*' => '子カテゴリ',
+        'carrerup.training_minute.*' => '受講時間',
+        'event_dates.*' => '研修開催日',
+        'files.*' => 'アップロードファイル',
     ],
 
 ];

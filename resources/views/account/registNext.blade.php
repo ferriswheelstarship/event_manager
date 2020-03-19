@@ -230,6 +230,7 @@
                                         @endif
                                     </div>
                                 </div>
+                                </div>
                                 
                                 @elseif ($postdata["role_id"] == 3)
                                 <!-- 法人ユーザ登録情報 -->

@@ -28,22 +28,7 @@ class AuthServiceProvider extends ServiceProvider
 
         // 特権ユーザのみ許可
         Gate::define('system-only', function ($user) {
-            return ($user->role->level == 1);
-        });
-
-        // 支部ユーザ以上に許可
-        Gate::define('area-higher', function ($user) {
-            return ($user->role->level > 0 && $user->role->level <= 3);
-        });
-
-        // 法人ユーザ以上（特権＆法人ユーザ）に許可
-        Gate::define('admin-higher', function ($user) {
-            return ($user->role->level > 0 && $user->role->level <= 5);
-        });
-
-        // 一般ユーザ以上（全権限）に許可
-        Gate::define('user-higher', function ($user) {
-            return ($user->role->level > 0 && $user->role->level <= 10);
+            return ($user->role->level > 0 && $user->role->level == 1);
         });
 
         // 支部ユーザのみに許可
@@ -60,6 +45,24 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('user-only', function ($user) {
             return ($user->role->level > 0 && $user->role->level == 10);
         });
+
+
+        
+        // 支部ユーザ以上に許可
+        Gate::define('area-higher', function ($user) {
+            return ($user->role->level > 0 && $user->role->level <= 3);
+        });
+
+        // 法人ユーザ以上（特権＆支部＆法人ユーザ）に許可
+        Gate::define('admin-higher', function ($user) {
+            return ($user->role->level > 0 && $user->role->level <= 5);
+        });
+
+        // 一般ユーザ以上（全権限）に許可
+        Gate::define('user-higher', function ($user) {
+            return ($user->role->level > 0 && $user->role->level <= 10);
+        });
+
 
     }
 }

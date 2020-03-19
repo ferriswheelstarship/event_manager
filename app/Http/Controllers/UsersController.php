@@ -20,9 +20,16 @@ class UsersController extends Controller
         $user_self = User::find(Auth::id());
 
         if(Gate::allows('system-only')){ // 特権ユーザのみ
-            $users = User::withTrashed()->where('status',1)->orderBy('id', 'desc')->get();
+            $users = User::withTrashed()
+                            ->where('status',1)
+                            ->orderBy('id', 'desc')
+                            ->get();
         } elseif(Gate::allows('admin-only')){ // 法人ユーザのみ
-            $users = User::where('role_id',4)->where('company_profile_id',$user_self->company_profile_id)->orderBy('id', 'desc')->get();
+            $users = User::where('status',1)
+                            ->where('role_id',4)
+                            ->where('company_profile_id',$user_self->company_profile_id)
+                            ->orderBy('id', 'desc')
+                            ->get();
         } else {
             return redirect('/account/edit/'.Auth::id());
         }
@@ -45,6 +52,10 @@ class UsersController extends Controller
 
     public function firstPost(Request $request)
     {
+
+        if(Gate::denies('system-only')) {
+            return redirect('/account/edit/'.Auth::id());
+        }
 
         $rules = [
             'email' => 'required|string|email|max:191|unique:users',
@@ -75,6 +86,10 @@ class UsersController extends Controller
 
     public function registNext()
     {
+        if(Gate::denies('system-only')) {
+            return redirect('/account/edit/'.Auth::id());
+        }
+
         $postdata = session()->get('firstPost');
 
         // 施設ユーザ
@@ -102,6 +117,11 @@ class UsersController extends Controller
 
     public function create(Request $request)
     {
+
+        if(Gate::denies('system-only')) {
+            return redirect('/account/edit/'.Auth::id());
+        }
+
         if($request->role_id == 4) { // 個人を選択時
             
             $rules = [
@@ -210,13 +230,9 @@ class UsersController extends Controller
         $userSelf = User::find(Auth::id());
         $userSelfRole = $userSelf->role->level;
 
-        if(Gate::allows('user-hihger')){ // 個人ユーザ
-            if (Auth::id() != $id) { // 認証済ID（自分）のみ許可
-                return redirect('/account/edit/'.Auth::id());
-            }
-        } elseif(Gate::allows('area-higher')) { // 支部ユーザ以上
-            if($user->role->level < $userSelfRole){
-                return redirect('/account/edit/'.Auth::id());
+        if(Gate::denies('system-only')){ // 特権ユーザ以外は
+            if (Auth::id() != $id) { // 認証済（自分の）IDのみ許可
+                return redirect('/account/'.Auth::id());
             }
         }
 
@@ -242,6 +258,14 @@ class UsersController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
+        $userSelf = User::find(Auth::id());
+        $userSelfRole = $userSelf->role->level;
+
+        if(Gate::denies('system-only')){ // 特権ユーザ以外は
+            if (Auth::id() != $id) { // 認証済（自分の）IDのみ許可
+                return redirect('/account/edit/'.Auth::id());
+            }
+        }
 
         // 施設ユーザ
         $company = User::where('role_id','3')->get();
@@ -268,13 +292,22 @@ class UsersController extends Controller
             $profile = [];
         }
 
+
         return view('account.edit', 
             compact('user','profile','company','area_name','branch_name','company_variation','category','job','pref','childminder_status')
-        ); 
+        );
+
+
     }
 
     public function update(Request $request, $id)
     {
+        if(Gate::denies('system-only')){ // 特権ユーザ以外は
+            if (Auth::id() != $id) { // 認証済（自分の）IDのみ許可
+                return redirect('/account/edit/'.Auth::id());
+            }
+        }
+
         $user = User::find($id);
 
         $rules = [
@@ -393,6 +426,9 @@ class UsersController extends Controller
     }
 
     public function trimcompany($id) {
+        if(Gate::denies('admin-only')){
+            return redirect('/account/edit/'.Auth::id());
+        }
         $user = User::find($id);
         $user->company_profile_id = null;
         $user->save();
@@ -401,6 +437,9 @@ class UsersController extends Controller
 
     public function destroy($id)
     {
+        if(Gate::denies('system-only')) {
+            return redirect('/account/edit/'.Auth::id());
+        }
         $user = User::find($id);
         $user->delete();
         return redirect()->route('account.index')->with('status',"指定ユーザを退会にしました。");
@@ -430,12 +469,18 @@ class UsersController extends Controller
     }
 
     public function restore($id) {
+        if(Gate::denies('system-only')) {
+            return redirect('/account/edit/'.Auth::id());
+        }
         $user = User::onlyTrashed()->find($id);
         $user->restore();
         return redirect()->route('account.index')->with('status','指定ユーザを復元しました。');
     }
 
     public function forceDelete($id) {
+        if(Gate::denies('system-only')) {
+            return redirect('/account/edit/'.Auth::id());
+        }
         $user = User::onlyTrashed()->find($id);
         $user->forceDelete();
         return redirect()->route('account.index')->with('status','指定ユーザのアカウントを削除しました。削除したユーザは復元できません。');
