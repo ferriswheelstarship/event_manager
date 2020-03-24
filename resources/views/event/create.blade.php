@@ -11,7 +11,7 @@ $(function(){
         format:'Y-m-d H:i',
         lang:'ja'
     });
-    $('.datepicker').datetimepicker({
+    $('#event_date1').datetimepicker({
         format:'Y-m-d',
         lang:'ja'
     });
@@ -33,7 +33,7 @@ $(function(){
                     @endisset
 
                     <div class="card-body">
-                    @empty($message)                    
+                    @empty($message)
                         <form method="POST" action="{{ route('event.store') }}" enctype="multipart/form-data">
                             {{ csrf_field() }}
                             <div class="form-group row ">
@@ -172,11 +172,11 @@ $(function(){
                             <div class="form-group row">
                                 <label for="event_dates" class="col-md-4 col-form-label text-md-right">研修開催日</label>
                                 <div class="col-md-6">
-                                    <div class="row">
+                                    <div class="row" id="event_dates_wrapper1">
                                     <div class="col-md-8 mb-2">
                                     <input
-                                        type="text"
-                                        class="datepicker form-control{{ $errors->has('event_dates.*') ? ' is-invalid' : '' }}"
+                                        type="text" id="event_date1"
+                                        class="event_date form-control{{ $errors->has('event_dates.*') ? ' is-invalid' : '' }}"
                                         name="event_dates[]" value="{{ old('event_dates.0') }}">
                                     @if ($errors->has('event_dates.*'))
                                         <span class="invalid-feedback">
@@ -184,7 +184,7 @@ $(function(){
                                         </span>
                                     @endif
                                     </div>
-                                    <input type="button" value="＋" class="col-md-2 add pluralBtn mb-2">
+                                    <input type="button" value="＋" class="col-md-2 add_date pluralBtn mb-2">
                                     <input type="button" value="－" class="col-md-2 del pluralBtn mb-2">
                                     </div>                                    
                                 </div>                                
@@ -332,6 +332,7 @@ $(function(){
 @section('each-js')
 <script src="{{ asset('js/training-form-event.js') }}" ></script>
 <script>
+
 $(document).on("click", ".add", function() {
     $(this).parent().clone(true).insertAfter($(this).parent());
 });
@@ -340,6 +341,34 @@ $(document).on("click", ".del", function() {
     if (target.parent().children().length > 1) {
         target.remove();
     }
+});
+
+
+var copy_block = function(i) {
+    var increament_id = function(name,id) {
+        $("#event_dates_wrapper"+id+" ."+name).attr("id", name+id);
+    };
+            
+    var target = $("#event_dates_wrapper"+(i-1));
+    target.clone().insertAfter(target).attr("id","event_dates_wrapper"+i);
+    
+    increament_id("event_date",i);
+};
+var init_vals = function(i) {
+    $("#event_date"+i+" :text").val('');
+};
+    
+$(document).on("click", ".add_date", function(i) {
+    var i=1;
+    while($("#event_dates_wrapper"+i).length != 0) {
+        i++;
+    }
+    copy_block(i);    
+    init_vals(i);
+    $('#event_date'+i).datetimepicker({
+        format:'Y-m-d',
+        lang:'ja'
+    });
 });
 </script>
 @endsection

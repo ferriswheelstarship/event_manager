@@ -11,7 +11,7 @@ $(function(){
         format:'Y-m-d H:i',
         lang:'ja'
     });
-    $('.datepicker').datetimepicker({
+    $('#event_date1').datetimepicker({
         format:'Y-m-d',
         lang:'ja'
     });
@@ -240,11 +240,11 @@ $(function(){
                                     @php
                                         $edate = date('Y-m-d', strtotime($val->event_date));
                                     @endphp
-                                    <div class="row">
+                                    <div class="row" id="event_dates_wrapper{{ $key+1 }}">
                                     <div class="col-md-8 mb-2">
                                     <input
-                                        type="text"
-                                        class="datepicker form-control{{ $errors->has('event_dates.*') ? ' is-invalid' : '' }}"
+                                        type="text" id="event_date{{ $key+1 }}"
+                                        class="event_date form-control{{ $errors->has('event_dates.*') ? ' is-invalid' : '' }}"
                                         name="event_dates[]" value="{{ old('event_dates.0',$edate) }}">
                                     @if ($errors->has('event_dates.*'))
                                         <span class="invalid-feedback">
@@ -252,7 +252,7 @@ $(function(){
                                         </span>
                                     @endif
                                     </div>
-                                    <input type="button" value="＋" class="col-md-2 add pluralBtn mb-2">
+                                    <input type="button" value="＋" class="col-md-2 add_date pluralBtn mb-2">
                                     <input type="button" value="－" class="col-md-2 del pluralBtn mb-2">
                                     </div>
                                     @endforeach
@@ -466,5 +466,33 @@ $(document).on("click", ".del", function() {
         target.remove();
     }
 });
+
+var copy_block = function(i) {
+    var increament_id = function(name,id) {
+        $("#event_dates_wrapper"+id+" ."+name).attr("id", name+id);
+    };
+            
+    var target = $("#event_dates_wrapper"+(i-1));
+    target.clone().insertAfter(target).attr("id","event_dates_wrapper"+i);
+    
+    increament_id("event_date",i);
+};
+var init_vals = function(i) {
+    $("#event_date"+i+" :text").val('');
+};
+    
+$(document).on("click", ".add_date", function(i) {
+    var i=1;
+    while($("#event_dates_wrapper"+i).length != 0) {
+        i++;
+    }
+    copy_block(i);    
+    init_vals(i);
+    $('#event_date'+i).datetimepicker({
+        format:'Y-m-d',
+        lang:'ja'
+    });
+});
+
 </script>
 @endsection
