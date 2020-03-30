@@ -38,6 +38,7 @@
                     <!-- <th>ID</th> -->
                     <th>開催日</th>
                     <th>研修タイトル</th>
+                    <th>申込数 / 定員</th>
                     <th>ステータス</th>
                     <th>操作</th>
                 </tr>
@@ -54,6 +55,9 @@
                         @endforeach
                     </td>
                     <td>{{ $event['title'] }}</td>
+                    <td>
+                        <span>{{ $event['entrys_cnt'] }} / {{ $event['capacity'] }}</span>
+                    </td>
                     <td>
                         <span>{{ $event['status']}}</span>
                     </td>

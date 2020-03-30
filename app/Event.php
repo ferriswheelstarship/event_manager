@@ -34,4 +34,8 @@ class Event extends Model
     public function event_uploads() {
       return $this->hasMany('App\Event_upload');
     }
+
+    public function entrys() {
+      return $this->hasMany('App\Entry');
+    }
 }

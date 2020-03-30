@@ -12,6 +12,7 @@ use App\User;
 use App\Careerup_curriculum;
 use App\Event_date;
 use App\Event_upload;
+use App\Entry;
 
 class EventsController extends Controller
 {
@@ -41,26 +42,39 @@ class EventsController extends Controller
             $entry_start_date = new Carbon($event['entry_start_date']);
             $entry_end_date = new Carbon($event['entry_end_date']);
 
+            // 申込数
+            $entrys_cnt = Entry::select('user_id')
+                            ->where('event_id',$event['id'])
+                            ->where(function($q){
+                                $q->where('entry_status','Y')
+                                    ->orWhere('entry_status','YC');
+                            })->groupBy('user_id')->get()->count();
+
+            // ステータス
             if($event->deleted_at) {
                 $status = "削除済";
             } else {
-                if($entry_start_date > $dt){
-                    $status = "申込開始前";
-                } elseif($entry_end_date < $dt) {
-                    $status = "申込受付終了";
+                if($entrys_cnt >= $event['capacity']){
+                    $status = "キャンセル待申込のみ可";
                 } else {
-                    $status = "申込受付中";
-                } 
+                    if($entry_start_date > $dt){
+                        $status = "申込開始前";
+                    } elseif($entry_end_date < $dt) {
+                        $status = "申込受付終了";
+                    } else {
+                        $status = "申込受付中";
+                    } 
+                }
             }
-
-            // 申込数
-            
+                            
             //
             $data[] = [
                 'id' => $event->id,
                 'title' => $event->title,
                 'status' => $status,
                 'event_dates' => $event->event_dates()->select('event_date')->get(),
+                'capacity' => $event->capacity,
+                'entrys_cnt' => $entrys_cnt,
                 'deleted_at' => $event->deleted_at,
             ];
         }
@@ -197,7 +211,53 @@ class EventsController extends Controller
             $event_uploads = null;
         }
         $general_or_carrerup = config('const.TRAINING_VARIATION');
-        return view('event.show',compact('event','careerup_curriculums','event_dates','event_uploads','general_or_carrerup'));
+
+        $entrys_cnt = Entry::select('user_id')
+                        ->where('event_id',$id)
+                        ->where(function($q){
+                            $q->where('entry_status','Y')
+                                ->orWhere('entry_status','YC');
+                        })->groupBy('user_id')->get()->count();
+
+        $entrys_self = Entry::where('user_id',Auth::id())
+                        ->where('event_id',$id)
+                        ->where('entry_status','Y')
+                        ->first();
+
+        $entrys_self_YC = Entry::where('user_id',Auth::id())
+                        ->where('event_id',$id)
+                        ->where('entry_status','YC')
+                        ->first();
+        
+        // 申込可否フラグ
+        $applyfrag = true;
+        $status_mes = null;
+
+        $dt = Carbon::now();
+        $entry_start_date = new Carbon($event->entry_start_date);
+        $entry_end_date = new Carbon($event->entry_end_date);
+        if($entry_start_date > $dt || $entry_end_date < $dt){ // 申込期間外の場合
+            $applyfrag = false;
+        } 
+        if($entry_start_date > $dt){
+            $status_mes = "申込受付開始前のため申込できません。";
+        } elseif($entry_end_date < $dt) {
+            $status_mes = "申込受付が終了したため申込できません。";
+        } 
+
+        // 通常申込 or キャンセル待ち申込み判定
+        if($event->capacity <= $entrys_cnt){// 申込数が定員に達した場合
+            $capacity_status = "定員に達したためキャンセル待ちでの申込となります。";
+        } else {
+            $capacity_status = null;
+        }
+
+        
+        return view('event.show',
+                compact(
+                    'event','careerup_curriculums','event_dates','event_uploads','general_or_carrerup',
+                    'entrys_cnt','entrys_self','entrys_self_YC','applyfrag','status_mes','capacity_status'
+                ));
     }
 
     /**
@@ -357,8 +417,8 @@ class EventsController extends Controller
         if(Gate::denies('area-higher')){ // 支部、特権ユーザ以外
             return redirect('/event');
         }
-        $user = Event::onlyTrashed()->find($id);
-        $user->restore();
+        $event = Event::onlyTrashed()->find($id);
+        $event->restore();
         return redirect()->route('event.index')->with('status','研修を復元しました。');
     }
 
@@ -366,8 +426,8 @@ class EventsController extends Controller
         if(Gate::denies('area-higher')){ // 支部、特権ユーザ以外
             return redirect('/event');
         }
-        $user = Event::onlyTrashed()->find($id);
-        $user->forceDelete();
+        $event = Event::onlyTrashed()->find($id);
+        $event->forceDelete();
         return redirect()->route('event.index')->with('attention','研修をを完全に削除しました。削除した研修は復元できません。');
     }
 
@@ -376,9 +436,102 @@ class EventsController extends Controller
             return redirect('/event');
         }
         $event_upload = Event_upload::find($id);
+        $pathname = storage_path().'/app/public/event/'.$event_upload->path;
+        \File::delete($pathname);
+
         $event = $event_upload->event;
         $event_upload->delete();
         return redirect()->route('event.edit',['id' => $event->id])->with('attention',"アップロードファイルを削除しました。");
+
+    }
+
+    public function apply(Request $request) {
+        if(Gate::allows('area-higher')){ // 個人、法人ユーザ以外
+            return redirect('/event');
+        }
+        $event = Event::find($request->event_id);
+        $event_dates = $event->event_dates()->get();
+        $event_dates_cnt = $event_dates->count();
+        $entrys_cnt = Entry::select('user_id')
+                        ->where('event_id',$request->event_id)
+                        ->where(function($q){
+                            $q->where('entry_status','Y')
+                                ->orWhere('entry_status','YC');
+                        })->groupBy('user_id')->get()->count();
+        // 通し番号
+        $anumber = Entry::where('event_id',$request->event_id) 
+                        ->where(function($q){
+                            $q->where('entry_status','Y')
+                                ->orWhere('entry_status','YC');
+                        })->get();
+        
+        if($anumber->count() > 0){
+            $applynumber = $anumber->max('serial_number');
+        } else {
+            $applynumber = 0;
+        }
+
+        // 定員<-->申込数
+        if($event->capacity > $entrys_cnt){
+            $entry_status = 'Y'; // 申込枠確保
+            $message = $event->title."への申込が完了しました。";
+			$anumber_real = ($applynumber+1); //通し番号
+        } else {
+            $entry_status = 'CW'; // キャンセル待ち申込み
+            $message = $event->title."への申込をキャンセル待ちとして登録完了しました。";
+			$anumber_real = null;
+        }
+
+        // 申込期間
+        $dt = Carbon::now();
+        $entry_start_date = new Carbon($event->entry_start_date);
+        $entry_end_date = new Carbon($event->entry_end_date);
+        
+        if($entry_start_date > $dt || $entry_end_date < $dt){
+            return view('event.show',['id' => $id])->with('attention', '申込期間外のため申込みができません。');
+        }
+
+        $entry = New Entry;
+        foreach($event_dates as $key => $item){
+            $entry->create([
+                'event_id' => $request->event_id,
+                'event_date_id' => $item['id'],
+                'user_id' => $request->user_id,
+                'applying_user_id' => Auth::id(),
+                'serial_number' => $anumber_real,
+                'entry_status' => $entry_status,
+            ]);
+        }        
+
+        return redirect()->route('event.show',['id' => $request->event_id])->with('status',$message);
+
+    }
+
+    public function cancel(Request $request) {
+        if(Gate::allows('area-higher')){ // 個人、法人ユーザ以外
+            return redirect('/event');
+        }
+        $event = Event::find($request->event_id);
+
+        // 申込期間
+        $dt = Carbon::now();
+        $entry_start_date = new Carbon($event->entry_start_date);
+        $entry_end_date = new Carbon($event->entry_end_date);        
+        if($entry_start_date > $dt || $entry_end_date < $dt){
+            return view('event.show',['id' => $id])->with('attention', '申込期間外のためキャンセルができません。');
+        }
+
+        $entrys = Entry::where('user_id',$request->user_id)
+                        ->where('event_id',$request->event_id)
+                        ->where('entry_status','Y')
+                        ->get();
+
+        foreach($entrys as $entry){
+            $entry->entry_status = "YC";
+            $entry->save();
+        }
+
+        return redirect()->route('event.show',['id' => $request->event_id])->with('attention',$event->title."への申込をキャンセルしました。");
 
     }
 

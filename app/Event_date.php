@@ -11,4 +11,7 @@ class Event_date extends Model
     public function event() {
       return $this->belongsTo('App\Event');
     }
+    public function entrys() {
+      return $this->hasMany('App\Entry');
+    }
 }

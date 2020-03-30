@@ -16,7 +16,7 @@
       display:block;
       height:40px;
       line-height:40px;
-      padding:.2em .5em;
+      padding:0 .5em;
 
     }
   </style>
@@ -30,8 +30,8 @@
  
 @include('layouts.partials.header')
  
-<div style="min-height: calc(100% - 60px); padding-bottom:60px">
-  <div class="mt-3">
+<div style="min-height: calc(100% + 40px); padding-bottom:40px">
+  <div class="pt-3">
     <div id="content">
     <!-- @include('commons.error_messages') -->
     @yield('content')

@@ -71,6 +71,8 @@ Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
   // Route::get('event/create', 'EventsController@create')->name('event.create'); 
   // Route::get('event/{id}/edit', 'EventsController@edit')->name('event.edit');
   Route::resource('event', 'EventsController');
+  Route::post('event/apply', 'EventsController@apply')->name('event.apply'); 
+  Route::post('event/cancel', 'EventsController@cancel')->name('event.cancel'); 
 
 });
 

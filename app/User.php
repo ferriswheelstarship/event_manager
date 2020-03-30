@@ -45,6 +45,9 @@ class User extends Authenticatable
     public function events(){
         return $this->hasMany('App\Event');
     }
+    public function entrys(){
+        return $this->hasMany('App\Entry');
+    }
 
     /**
      * パスワードリセット通知の送信をオーバーライド
