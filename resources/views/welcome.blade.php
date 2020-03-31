@@ -175,7 +175,7 @@ Internet Explorerの安全ではないバージョンをお使いのようです
             <a href="{{ route('register') }}" class="top-btns-ul-li-a top-btns-ul-li-a-03">
               <img src="img/icon-pen.png" class="top-btns-img" alt="ユーザー新規登録" />
               <span class="top-btns-txt-outer">
-                <span class="top-btns-txt">ユーザー新規登録</span>
+                <span class="top-btns-txt">ユーザ新規登録</span>
               </span>
             </a>
           </li>
@@ -183,7 +183,7 @@ Internet Explorerの安全ではないバージョンをお使いのようです
             <a href="{{ route('login') }}" class="top-btns-ul-li-a top-btns-ul-li-a-04">
               <img src="img/icon-person.png" class="top-btns-img" alt="ユーザーログイン" />
               <span class="top-btns-txt-outer">
-                <span class="top-btns-txt">ユーザーログイン</span>
+                <span class="top-btns-txt">ユーザログイン</span>
               </span>
             </a>
           </li>
