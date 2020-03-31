@@ -105,6 +105,21 @@ Internet Explorerの安全ではないバージョンをお使いのようです
     </div>
 
     <section class="contents-section">
+      <div class="contents-section-inner contents-section-greeting fadeInUp">
+        <div class="greeting-box">
+          <h2 class="contents-header-h2">兵庫県保育協会 研修サイトの<span class="ilb">立ち上げについて</span></h2>
+          <div class="greeting-contents-body">
+            <p class="mgb15-30">近年、子どもを取り巻く環境や情報は変化して複雑になっていますが、同様に私たち保育者の仕事も多岐にわたり、複雑化しています。このような状況ですが、私たちは日々を振り返りながら、保育の質をさらに高めるために研鑚をし続けなければなりません。そのために兵庫県保育協会ではより質の高い研修を提供するための取り組みをしています。会員の皆様に、より便利に受講していただき、さらに保育者のキャリアパスにもつながることができれば幸いです。</p>
+            <p class="mgb15-30">そこで、兵庫県保育協会の実施する研修会について、インターネットから申込ができるよう、研修サイトを立ち上げました。従来のファクシミリによる申込方法から、インターネット上での操作が可能になることで、より便利で使いやすい機能に充実させました。当協会では日々の保育に活かせる充実した研修会を実施していきますので、今後、会員の皆様をはじめ、多くの保育者の方に当サイトを利用し、研修会への参加をいただければ幸いです。</p>
+            <p class="mgb15-30">研修会では多くのことを学んでいただくことはもちろんですが、保育者同士で語り合うことや日頃の悩み・疑問を発信する大切な機会でもあります。こういった機会をとおして、子どもたちにとって最善となる保育者を目指して、一緒に学んでいきましょう。</p>
+            <div class="talr">
+              2020年4月
+              <div class="greeting-contents-name">公益社団法人兵庫県保育協会</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="contents-section-inner fadeInUp">
         <div class="greeting-preface">こんなことができます。</div>
 
