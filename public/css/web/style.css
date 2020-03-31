@@ -2034,8 +2034,8 @@ address {
 
 .contents-header-h2 {
   font-family: "CezannePro-DB";
-  font-size: 183.3%;
-  margin: 0 0 30px;
+  font-size: 150%;
+  margin: 0 0 20px;
   text-align: center;
 }
 
@@ -2068,17 +2068,17 @@ address {
   }
 
   .contents-header-h2 {
-    font-size: 35px;
+    font-size: 28px;
     margin: 0 0 60px;
   }
 
   .contents-header-h3 {
-    font-size: 30px;
+    font-size: 25px;
     margin: 0 0 20px;
   }
 
   .contents-header-h4 {
-    font-size: 25px;
+    font-size: 22px;
     margin: 0 0 20px;
   }
 }
@@ -2103,6 +2103,15 @@ address {
 
 .contents-section-greeting {
   padding-bottom: 30px;
+}
+
+.greeting-box {
+  border: 5px double #c1e4e9;
+  padding: 15px;
+}
+
+.greeting-contents-name {
+  font-size: 112.5%;
 }
 
 .greeting-preface {
@@ -2365,6 +2374,10 @@ address {
 @media only screen and (min-width: 769px) {
   .contents-section-greeting {
     padding-bottom: 60px;
+  }
+
+  .greeting-box {
+    padding: 30px;
   }
 
   .greeting-ol {
@@ -3239,6 +3252,10 @@ address {
   margin-bottom: 10px;
 }
 
+.mgb15-30 {
+  margin-bottom: 15px;
+}
+
 .mgnb20 {
   margin-bottom: 20px;
 }
@@ -3278,6 +3295,10 @@ address {
 @media only screen and (min-width: 1050px) {
   .mgb10-15 {
     margin-bottom: 15px;
+  }
+
+  .mgb15-30 {
+    margin-bottom: 30px;
   }
 }
 
