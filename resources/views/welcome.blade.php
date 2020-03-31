@@ -138,13 +138,14 @@ Internet Explorerの安全ではないバージョンをお使いのようです
           <header class="top-info-header">
             <div class="top-info-header-inner">
               <h2 class="top-header-h2 top-info-header-h2">インフォメーション</h2>
-              <div class="top-header-tolist-box"><a href="info.html" class="top-header-tolist-a">記事一覧へ</a></div>
+              <div class="top-header-tolist-box"><a href="javascript:alert('現在準備中です');" class="top-header-tolist-a">記事一覧へ</a></div>
             </div>
           </header>
           <ul class="top-info-ul">
+              <li style="text-align:center">現在準備中です。</li>
+            <!-- <li class="top-info-ul-li"><a href="info-content.html" class="top-info-ul-li-a"><span class="top-info-ul-li-date">2020.2.20</span><span class="top-info-ul-li-body"><span class="top-info-ul-li-body-inner">サンプルテキストサンプルテキストサンプルテキストサンプルテキスト</span></span></a></li>
             <li class="top-info-ul-li"><a href="info-content.html" class="top-info-ul-li-a"><span class="top-info-ul-li-date">2020.2.20</span><span class="top-info-ul-li-body"><span class="top-info-ul-li-body-inner">サンプルテキストサンプルテキストサンプルテキストサンプルテキスト</span></span></a></li>
-            <li class="top-info-ul-li"><a href="info-content.html" class="top-info-ul-li-a"><span class="top-info-ul-li-date">2020.2.20</span><span class="top-info-ul-li-body"><span class="top-info-ul-li-body-inner">サンプルテキストサンプルテキストサンプルテキストサンプルテキスト</span></span></a></li>
-            <li class="top-info-ul-li"><a href="info-content.html" class="top-info-ul-li-a"><span class="top-info-ul-li-date">2020.2.20</span><span class="top-info-ul-li-body"><span class="top-info-ul-li-body-inner">サンプルテキストサンプルテキストサンプルテキストサンプルテキスト</span></span></a></li>
+            <li class="top-info-ul-li"><a href="info-content.html" class="top-info-ul-li-a"><span class="top-info-ul-li-date">2020.2.20</span><span class="top-info-ul-li-body"><span class="top-info-ul-li-body-inner">サンプルテキストサンプルテキストサンプルテキストサンプルテキスト</span></span></a></li> -->
           </ul>
         </div>
 
