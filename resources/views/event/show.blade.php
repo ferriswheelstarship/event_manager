@@ -130,37 +130,37 @@
                         </table>
                         @cannot('area-higher')
                         @if($applyfrag == true)
-                        @isset($capacity_status)
+                            @isset($capacity_status)
                         <div class="alert alert-danger">
                             {{ capacity_status }}
                         </div>
-                        @endisset
-                        @if($entrys_self)
-                        @if($entrys_self->ticket_status != 'Y')
+                            @endisset
+                            @if($entrys_self)
+                                @if($entrys_self->ticket_status != 'Y')
                         <div class="alert alert-danger">
-                        現在、こちらの研修に申込み中です。メールで入金のご案内をお送りしておりますのでご入金後、こちらで受講券の発券、確認ができます。
+                        現在、当研修に申込み中です。メールで入金のご案内をお送りしておりますのでご入金いただくことで受講券の発券、確認ができます。
                         </div>
                         <button type="button" class="apply-cancel btn-sm btn-danger" 
                         value="{{ $event->id }}" 
                         data-toggle="modal" data-target="#confirm-cancel">申込みキャンセル</button>
-                        @else
+                                @else
                         <div class="alert alert-danger">
-                        現在、こちらの研修への申し込みは完了しております。<br>
+                        現在、当研修への申し込みは完了しております。<br>
                         チケット発券（ダウンロード）はお忘れのないようにし、研修当日の受付時チケット内のバーコードのご提示をお願い致します。
                         </div>
                         <button type="button" class="ticket-confirm btn-sm btn-info" 
                         value="{{ $event->id }}" 
                         data-toggle="modal" data-target="#confirm-ticket">受講券を表示</button>
-                        @endif
-                        @elseif($entrys_self_YC)
+                                @endif
+                            @elseif($entrys_self_YC)
                         <div class="alert alert-danger">
-                        こちらの研修へは申込み後キャンセルをされています。
+                        当研修へは申込み後キャンセルをされています。再度申込みされる場合は事務局へお電話ください。
                         </div>
-                        @else
+                            @else
                         <button type="button" class="apply-confirm btn-sm btn-primary" 
                         value="{{ $event->id }}" 
                         data-toggle="modal" data-target="#confirm-apply">参加申込</button>
-                        @endif
+                            @endif
 
                         <!-- Modal(apply) -->
                         <div class="modal fade" id="confirm-apply" tabindex="-1">
@@ -225,6 +225,7 @@
                             {{ $status_mes }}
                         </div>
                         @endif
+
                         @endcannot
 
                     </div>

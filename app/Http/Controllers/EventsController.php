@@ -9,6 +9,7 @@ use Gate;
 use Carbon\Carbon;
 use App\Event;
 use App\User;
+use App\Profile;
 use App\Careerup_curriculum;
 use App\Event_date;
 use App\Event_upload;
@@ -336,9 +337,23 @@ class EventsController extends Controller
         }
         $request->validate($rules);
 
-
         // event
         $event = Event::find($id);
+
+        // 申込者がすでにいる場合、研修開催日の増減は不可
+        $entrys_cnt = Entry::select('user_id')
+                        ->where('event_id',$id)
+                        ->where(function($q){
+                            $q->where('entry_status','Y')
+                                ->orWhere('entry_status','YC');
+                        })->groupBy('user_id')->get()->count();
+        if($entrys_cnt > 0) {
+            if(count($request->event_dates) != $event->event_dates()->count() ) {
+                return redirect()->route('event.edit',['id' => $id])->with('attention', '申込者がすでにいるため、「研修開催日」の増減はできません。');
+            }
+        }
+
+        // event
         $event->user_id = $request->user()->id;
         $event->view_start_date = $request->view_start_date.":00";
         $event->view_end_date = $request->view_end_date.":00";
@@ -379,8 +394,8 @@ class EventsController extends Controller
         }
 
         // event_dates（開催日）
+        $event->event_dates()->delete();         
         foreach ($request->event_dates as $val) {
-            $event->event_dates()->delete();
             $event->event_dates()->create(['event_date' => $val." 00:00:00"]);
         }
 
@@ -485,10 +500,22 @@ class EventsController extends Controller
         // 申込期間
         $dt = Carbon::now();
         $entry_start_date = new Carbon($event->entry_start_date);
-        $entry_end_date = new Carbon($event->entry_end_date);
-        
+        $entry_end_date = new Carbon($event->entry_end_date);        
         if($entry_start_date > $dt || $entry_end_date < $dt){
             return view('event.show',['id' => $id])->with('attention', '申込期間外のため申込みができません。');
+        }
+
+        // キャリアアップ研修のみ保育士かどうか、所属施設の確認
+        if($event->general_or_carrerup == 'carrerup') {
+            $entrying_user = User::find($request->user_id);
+
+            if($entrying_user->profile->job != '保育士') {
+                return view('event.show',['id' => $id])->with('attention', 'キャリアアップ研修は保育士専用の研修です。職種が保育士でないため申込みができません。');
+            } else {
+                if($entrying_user->company_profile_id == null && !$entrying_user->profile->other_facility_name) {
+                    return view('event.show',['id' => $id])->with('attention', '所属施設が兵庫県外で所属施設名の設定がないため申込みができません。');
+                }
+            }
         }
 
         $entry = New Entry;
@@ -501,7 +528,9 @@ class EventsController extends Controller
                 'serial_number' => $anumber_real,
                 'entry_status' => $entry_status,
             ]);
-        }        
+        }
+
+        // メール送信
 
         return redirect()->route('event.show',['id' => $request->event_id])->with('status',$message);
 
