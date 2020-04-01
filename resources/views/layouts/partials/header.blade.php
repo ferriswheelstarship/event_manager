@@ -15,7 +15,7 @@
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">研修管理</a>
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="{{ route('event.index') }}">研修一覧</a>
-                    @can('admin-higher')
+                    @can('area-higher')
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{ route('event.create') }}">研修登録</a>
                     @endcan
