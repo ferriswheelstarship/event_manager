@@ -10,4 +10,30 @@ class PagesController extends Controller
     {
         return view('afterwithdrawal');
     }
+
+    public function greeting()
+    {
+        return view('greeting');
+    }
+
+    public function links()
+    {
+        return view('links');
+    }
+
+    public function privacy()
+    {
+        return view('privacy');
+    }
+
+    public function info()
+    {
+        return view('info');
+    }
+
+    public function contact()
+    {
+        return view('contact');
+    }
+
 }

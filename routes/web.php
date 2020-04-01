@@ -39,6 +39,14 @@ Route::get('register/verify/{token}', 'Auth\RegisterController@showForm');
 Route::post('register/main_check', 'Auth\RegisterController@mainCheck')->name('register.main.check');
 Route::post('register/main_register', 'Auth\RegisterController@mainRegister')->name('register.main.registered');
 
+
+// webページ
+Route::get('greeting', 'PagesController@greeting')->name('greeting');
+Route::get('links', 'PagesController@links')->name('links');
+Route::get('privacy', 'PagesController@privacy')->name('privacy');
+Route::get('info', 'PagesController@info')->name('info');
+Route::get('contact', 'PagesController@contact')->name('contact');
+
 // 退会後表示
 Route::get('afterwithdrawal', 'PagesController@afterwithdrawal')->name('afterwithdrawal');
 

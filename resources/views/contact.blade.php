@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="description" content="公益社団法人 兵庫県保育協会からのごあいさつです" />
+<meta name="description" content="公益社団法人 兵庫県保育協会へのお問い合わせはこちらから" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="format-detection" content="telephone=no" />
@@ -11,12 +11,11 @@
 <link rel="icon" href="/img/favicon.ico" type="image/vnd.microsoft.icon" />
 <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
 <meta name="robots" content="noindex,nofollow"/>
-<title>公益社団法人 兵庫県保育協会 | ユーザ新規登録</title>
+<title>公益社団法人 兵庫県保育協会 | お問い合わせ</title>
 <!-- <script type="text/javascript" src="//webfont.fontplus.jp/accessor/script/fontplus.js?kZSFUtx-OUM%3D&box=93sB9wS4lok%3D&aa=1&ab=2" charset="utf-8"></script> -->
 
 <link href="{{ asset('css/web/swiper.css') }}" rel="stylesheet">
 <link href="{{ asset('css/web/style.css') }}" rel="stylesheet">
-<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"> -->
 
 </head>
 <body id="home">
@@ -68,7 +67,7 @@ Internet Explorerの安全ではないバージョンをお使いのようです
     <nav id="navMenu" class="nav">
       <div class="nav-inner">
         <ul class="nav-ul-1">
-          <li class="nav-ul-1-li active">
+          <li class="nav-ul-1-li">
             <a href="{{ route('greeting') }}" class="nav-ul-1-li-a"><span class="nav-ul-1-li-a-span nav-ul-1-li-a-greeting">ごあいさつ</span></a>
           </li>
           <li class="nav-ul-1-li">
@@ -80,7 +79,7 @@ Internet Explorerの安全ではないバージョンをお使いのようです
           <li class="nav-ul-1-li">
             <a href="{{ route('login') }}" class="nav-ul-1-li-a"><span class="nav-ul-1-li-a-span nav-ul-1-li-a-login">ユーザログイン</span></a>
           </li>
-          <li class="nav-ul-1-li">
+          <li class="nav-ul-1-li active">
             <a href="{{ route('contact') }}" class="nav-ul-1-li-a"><span class="nav-ul-1-li-a-span nav-ul-1-li-a-contact">お問い合わせ</span></a>
           </li>
           <li class="nav-ul-1-li nav-ul-1-li-sp">
@@ -100,23 +99,69 @@ Internet Explorerの安全ではないバージョンをお使いのようです
     </nav>
   </header>
 
-    <div id="main" class="contents">
-    <div class="second-mainvis-box greeting-mainvis">
-      <h1 class="second-mainvis-pagetitle"><span class="greeting-pagetitle">ユーザ新規登録</span></h1>
+  <div id="main" class="contents">
+    <div class="second-mainvis-box contact-mainvis">
+      <h1 class="second-mainvis-pagetitle"><span class="contact-pagetitle">お問い合わせ</span></h1>
     </div>
 
     <section class="contents-section">
-        <div class="contents-section-inner fadeInUp">
-            <article class="contact-box">
-            <header class="contact-box-header">
-                <h2 class="contact-box-header-h2">ユーザ仮登録完了</h2>
-            </header>
-            <div class="contact-box-body">
-                この度は、ユーザ登録いただき、誠にありがとうございます。<br>
-                ご本人様確認のため、ご登録いただいたメールアドレスに、本登録のご案内のメールが届きます。<br>
-                そちらに記載されているURLにアクセスし、アカウントの本登録を完了させてください。
+      <div class="contents-section-inner fadeInUp">
+        <article class="contact-box">
+          <header class="contact-box-header">
+            <h2 class="contact-box-header-h2">電話でのお問い合わせ</h2>
+          </header>
+          <div class="contact-box-body">
+            <div class="contact-box-tel">
+              <a href="tel:0782424623" class="contact-box-tel-a">078-242-4623</a>
+              受付時間：10:00〜17:00（月〜金）
             </div>
-        </div>
+            <div class="contact-box-address">
+              <div class="contact-box-address-name">公益社団法人 兵庫県保育協会</div>
+              〒651-0062<br />兵庫県神戸市中央区坂口通2丁目1番1号 <span class="ilb">兵庫県福祉センター内</span>
+            </div>
+          </div>
+        </article>
+        <!-- <form class="contact-form">
+          <article class="contact-form-box">
+            <header class="contact-box-header">
+              <h2 class="contact-box-header-h2">お問い合わせフォーム</h2>
+            </header>
+            <div class="contact-form-body">
+              <table class="tbl-normal">
+                <tr>
+                  <th class="th-w25prc required">施設名または会社／組織名</th>
+                  <td><input type="text" class="form-textbox" /></td>
+                </tr>
+                <tr>
+                  <th class="th-w25prc required">氏名</th>
+                  <td><input type="text" class="form-textbox" /></td>
+                </tr>
+                <tr>
+                  <th class="th-w25prc required">メールアドレス</th>
+                  <td>
+                    <input type="text" class="form-textbox" />
+                    <div class="note">※半角英数字</div>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="th-w25prc required">メールアドレス再入力</th>
+                  <td>
+                    <input type="text" class="form-textbox" />
+                    <div class="note">※再入力してください</div>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="th-w25prc required">お問い合わせ内容</th>
+                  <td><textarea class="form-textarea"></textarea></td>
+                </tr>
+              </table>
+              <div class="form-submit-btn-box">
+                <a href="contact-confirm.html" class="form-submit-btn">入力内容を確認する</a>
+              </div>
+            </div>
+          </article>
+        </form> -->
+      </div>
     </section>
 
   </div><!-- main -->

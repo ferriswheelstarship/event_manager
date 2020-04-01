@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="description" content="公益社団法人 兵庫県保育協会からのごあいさつです" />
+<meta name="description" content="公益社団法人 兵庫県保育協会の関連リンクです。" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="format-detection" content="telephone=no" />
@@ -11,12 +11,11 @@
 <link rel="icon" href="/img/favicon.ico" type="image/vnd.microsoft.icon" />
 <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
 <meta name="robots" content="noindex,nofollow"/>
-<title>公益社団法人 兵庫県保育協会 | ユーザ新規登録</title>
+<title>公益社団法人 兵庫県保育協会 | リンク</title>
 <!-- <script type="text/javascript" src="//webfont.fontplus.jp/accessor/script/fontplus.js?kZSFUtx-OUM%3D&box=93sB9wS4lok%3D&aa=1&ab=2" charset="utf-8"></script> -->
 
 <link href="{{ asset('css/web/swiper.css') }}" rel="stylesheet">
 <link href="{{ asset('css/web/style.css') }}" rel="stylesheet">
-<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"> -->
 
 </head>
 <body id="home">
@@ -68,7 +67,7 @@ Internet Explorerの安全ではないバージョンをお使いのようです
     <nav id="navMenu" class="nav">
       <div class="nav-inner">
         <ul class="nav-ul-1">
-          <li class="nav-ul-1-li active">
+          <li class="nav-ul-1-li">
             <a href="{{ route('greeting') }}" class="nav-ul-1-li-a"><span class="nav-ul-1-li-a-span nav-ul-1-li-a-greeting">ごあいさつ</span></a>
           </li>
           <li class="nav-ul-1-li">
@@ -100,23 +99,28 @@ Internet Explorerの安全ではないバージョンをお使いのようです
     </nav>
   </header>
 
-    <div id="main" class="contents">
-    <div class="second-mainvis-box greeting-mainvis">
-      <h1 class="second-mainvis-pagetitle"><span class="greeting-pagetitle">ユーザ新規登録</span></h1>
+  <div id="main" class="contents">
+    <div class="second-mainvis-box links-mainvis">
+      <h1 class="second-mainvis-pagetitle"><span class="links-pagetitle">リンク</span></h1>
     </div>
 
     <section class="contents-section">
-        <div class="contents-section-inner fadeInUp">
-            <article class="contact-box">
-            <header class="contact-box-header">
-                <h2 class="contact-box-header-h2">ユーザ仮登録完了</h2>
-            </header>
-            <div class="contact-box-body">
-                この度は、ユーザ登録いただき、誠にありがとうございます。<br>
-                ご本人様確認のため、ご登録いただいたメールアドレスに、本登録のご案内のメールが届きます。<br>
-                そちらに記載されているURLにアクセスし、アカウントの本登録を完了させてください。
-            </div>
-        </div>
+      <div class="contents-section-inner fadeInUp">
+        <article class="links-box">
+          <header class="links-header">
+            <h2 class="links-header-h2">外部リンク</h2>
+          </header>
+          <div class="links-body">
+
+            <ul class="links-ul">
+              <li class="links-ul-li"><a href="https://www.hyogo-hoikushi.jp/index.html" class="links-a" target="_blank">保育士就職サポートセンター</a></li>
+              <li class="links-ul-li"><a href="https://www.hyogo-hoikukyokai.or.jp/" class="links-a" target="_blank">公益社団法人 兵庫県保育協会</a></li>
+            </ul>
+
+          </div>
+        </article>
+
+      </div>
     </section>
 
   </div><!-- main -->
