@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use DB;
 use Validator;
 use Auth;
 use Gate;
@@ -394,9 +395,83 @@ class EventsController extends Controller
         }
 
         // event_dates（開催日）
-        $event->event_dates()->delete();         
-        foreach ($request->event_dates as $val) {
-            $event->event_dates()->create(['event_date' => $val." 00:00:00"]);
+        if(count($request->event_dates) >= $event->event_dates()->count() ){ //　研修開催日増減なし分
+            foreach ($event->event_dates as $key => $event_date) {
+                $ed_data[] = [
+                    'id' => $event_date->id,
+                    'event_date' => $request['event_dates'][$key]." 00:00:00",
+                ];
+            }
+
+            // 既存カラム更新
+            $when_then = '';
+            $ids = '';
+            foreach($ed_data as $key => $item) {
+                $when_then .= " WHEN ".$item['id']." THEN '".$item['event_date']."'";
+                $ids .=  $item['id'];
+                if(end($ed_data) != $item) {
+                    $ids .= ',';
+                }
+            }
+
+            $sql = 'update event_dates set `event_date` =
+                            case `id`
+                                '.$when_then.'
+                            END 
+                        WHERE `id` IN('.$ids.')';
+            $affected = DB::update($sql);
+
+            if(count($request->event_dates) > $event->event_dates()->count()) { // 研修開催日増えた分
+                foreach ($request->event_dates as $key => $val) {
+                    if($key >= ($event->event_dates()->count()) ) {// 挿入カラム抽出
+                        $ed_insert_data[] = [
+                            'event_date' => $val." 00:00:00",
+                        ];
+                    }
+                }
+                // 追加挿入
+                foreach ($ed_insert_data as $key => $val) {
+                    $event->event_dates()->create(['event_date' => $val['event_date']]);
+                }                
+            }
+
+        } else { // 研修開催日減った分
+
+            foreach ($event->event_dates as $key => $event_date) {
+                if($key <= (count($request->event_dates)-1) ) { // 更新カラム抽出
+                    $ed_data[] = [
+                        'id' => $event_date->id,
+                        'event_date' => $request['event_dates'][$key]." 00:00:00",
+                    ];
+                } else { // 削除カラムid抽出
+                    $ed_delete_data[] = $event_date->id;
+                }
+            }
+
+            // 既存カラム更新
+            $when_then = '';
+            $ids = '';
+            foreach($ed_data as $key => $item) {
+                $when_then .= " WHEN ".$item['id']." THEN '".$item['event_date']."'";
+                $ids .=  $item['id'];
+                if(end($ed_data) != $item) {
+                    $ids .= ',';
+                }
+            }
+
+            $sql = 'update event_dates set `event_date` =
+                            case `id`
+                                '.$when_then.'
+                            END 
+                        WHERE `id` IN('.$ids.')';
+            $affected = DB::update($sql);
+
+            // 減った分削除
+            foreach ($ed_delete_data as $val) {
+                $event_dates = Event_date::find($val);
+                $event_dates->delete();
+            }                
+
         }
 
         // event_uploads（アップロード）
