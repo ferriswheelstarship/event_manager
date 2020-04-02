@@ -230,7 +230,50 @@ class EventsController extends Controller
                         ->where('event_id',$id)
                         ->where('entry_status','YC')
                         ->first();
+
+        if(Gate::allows('admin-only')) { // 法人ユーザのみ所属ユーザ取得
+
+            $user_self = User::find(Auth::id());
+
+            $users = User::where('status',1)
+                            ->where('role_id',4)
+                            ->where('company_profile_id',$user_self->company_profile_id)
+                            ->orderBy('id', 'desc')
+                            ->get();
+
+            foreach($users as $user) {
+                $entry = Entry::where('event_id',$id)
+                                ->where('user_id',$user->id)
+                                ->first();
+                if(!$entry) {
+                    $entry_status = "申込なし";
+                } else {
+                    if($entry->ticket_status == 'Y') {
+                        $entry_status = "申込済・入金済";
+                    } else {
+                        if($entry->entry_status == 'Y') {
+                            $entry_status = "申込済・入金未";
+                        } elseif($entry->entry_status == 'YC') {
+                            $entry_status = "申込後キャンセル";
+                        } elseif($entry->entry_status == 'CW') {
+                            $entry_status = "キャンセル待ち申込";
+                        } else {
+                            $entry_status = "申込なし";
+                        }
+                    }
+                }
+
+                $datas[] = [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'entry_status' => $entry_status,
+                ];
+            }
         
+        } else {
+            $datas = null;
+        }
+
         // 申込可否フラグ
         $applyfrag = true;
         $status_mes = null;
@@ -258,7 +301,8 @@ class EventsController extends Controller
         return view('event.show',
                 compact(
                     'event','careerup_curriculums','event_dates','event_uploads','general_or_carrerup',
-                    'entrys_cnt','entrys_self','entrys_self_YC','applyfrag','status_mes','capacity_status'
+                    'entrys_cnt','entrys_self','entrys_self_YC','applyfrag','status_mes','capacity_status',
+                    'datas'
                 ));
     }
 

@@ -135,6 +135,9 @@
                             {{ capacity_status }}
                         </div>
                             @endisset
+
+                            @can('user-only')
+
                             @if($entrys_self)
                                 @if($entrys_self->ticket_status != 'Y')
                         <div class="alert alert-danger">
@@ -176,10 +179,8 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    @can('user-only')
                                     <strong>{{ $event->title }}</strong>へ参加申込みしますか？
                                     <input type="hidden" name="user_id" value="{{ Auth::id() }}">
-                                    @endcan
                                     <input type="hidden" name="event_id" value="{{ $event->id }}">
                                 </div>
                                 <div class="modal-footer">
@@ -205,10 +206,8 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    @can('user-only')
                                     <strong>{{ $event->title }}</strong>の参加をキャンセルしますか？
                                     <input type="hidden" name="user_id" value="{{ Auth::id() }}">
-                                    @endcan
                                     <input type="hidden" name="event_id" value="{{ $event->id }}">
                                 </div>
                                 <div class="modal-footer">
@@ -219,6 +218,117 @@
                                 </form>
                             </div>
                         </div>
+
+                            @elsecan('admin-only')
+                            <h3 class="h5 mt-5">所属ユーザ申込状況</h3>
+                            <div >
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>名前</th>
+                                            <th>ステータス</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                @foreach($datas as $key => $item)
+                                        <tr>
+                                            <td>{{ $item['name'] }}</td>
+                                            <td>{{ $item['entry_status'] }}</td>
+                                            <td>
+                                                @if($item['entry_status'] == '申込なし')
+                                                <button type="button" class="apply-confirm btn-sm btn-primary" 
+                                                value="{{ $item['id'] }}" 
+                                                data-toggle="modal" data-target="#confirm-apply{{ $item['id'] }}">参加申込</button>
+                                                @elseif($item['entry_status'] == 'キャンセル待ち申込')
+                                                <button type="button" class="apply-confirm btn-sm btn-primary" 
+                                                value="{{ $item['id'] }}" 
+                                                data-toggle="modal" data-target="#confirm-apply{{ $item['id'] }}">キャンセル待ち申込</button>
+                                                @elseif($item['entry_status'] == '申込済・入金未')
+                                                <button type="button" class="apply-cancel btn-sm btn-danger" 
+                                                value="{{ $event->id }}" 
+                                                data-toggle="modal" data-target="#confirm-cancel{{ $item['id'] }}">申込みキャンセル</button>
+                                                @elseif($item['entry_status'] == '申込済・入金済')
+                                                <button type="button" class="ticket-confirm btn-sm btn-info" 
+                                                value="{{ $event->id }}" 
+                                                data-toggle="modal" data-target="#confirm-ticket">受講券を表示</button>
+                                                @elseif($item['entry_status'] == '申込後キャンセル')
+                                                申込み後キャンセル
+                                                @elseif($item['entry_status'] == 'キャンセル待ち申込')
+                                                キャンセル待ち申込
+                                                @endif
+                                            </td>
+                                        </tr>
+                                @endforeach
+                                    <tbody>
+                                </table>
+                            </div>
+
+                                @foreach($datas as $key => $item)
+                                <!-- Modal(apply) -->
+                                <div class="modal fade" id="confirm-apply{{ $item['id'] }}" tabindex="-1">
+                                    <div class="modal-dialog" role="document">
+                                        <form role="form" class="form-inline" method="POST" action="{{ route('event.apply') }}">
+                                        {{ csrf_field() }}
+
+                                        <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">参加申込</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <strong>ユーザ：{{ $item['name'] }} </strong><br>
+                                            <strong>{{ $event->title }}</strong>へ参加申込みしますか？
+                                            @if($item['entry_status'] == 'キャンセル待ち申込')
+                                            <br>
+                                            <span style=" color: crimson; font-weight:bold">※ 定員に達したためキャンセル待ちでの申込みになります。</span>
+                                            @endif
+                                            <input type="hidden" name="user_id" value="{{ $item['id'] }}">
+                                            <input type="hidden" name="event_id" value="{{ $event->id }}">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+                                            <button type="submit" class="btn btn-primary">申し込む</button>
+                                        </div>
+                                        </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- Modal(cancel) -->
+                                <div class="modal fade" id="confirm-cancel{{ $item['id'] }}" tabindex="-1">
+                                    <div class="modal-dialog" role="document">
+                                        <form role="form" class="form-inline" method="POST" action="{{ route('event.cancel') }}">
+                                        {{ csrf_field() }}
+
+                                        <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">参加キャンセル</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <strong>ユーザ：{{ $item['name'] }} </strong><br>
+                                            <strong>{{ $event->title }}</strong>の参加をキャンセルしますか？
+                                            <input type="hidden" name="user_id" value="{{ $item['id'] }}">
+                                            <input type="hidden" name="event_id" value="{{ $event->id }}">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+                                            <button type="submit" class="btn btn-danger">キャンセル</button>
+                                        </div>
+                                        </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                @endforeach
+
+                            
+                            @endcan
+
 
                         @else
                         <div class="alert alert-danger">
