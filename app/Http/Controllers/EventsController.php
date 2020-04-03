@@ -15,6 +15,8 @@ use App\Careerup_curriculum;
 use App\Event_date;
 use App\Event_upload;
 use App\Entry;
+use Mail;
+use App\Mail\ApplyConfirmMail;
 
 class EventsController extends Controller
 {
@@ -608,11 +610,13 @@ class EventsController extends Controller
         // 定員<-->申込数
         if($event->capacity > $entrys_cnt){
             $entry_status = 'Y'; // 申込枠確保
-            $message = $event->title."への申込が完了しました。";
+            $entry_status_replace = '申し込み登録';
+            $vmessage = $event->title."への申込が完了しました。";
 			$anumber_real = ($applynumber+1); //通し番号
         } else {
             $entry_status = 'CW'; // キャンセル待ち申込み
-            $message = $event->title."への申込をキャンセル待ちとして登録完了しました。";
+            $entry_status_replace = 'キャンセル待ち登録';
+            $vmessage = $event->title."への申込をキャンセル待ちとして登録完了しました。";
 			$anumber_real = null;
         }
 
@@ -621,7 +625,7 @@ class EventsController extends Controller
         $entry_start_date = new Carbon($event->entry_start_date);
         $entry_end_date = new Carbon($event->entry_end_date);        
         if($entry_start_date > $dt || $entry_end_date < $dt){
-            return view('event.show',['id' => $id])->with('attention', '申込期間外のため申込みができません。');
+            return redirect()->route('event.show',['id' => $request->event_id])->with('attention', '申込期間外のため申込みができません。');
         }
 
         // キャリアアップ研修のみ保育士かどうか、所属施設の確認
@@ -629,10 +633,10 @@ class EventsController extends Controller
             $entrying_user = User::find($request->user_id);
 
             if($entrying_user->profile->job != '保育士') {
-                return view('event.show',['id' => $id])->with('attention', 'キャリアアップ研修は保育士専用の研修です。職種が保育士でないため申込みができません。');
+                return redirect()->route('event.show',['id' => $request->event_id])->with('attention', 'キャリアアップ研修は保育士専用の研修です。該当ユーザの職種が保育士でないため申込みができません。');
             } else {
                 if($entrying_user->company_profile_id == null && !$entrying_user->profile->other_facility_name) {
-                    return view('event.show',['id' => $id])->with('attention', '所属施設が兵庫県外で所属施設名の設定がないため申込みができません。');
+                    return redirect()->route('event.show',['id' => $request->event_id])->with('attention', '所属施設が兵庫県外で所属施設名の設定がないため申込みができません。');
                 }
             }
         }
@@ -650,8 +654,18 @@ class EventsController extends Controller
         }
 
         // メール送信
+        $user = User::where('id',$request->user_id)->first();
+        $data = [
+            'username' => $user->name,
+            'eventtitle' => $event->title,
+            'eventdates' => $event_dates,
+            'entrystatus' => $entry_status_replace,
+        ];
 
-        return redirect()->route('event.show',['id' => $request->event_id])->with('status',$message);
+        $email = new ApplyConfirmMail($data);
+        Mail::to($user->email)->send($email);
+
+        return redirect()->route('event.show',['id' => $request->event_id])->with('status',$vmessage);
 
     }
 
