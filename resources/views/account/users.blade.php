@@ -4,11 +4,11 @@
             <thead>
                 <tr>
                     <!-- <th>ID</th> -->
-                    <th>名前</th>
-                    <th>メールアドレス</th>
-                    <th>権限</th>
-                    <th>アカウント</th>
-                    <th>操作</th>
+                    <th class="text-nowrap">名前</th>
+                    <th class="text-nowrap">メールアドレス</th>
+                    <th class="text-nowrap">権限</th>
+                    <th class="text-nowrap">アカウント</th>
+                    <th class="text-nowrap">操作</th>
                 </tr>
             </thead>
             <tbody>
@@ -123,7 +123,34 @@
                         @endif
 
                     @elsecan('admin-only')
-                        <a href="{{ url('account/trimcompany/'.$user->id) }}" class="btn btn-danger btn-sm">所属解除</a>
+                        <button type="button" class="trimcompany-confirm btn-sm btn-danger" value="{{ $user->id }}" data-toggle="modal" data-target="#confirm-trimcompany{{ $user->id }}">所属解除</button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="confirm-trimcompany{{ $user->id }}" tabindex="-1">
+                            <div class="modal-dialog" role="document">
+                                <form role="form" class="form-inline" method="POST" action="{{ route('account.trimcompany', $user->id) }}">
+                                {{ csrf_field() }}
+                                <input name="_method" type="hidden" value="PUT">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">所属解除確認</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <strong>{{ $user->name }}</strong>の施設所属を本当に解除してよろしいですか？<br>
+                                    解除した場合、施設側より復元できませんのでご注意下さい。
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+                                    <button type="submit" class="btn btn-danger">所属解除</button>
+                                </div>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                        
                     @endcan
                     </td>
                 </tr>

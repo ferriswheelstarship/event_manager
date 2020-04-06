@@ -106,13 +106,37 @@ class RegisterController extends Controller
         return view('auth.registered');
     }
     
-    public function showForm($email_token)
+    public function showForm(Request $request,$email_token)
     {
         // 施設ユーザ
         $company = User::where('role_id','3')->get();
 
+        foreach($company as $key => $item) {
+
+            if(preg_match('/郡/',$item->address)){
+                list($city,$etc) = explode("郡",$item->address);
+                $city = $city."郡";
+            } elseif(preg_match('/市/',$item->address)){
+                list($city,$etc) = explode("市",$item->address);
+                $city = $city."市";
+            } elseif(preg_match('/郡/',$item->address)){
+                list($city,$etc) = explode("郡",$item->address);
+                $city = $city."郡";
+            } else {
+                $city = $item->address;
+            }
+
+
+            $facilites[] = [
+                'company_profile_id' => $item['company_profile_id'],
+                'name' => $item['name'],
+                'city' => $city,
+            ];
+        }
+
         // 都道府県
         $pref = config('const.PREF');
+        $pref_all = config('const.PREF_ALL');
         // 職種
         $job = config('const.JOB');
         // 保育士番号所持状況
@@ -134,7 +158,7 @@ class RegisterController extends Controller
             $user->status = config('const.USER_STATUS.MAIL_AUTHED');
             //$user->verify_at = Carbon::now();
             if($user->save()) {
-                return view('auth.main.register', compact('email_token','company','pref','job','childminder_status'));
+                return view('auth.main.register', compact('email_token','facilites','pref','job','childminder_status'));
             } else{
                 return view('auth.main.register')->with('message', 'メール認証に失敗しました。再度、メールからリンクをクリックしてください。');
             }
@@ -143,14 +167,16 @@ class RegisterController extends Controller
     
     public function mainCheck(Request $request)
     {
+        
         $rules = [
             'password' => 'required|string|min:6|confirmed',
-            'name' => 'required|string',
-            'ruby' => 'required|string',
+            'firstname' => 'required|string',
+            'lastname' => 'required|string',
+            'firstruby' => 'required|string',
+            'lastruby' => 'required|string',
             'phone' => 'required|string',
             'zip' => 'required|string',
             'address' => 'required|string',
-            'ruby' => 'required|string',
             'birth_year' => 'not_in:0',
             'birth_month' => 'not_in:0',
             'birth_day' => 'not_in:0',
@@ -166,14 +192,15 @@ class RegisterController extends Controller
             ];
         }
 
-        if($request->job === config('const.JOB.0')) {//「保育士」の場合
+        if($request->job === config('const.JOB.0')) {//「保育士・保育教諭」の場合
             $rules += [
                 'childminder_status' => 'not_in:0'
             ];
             
             if($request->childminder_status == config('const.CHILDMINDER_STATUS.0')) {// 保育士番号ありの場合
                 $rules += [
-                    'childminder_number' => 'required|string'
+                    'childminder_number_pref' => 'not_in:0',
+                    'childminder_number_only' => 'required|alpha_num|digits:6'
                 ];
             }
                     
@@ -188,8 +215,8 @@ class RegisterController extends Controller
         $user = new User();
         
         $user->password = $request->password;
-        $user->name = $request->name;
-        $user->ruby = $request->ruby;
+        $user->name = $request->firstname.'　'.$request->lastname;
+        $user->ruby = $request->firstruby.'　'.$request->lastruby;
         $user->phone = $request->phone;
         $user->zip = $request->zip;
         $user->address = $request->address;
@@ -212,7 +239,7 @@ class RegisterController extends Controller
         if($profile->job == config('const.JOB.0')){
             $profile->childminder_status = $request->childminder_status;
             if($request->childminder_status == config('const.CHILDMINDER_STATUS.0')) {
-                $profile->childminder_number = $request->childminder_number;
+                $profile->childminder_number = $request->childminder_number_pref.'-'.$request->childminder_number_only;
             } else {
                 $profile->childminder_number = null;
             }
@@ -223,7 +250,7 @@ class RegisterController extends Controller
         // password マスキング
         $password_mask = '******';
         
-        return view('auth.main.register_check', compact('profile','user','email_token','password_mask'));
+        return view('auth.main.register_check', compact('request','profile','user','email_token','password_mask'));
     }
     
     public function mainRegister(Request $request)

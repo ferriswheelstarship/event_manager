@@ -123,6 +123,12 @@
                             </div>
                             <div class="col-md-2">
                                 <input type="submit" name="action" value="入力へ戻る" class="btn btn-primary" />
+                                <input type="hidden" name="firstname" value="{{ $request->firstname }}">
+                                <input type="hidden" name="lastname" value="{{ $request->lastname }}">
+                                <input type="hidden" name="firstruby" value="{{ $request->firstruby }}">
+                                <input type="hidden" name="lastruby" value="{{ $request->lastruby }}">
+                                <input type="hidden" name="childminder_number_pref" value="{{ $request->childminder_number_pref }}">
+                                <input type="hidden" name="childminder_number_only" value="{{ $request->childminder_number_only }}">
                             </div>
                         </div>
                     </form>

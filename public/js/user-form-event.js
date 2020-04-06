@@ -1,7 +1,7 @@
 function changeEventJob(value) {
     var jobs = document.getElementById("only-nursery");
 
-    if (value == "保育士") {
+    if (value == "保育士・保育教諭") {
         jobs.style.display = "";
     } else {
         jobs.style.display = "none";

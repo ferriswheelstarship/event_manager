@@ -58,16 +58,46 @@
                             <div class="form-group row">
                                 <label for="name" class="col-md-4 col-form-label text-md-right">名前</label>
                                 <div class="col-md-6">
-                                    <input id="name" 
-                                        type="text"
+                                    @if ($user->role_id == 4)
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input
+                                                id="firstname" type="text"
+                                                class="form-control{{ $errors->has('firstname') ? ' is-invalid' : '' }}"
+                                                name="firstname" value="{{ old('firstname',$user->firstname) }}" placeholder="兵庫" required>
+
+                                            @if ($errors->has('firstname'))
+                                                <span class="invalid-feedback">
+                                                <strong>{{ $errors->first('firstname') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input
+                                                id="lastname" type="text"
+                                                class="form-control{{ $errors->has('lastname') ? ' is-invalid' : '' }}"
+                                                name="lastname" value="{{ old('lastname',$user->lastname) }}" placeholder="太郎" required>
+
+                                            @if ($errors->has('lastname'))
+                                                <span class="invalid-feedback">
+                                                <strong>{{ $errors->first('lastname') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    @else
+
+                                    <input
+                                        id="name" type="text"
                                         class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}"
-                                        name="name" 
-                                        value="{{ old('name',$user->name) }}" required>
+                                        name="name" value="{{ old('name',$user->name) }}" required>
 
                                     @if ($errors->has('name'))
                                         <span class="invalid-feedback">
                                         <strong>{{ $errors->first('name') }}</strong>
                                         </span>
+                                    @endif
+
                                     @endif
                                 </div>
                             </div>
@@ -77,15 +107,46 @@
                                         class="col-md-4 col-form-label text-md-right">フリガナ</label>
 
                                 <div class="col-md-6">
-                                    <input id="ruby" type="text"
-                                            class="form-control{{ $errors->has('ruby') ? ' is-invalid' : '' }}"
-                                            name="ruby" value="{{ old('ruby',$user->ruby) }}"
-                                            required>
+                                    @if ($user->role_id == 4)
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input id="firstruby" type="text"
+                                                class="form-control{{ $errors->has('firstruby') ? ' is-invalid' : '' }}"
+                                                name="firstruby" value="{{ old('firstruby',$user->firstruby) }}" placeholder="ヒョウゴ"
+                                                required>
+
+                                            @if ($errors->has('firstruby'))
+                                                <span class="invalid-feedback">
+                                                <strong>{{ $errors->first('firstruby') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input id="lastruby" type="text"
+                                                class="form-control{{ $errors->has('lastruby') ? ' is-invalid' : '' }}"
+                                                name="lastruby" value="{{ old('lastruby',$user->lastruby) }}" placeholder="タロウ"
+                                                required>
+
+                                            @if ($errors->has('lastruby'))
+                                                <span class="invalid-feedback">
+                                                <strong>{{ $errors->first('lastruby') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    @else
+
+                                    <input
+                                        id="ruby" type="text"
+                                        class="form-control{{ $errors->has('ruby') ? ' is-invalid' : '' }}"
+                                        name="ruby" value="{{ old('ruby',$user->ruby) }}" required>
 
                                     @if ($errors->has('ruby'))
                                         <span class="invalid-feedback">
                                         <strong>{{ $errors->first('ruby') }}</strong>
                                         </span>
+                                    @endif
+
                                     @endif
                                 </div>
                             </div>
@@ -103,6 +164,7 @@
                                         <strong>{{ $errors->first('phone') }}</strong>
                                         </span>
                                     @endif
+                                    
                                 </div>
                             </div>
 
@@ -151,7 +213,7 @@
                                                 <option value="0">----</option>
                                                 @for ($i = 1930; $i <= 2005; $i++)
                                                     <option value="{{ $i }}"
-                                                            @if(old('birth_year',$profile->birth_year) == $i ) selected @endif>{{ $i }}</option>
+                                                            @if(old('birth_year',$profile->birth_year) == $i ) selected @endif>{{ $i }}年</option>
                                                 @endfor
                                             </select>
                                             @if ($errors->has('birth_year'))
@@ -159,9 +221,9 @@
                                                     <strong>{{ $errors->first('birth_year') }}</strong>
                                                 </span>
                                             @endif
-                                        </div>年
+                                        </div>
 
-                                        <div class="col-md-3">
+                                        <div class="col-md-4">
                                             <select 
                                                 id="birth_month" 
                                                 class="form-control{{ $errors->has('birth_month') ? ' is-invalid' : '' }}" 
@@ -169,7 +231,7 @@
                                                 <option value="0">--</option>
                                                 @for ($i = 1; $i <= 12; $i++)
                                                     <option value="{{ $i }}"
-                                                        @if(old('birth_month',$profile->birth_month) == $i) selected @endif>{{ $i }}</option>
+                                                        @if(old('birth_month',$profile->birth_month) == $i) selected @endif>{{ $i }}月</option>
                                                 @endfor
                                             </select>
                                             @if ($errors->has('birth_month'))
@@ -177,9 +239,9 @@
                                                     <strong>{{ $errors->first('birth_month') }}</strong>
                                                 </span>
                                             @endif
-                                        </div>月
+                                        </div>
 
-                                        <div class="col-md-3">
+                                        <div class="col-md-4">
                                             <select 
                                                 id="birth_day" 
                                                 class="form-control{{ $errors->has('birth_day') ? ' is-invalid' : '' }}" 
@@ -187,7 +249,7 @@
                                                 <option value="0">--</option>
                                                 @for ($i = 1; $i <= 31; $i++)
                                                     <option value="{{ $i }}"
-                                                        @if(old('birth_day',$profile->birth_day) == $i) selected @endif>{{ $i }}</option>
+                                                        @if(old('birth_day',$profile->birth_day) == $i) selected @endif>{{ $i }}日</option>
                                                 @endfor
                                             </select>
 
@@ -196,7 +258,7 @@
                                                     <strong>{{ $errors->first('birth_day') }}</strong>
                                                 </span>
                                             @endif
-                                        </div>日
+                                        </div>
                                     </div>
 
                                     <div class="row col-md-6 col-md-offset-4">
@@ -217,9 +279,9 @@
                                     onchange="changeEventFacility(this.value)">
                                         <option value="なし" 
                                         @if(old('company_profile_id') == "なし" || $user->company_profile_id == null) selected @endif >兵庫県下に所属なし</option>
-                                        @foreach ($company as $key => $val)
-                                        <option value="{{ $val->company_profile_id }}"
-                                            @if(old('company_profile_id',$user->company_profile_id) == $val->company_profile_id) selected @endif>{{ $val->name }}</option>
+                                        @foreach ($facilites as $key => $val)
+                                        <option value="{{ $val['company_profile_id'] }}"
+                                            @if(old('company_profile_id',$user->company_profile_id) == $val['company_profile_id']) selected @endif>【{{ $val['city'] }}】{{ $val['name'] }}</option>
                                         @endforeach
                                     </select>
 
@@ -288,6 +350,33 @@
                                 </div>
                             </div>
                             </div>
+
+                            <div class="form-group row">
+                                <label for="company_profile_id" class="col-md-4 col-form-label text-md-right">職種</label>
+                                <div class="col-md-6">
+                                    <select 
+                                    id="job" 
+                                    class="form-control{{ $errors->has('job') ? ' is-invalid' : '' }}" 
+                                    name="job"
+                                    onchange="changeEventJob(this.value)">
+                                        @foreach ($job as $key => $val)
+                                        <option value="{{ $val }}"
+                                            @if(old('job',$profile->job) == $val) selected @endif>{{ $val }}</option>
+                                        @endforeach
+                                    </select>
+
+                                    @if ($errors->has('job'))
+                                        <span class="invalid-feedback">
+                                        <strong>{{ $errors->first('job') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                            
+                            <div id="only-nursery" 
+                                    style="display: 
+                                    @if(old('job',$profile->job) != '保育士・保育教諭') none 
+                                    @endif">
                             <div class="form-group row">
                                 <label for="childminder_status" class="col-md-4 col-form-label text-md-right">保育士番号所持状況</label>
                                 <div class="col-md-6">
@@ -317,17 +406,38 @@
                                 @endif ">
                                 <label for="childminder_number" class="col-md-4 col-form-label text-md-right">保育士番号</label>
                                 <div class="col-md-6">
-                                    <input
-                                        id="childminder_number" type="text"
-                                        class="form-control{{ $errors->has('childminder_number') ? ' is-invalid' : '' }}"
-                                        name="childminder_number" value="{{ old('childminder_number',$profile->childminder_number) }}" >
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <select id="childminder_number_pref" 
+                                            class="form-control{{ $errors->has('childminder_number_pref') ? ' is-invalid' : '' }}" 
+                                            name="childminder_number_pref">
+                                                <option value="0">都道府県を選択</option>
+                                                <option value="兵庫県" @if(old('childminder_number_pref',$profile->childminder_number_pref) == "兵庫県") selected @endif>兵庫県</option>
+                                                @foreach ($pref as $item)
+                                                    <option value="{{ $item }}"
+                                                            @if(old('childminder_number_pref',$profile->childminder_number_pref) == $item) selected @endif>{{ $item }}</option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('childminder_number_pref'))
+                                            <span class="invalid-feedback">
+                                                <strong>{{ $errors->first('childminder_number_pref') }}</strong>
+                                            </span>
+                                            @endif
+                                        </div>
+                                        <div class="col-md-8">
+                                            <input
+                                                id="childminder_number_only" type="text"
+                                                class="form-control{{ $errors->has('childminder_number_only') ? ' is-invalid' : '' }}"
+                                                name="childminder_number_only" value="{{ old('childminder_number_only',$profile->childminder_number_only) }}" >
 
-                                    @if ($errors->has('childminder_number'))
-                                        <span class="invalid-feedback">
-                                        <strong>{{ $errors->first('childminder_number') }}</strong>
-                                        </span>
-                                    @endif
+                                            @if ($errors->has('childminder_number_only'))
+                                                <span class="invalid-feedback">
+                                                <strong>{{ $errors->first('childminder_number_only') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
                                 </div>
+                            </div>
                             </div>
                             
                             @elseif($user->role_id == 3)
@@ -422,6 +532,8 @@
                                     @endif
                                 </div>
                             </div>
+
+                            @can('system-only')
                             <div class="form-group row">
                                 <label for="kyokai_number" class="col-md-4 col-form-label text-md-right">協会NO</label>
                                 <div class="col-md-6">
@@ -437,6 +549,8 @@
                                     @endif
                                 </div>
                             </div>
+                            @endcan
+                            
                             @endif
 
                             <div class="form-group row mb-0">

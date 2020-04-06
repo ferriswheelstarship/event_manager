@@ -36,11 +36,11 @@
             <thead>
                 <tr>
                     <!-- <th>ID</th> -->
-                    <th>開催日</th>
-                    <th>研修タイトル</th>
-                    <th>申込数 / 定員</th>
-                    <th>ステータス</th>
-                    <th>操作</th>
+                    <th class="text-nowrap">開催日</th>
+                    <th class="text-nowrap">研修タイトル</th>
+                    <th class="text-nowrap">申込数 / 定員</th>
+                    <th class="text-nowrap">ステータス</th>
+                    <th class="text-nowrap">操作</th>
                 </tr>
             </thead>
             <tbody>

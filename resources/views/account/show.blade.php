@@ -49,6 +49,10 @@
                                         <td>{{ $user->birth_year }}年{{ $user->birth_month }}月{{ $user->birth_day }}日</td>
                                     </tr>
                                     <tr>
+                                        <th>職種</th>
+                                        <td>{{ $profile->job }}</td>
+                                    </tr>
+                                    <tr>
                                         <th>保育士番号所持状況</th>
                                         <td>{{ $profile->childminder_status }}</td>
                                     </tr>

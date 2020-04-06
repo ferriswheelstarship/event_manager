@@ -119,6 +119,8 @@ return [
     'attributes' => [
         'email' => 'メールアドレス',
         'password' => 'パスワード',
+        'firstname' => 'お名前（姓）',
+        'lastname' => 'お名前（名）',
         'birth_year' => '生年月日（年）',
         'birth_month' => '生年月日（年）',
         'birth_day' => '生年月日（日）',
@@ -140,7 +142,8 @@ return [
         'other_facility_address' => '施設所在地 市町村',
         'job' => '職種',
         'childminder_status' => '保育士番号所持状況',
-        'childminder_number' => '保育士番号',
+        'childminder_number_pref', '都道府県',
+        'childminder_number_only' => '保育士番号',
         'withdrawalreason' => '退会理由',
 
         'carrerup.parent_curriculum.*' => '親カテゴリ',

@@ -106,7 +106,7 @@ Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
 Route::group(['middleware' => ['auth', 'can:admin-only']], function () {
 
   // 個人ユーザの所属解除
-  Route::get('account/trimcompany/{user_id}', 'UsersController@trimcompany')->name('account.trimcompany');
+  Route::put('account/trimcompany/{user_id}', 'UsersController@trimcompany')->name('account.trimcompany');
 
 });
 

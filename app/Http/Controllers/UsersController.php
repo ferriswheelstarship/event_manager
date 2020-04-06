@@ -257,18 +257,46 @@ class UsersController extends Controller
     
     public function edit($id)
     {
-        $user = User::find($id);
-        $userSelf = User::find(Auth::id());
-        $userSelfRole = $userSelf->role->level;
-
         if(Gate::denies('system-only')){ // 特権ユーザ以外は
             if (Auth::id() != $id) { // 認証済（自分の）IDのみ許可
                 return redirect('/account/edit/'.Auth::id());
             }
         }
 
+        $user = User::find($id);
+        $userSelf = User::find(Auth::id());
+        $userSelfRole = $userSelf->role->level;
+
+        if($userSelfRole == 10) { // 個人ユーザの場合
+            list($user->firstname,$user->lastname) = explode('　',$user->name);
+            list($user->firstruby,$user->lastruby) = explode('　',$user->ruby);
+        }
+
         // 施設ユーザ
         $company = User::where('role_id','3')->get();
+        foreach($company as $key => $item) {
+
+            if(preg_match('/郡/',$item->address)){
+                list($city,$etc) = explode("郡",$item->address);
+                $city = $city."郡";
+            } elseif(preg_match('/市/',$item->address)){
+                list($city,$etc) = explode("市",$item->address);
+                $city = $city."市";
+            } elseif(preg_match('/郡/',$item->address)){
+                list($city,$etc) = explode("郡",$item->address);
+                $city = $city."郡";
+            } else {
+                $city = $item->address;
+            }
+
+
+            $facilites[] = [
+                'company_profile_id' => $item['company_profile_id'],
+                'name' => $item['name'],
+                'city' => $city,
+            ];
+        }
+
         // 地区名
         $area_name = config('const.AREA_NAME');
         // 支部名
@@ -286,6 +314,9 @@ class UsersController extends Controller
 
         if($user->role_id == 4) {
             $profile = $user->profile()->first();
+            if($profile->childminder_number) {
+                list($profile->childminder_number_pref,$profile->childminder_number_only) = explode('-',$profile->childminder_number);
+            }            
         } elseif($user->role_id == 3) {
             $profile = $user->company_profile()->first();
         } else {
@@ -294,7 +325,7 @@ class UsersController extends Controller
 
 
         return view('account.edit', 
-            compact('user','profile','company','area_name','branch_name','company_variation','category','job','pref','childminder_status')
+            compact('user','profile','facilites','area_name','branch_name','company_variation','category','job','pref','childminder_status')
         );
 
 
@@ -311,8 +342,7 @@ class UsersController extends Controller
         $user = User::find($id);
 
         $rules = [
-            'name' => 'required|string',
-            'ruby' => 'required|string',
+            'phone' => 'required|string',
             'phone' => 'required|string',
             'zip' => 'required|string',
             'address' => 'required|string',
@@ -326,6 +356,10 @@ class UsersController extends Controller
         if($user->role_id == 4) { // 個人ユーザ
             
             $rules += [
+                'firstname' => 'required|string',
+                'lastname' => 'required|string',
+                'firstruby' => 'required|string',
+                'lastruby' => 'required|string',
                 'birth_year' => 'not_in:0',
                 'birth_month' => 'not_in:0',
                 'birth_day' => 'not_in:0',
@@ -340,28 +374,35 @@ class UsersController extends Controller
                     'other_facility_address' => 'required|string',
                 ];
             }
-            if($request->job === config('const.JOB.0')) {//「保育士」の場合
+            if($request->job === config('const.JOB.0')) {//「保育士・保育教諭」の場合
                 $rules += [
                     'childminder_status' => 'not_in:0'
                 ];
                 
                 if($request->childminder_status == config('const.CHILDMINDER_STATUS.0')) {// 保育士番号ありの場合
                     $rules += [
-                        'childminder_number' => 'required|string'
+                        'childminder_number_pref' => 'not_in:0',
+                        'childminder_number_only' => 'required|alpha_num|digits:6'
                     ];
                 }
                         
             }
 
-        } elseif($user->role_id == 3) { // 法人ユーザ
+        } else {
             $rules += [
-                'area_name' => 'not_in:0',
-                'branch_name' => 'not_in:0',
-                'company_variation' => 'not_in:0',
-                'category' => 'not_in:0',
-                'fax' => 'required|string',
-                'kyokai_number' => 'required|string',
+                'name' => 'required|string',
+                'ruby' => 'required|string',
             ];
+
+            if($user->role_id == 3) { // 法人ユーザ
+                $rules += [
+                    'area_name' => 'not_in:0',
+                    'branch_name' => 'not_in:0',
+                    'company_variation' => 'not_in:0',
+                    'category' => 'not_in:0',
+                    'fax' => 'required|string',
+                ];
+            }
         }
         $request->validate($rules);
         
@@ -386,7 +427,7 @@ class UsersController extends Controller
             if($profile->job === config('const.JOB.0')) {
                 $profile->childminder_status = $request->childminder_status;
                 if($profile->childminder_status === config('const.CHILDMINDER_STATUS.0')) {
-                    $profile->childminder_number = $request->childminder_number;
+                    $profile->childminder_number = $request->childminder_number_pref.'-'.$request->childminder_number_only;
                 } else {
                     $profile->childminder_number = null;
                 }
@@ -396,24 +437,31 @@ class UsersController extends Controller
 
             $profile->save();
 
-        } elseif($user->role_id == 3) {
-            
-            $public_or_private = ($request->company_variation === '市町村') ? '公' : '私';
+            $user->name = $request->firstname.'　'.$request->lastname;
+            $user->ruby = $request->firstruby.'　'.$request->lastruby;
 
-            $profile = $user->company_profile()->first();
-            $profile->area_name = $request->area_name;
-            $profile->company_variation = $request->company_variation;
-            $profile->public_or_private = $public_or_private;
-            $profile->category = $request->category;
-            $profile->fax = $request->fax;
-            $profile->kyokai_number = $request->kyokai_number;
+        } else {
 
-            $profile->save();
+            $user->name = $request->name;
+            $user->ruby = $request->ruby;
+
+            if($user->role_id == 3) {
+                
+                $public_or_private = ($request->company_variation === '市町村') ? '公' : '私';
+
+                $profile = $user->company_profile()->first();
+                $profile->area_name = $request->area_name;
+                $profile->company_variation = $request->company_variation;
+                $profile->public_or_private = $public_or_private;
+                $profile->category = $request->category;
+                $profile->fax = $request->fax;                
+                $profile->kyokai_number = isset($request->kyokai_number) ? $request->kyokai_number : null;
+
+                $profile->save();
+            }
         }
 
         $user->email = $request->email;
-        $user->name = $request->name;
-        $user->ruby = $request->ruby;
         $user->phone = $request->phone;
         $user->zip = $request->zip;
         $user->address = $request->address;

@@ -15,5 +15,6 @@ echo date('Y年m月d日', strtotime($val['event_date']));
 ,
 @endif
 @endforeach
+
 受講者名：{{ $username }} 様
 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
