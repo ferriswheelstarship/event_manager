@@ -151,9 +151,7 @@
                         現在、当研修への申し込みは完了しております。<br>
                         チケット発券（ダウンロード）はお忘れのないようにし、研修当日の受付時チケット内のバーコードのご提示をお願い致します。
                         </div>
-                        <button type="button" class="ticket-confirm btn-sm btn-info" 
-                        value="{{ $event->id }}" 
-                        data-toggle="modal" data-target="#confirm-ticket">受講券を表示</button>
+                        <a href="{{ route('ticket_pdf',['id' => Auth::id().'-'.$event->id]) }}" target="_blank" class="btn btn-info">受講券を表示</a>
                                 @endif
                             @elseif($entrys_self_YC)
                         <div class="alert alert-danger">

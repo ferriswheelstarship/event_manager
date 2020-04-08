@@ -50,6 +50,8 @@ Route::get('contact', 'PagesController@contact')->name('contact');
 // 退会後表示
 Route::get('afterwithdrawal', 'PagesController@afterwithdrawal')->name('afterwithdrawal');
 
+// 受講券
+Route::get('ticket_pdf/{id}','PagesController@ticket_pdf')->name('ticket_pdf');
 
 
 
