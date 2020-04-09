@@ -20,10 +20,12 @@
                     <a class="dropdown-item" href="{{ route('event.create') }}">研修登録</a>
                     @endcan
                 </div>
-            </li>            
-            <li class="nav-item">
-                <a class="nav-link">申込管理</a>
             </li>
+            @can('area-higher')
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('entry.index') }}">申込管理</a>
+            </li>
+            @endcan
             @can('system-only')
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ユーザ設定</a>

@@ -340,7 +340,8 @@
                                     <input
                                         id="other_facility_address" type="text"
                                         class="form-control{{ $errors->has('other_facility_address') ? ' is-invalid' : '' }}"
-                                        name="other_facility_address" value="{{ old('other_facility_address',$profile->other_facility_address) }}" >
+                                        name="other_facility_address" value="{{ old('other_facility_address',$profile->other_facility_address) }}" 
+                                        placeholder="市町村を入力してください">
 
                                     @if ($errors->has('other_facility_address'))
                                         <span class="invalid-feedback">
@@ -550,7 +551,7 @@
                                 </div>
                             </div>
                             @endcan
-                            
+
                             @endif
 
                             <div class="form-group row mb-0">

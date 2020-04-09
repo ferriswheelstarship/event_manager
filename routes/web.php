@@ -122,6 +122,12 @@ Route::group(['middleware' => ['auth', 'can:area-higher']], function () {
   // 研修アップロードファイル削除
   Route::delete('event/filedelete/{id}', 'EventsController@fileDelete')->name('event.fileDelete');
 
+  // 申込者確認用index
+  Route::get('entry', 'EntryController@index')->name('entry.index');
+
+  // 申込者一覧
+  Route::get('entry/{id}', 'EntryController@show')->name('entry.show');
+
 });
 
 // システム管理者のみ
