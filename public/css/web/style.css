@@ -1337,6 +1337,41 @@ address {
 
 
 /***********************************************
+ list-number
+************************************************/
+.list-number-ol {
+  counter-reset: num;
+  text-indent: 0;
+}
+
+.list-number-ol-li {
+  padding-left: 2em;
+  position: relative;
+}
+
+.list-number-ol-li::before {
+  content: '('counter(num)')';
+  counter-increment: num;
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+
+/***********************************************
+ list-ol
+************************************************/
+.list-ol {
+  padding-left: 20px;
+  text-indent: 0;
+}
+
+.list-ol-li {
+  list-style-type: decimal;
+}
+
+
+
+/***********************************************
  tbl-normal
 ************************************************/
 .tbl-normal {
@@ -3136,6 +3171,11 @@ address {
 
 .privacy-dd {
   padding: 0 15px 15px;
+}
+
+.privacy-dd-child {
+  padding-left: 2em;
+  text-indent: -2em;
 }
 
 .privacy-contact-box {
