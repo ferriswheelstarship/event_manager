@@ -15,6 +15,8 @@ use App\Careerup_curriculum;
 use App\Event_date;
 use App\Entry;
 use Mail;
+use App\Mail\TicketSendMail;
+use App\Mail\UpgradingNoticeMail;
 
 class EntryController extends Controller
 {
@@ -93,12 +95,23 @@ class EntryController extends Controller
             ? config('const.TRAINING_VARIATION.carrerup') 
             : config('const.TRAINING_VARIATION.general');
 
+        // 申込者数（=申込者数+申込後キャンセル数） 
+        $entrys_cnt = Entry::select('user_id')
+                        ->where('event_id',$id)
+                        ->where(function($q){
+                            $q->where('entry_status','Y')
+                                ->orWhere('entry_status','YC');
+                        })->groupBy('user_id')->get()->count();
+        //定員数＝申込数フラグ
+        $max_frag = ($entrys_cnt === $event->capacity) ? true : false;
+
+ 
         // 申込完了者
-        $entrys_y = Entry::where('event_id',$id)
+        $entrys_y = Entry::select('user_id','created_at','ticket_status')
+                        ->where('event_id',$id)
                         ->where('entry_status','Y')
-                        ->distinct('user_id')
+                        ->groupBy('user_id','created_at','ticket_status')
                         ->get();
-        //dd($entrys_y);
 
         if($entrys_y->count() > 0){
             foreach($entrys_y as $entry) {
@@ -134,9 +147,10 @@ class EntryController extends Controller
         }
 
         // 申込後キャンセル者
-        $entrys_yc = Entry::distinct('user_id')
+        $entrys_yc = Entry::select('user_id','created_at','ticket_status')
                         ->where('event_id',$id)
                         ->where('entry_status','YC')
+                        ->groupBy('user_id','created_at','ticket_status')
                         ->get();
         
         if($entrys_yc->count() > 0){
@@ -174,9 +188,10 @@ class EntryController extends Controller
         }
 
         // キャンセル待ち申込者
-        $entrys_cw = Entry::distinct('user_id')
+        $entrys_cw = Entry::select('user_id','created_at','ticket_status')
                         ->where('event_id',$id)
                         ->where('entry_status','CW')
+                        ->groupBy('user_id','created_at','ticket_status')
                         ->get();
 
         if($entrys_cw->count() > 0){
@@ -211,8 +226,116 @@ class EntryController extends Controller
         return view('entry.show',
                 compact(
                     'event','careerup_curriculums','event_dates',
-                    'general_or_carrerup',
+                    'general_or_carrerup','max_frag',
                     'entrys_y_view','entrys_yc_view','entrys_cw_view'
                 ));
     }
+
+    public function ticketsend(Request $request)
+    {
+        $user = User::find($request->user_id);
+        $event = Event::find($request->event_id);
+        $event_dates = $event->event_dates()->get();
+        $entrys = Entry::where('user_id',$request->user_id)
+                        ->where('event_id',$request->event_id)
+                        ->where('entry_status','Y')
+                        ->get();
+
+        foreach($entrys as $entry){
+            $entry->ticket_status = "Y";
+            $entry->save();
+        }
+
+        $data = [
+            'username' => $user->name,
+            'eventtitle' => $event->title,
+            'eventdates' => $event_dates,
+            'ticketid' => $user->id.'-'.$event->id,
+        ];
+
+        $email = new TicketSendMail($data);
+        Mail::to($user->email)->send($email);
+
+        return redirect()
+                ->route('entry.show',['id' => $request->event_id])
+                ->with('status',$user->name.'へ受講券発行案内のメールを送信しました。');
+    }
+
+    public function cancel(Request $request) {
+
+        $event = Event::find($request->event_id);
+        $user = User::find($request->user_id);
+        $entrys = Entry::where('user_id',$request->user_id)
+                        ->where('event_id',$request->event_id)
+                        ->where('entry_status','Y')
+                        ->get();
+
+        foreach($entrys as $entry){
+            $entry->entry_status = "YC";
+            $entry->save();
+        }
+
+        return redirect()
+                    ->route('entry.show',['id' => $request->event_id])
+                    ->with('attention','ユーザ：'.$user->name.'の申込をキャンセルしました。');
+    }
+
+    public function destroy(Request $request) {
+
+        $event = Event::find($request->event_id);
+        $event_dates = $event->event_dates()->get();
+
+        // 削除
+        $delete_user = User::find($request->delete_user_id);
+        $delete_entrys = Entry::where('user_id',$request->delete_user_id)
+                        ->where('event_id',$request->event_id)
+                        ->where('entry_status','YC')
+                        ->get();
+        foreach($delete_entrys as $entry){
+            $entry->delete();
+        }
+
+        //繰り上げ者がいる場合
+        if($request->upgrade_user_id) {
+            $upgrade_user = User::find($request->upgrade_user_id);
+            $upgrade_entrys = Entry::where('user_id',$request->upgrade_user_id)
+                            ->where('event_id',$request->event_id)
+                            ->where('entry_status','CW')
+                            ->get();
+            // 通し番号
+            $anumber = Entry::where('event_id',$request->event_id) 
+                            ->where(function($q){
+                                $q->where('entry_status','Y')
+                                    ->orWhere('entry_status','YC');
+                            })->get();
+            $applynumber = ($anumber->count() > 0) ? $anumber->max('serial_number') : 0;
+            
+            // 申込ステータスと通し番号更新
+            foreach($upgrade_entrys as $entry){
+                $entry->entry_status = "Y";
+                $entry->serial_number = ($applynumber+1);
+                $entry->save();
+            }                       
+            $vmessage = 'ユーザ：【'.$delete_user->name.'】の申込データを削除し、ユーザ：【'.$upgrade_user->name.'】を申込者へ繰り上げしました。';
+
+            $data = [
+                'username' => $upgrade_user->name,
+                'eventtitle' => $event->title,
+                'eventdates' => $event_dates,
+            ];
+
+            $email = new UpgradingNoticeMail($data);
+            Mail::to($upgrade_user->email)->send($email);
+
+
+        } else {
+            $vmessage = 'ユーザ：【'.$delete_user->name.'】の申込データを削除しました。';
+        }
+
+        return redirect()
+                    ->route('entry.show',['id' => $request->event_id])
+                    ->with('attention',$vmessage);
+        
+    }
+
 }

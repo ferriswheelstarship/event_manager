@@ -48,7 +48,7 @@ class PagesController extends Controller
             $event = Event::find($event_id);
 
             if(!$user || !$event) { //ユーザ、研修
-                dd('不正なデータです');
+                dd('不正なデータです。');
             } else {
                 if($user->deleted_at) {
                     dd('退会しているため、受講券を表示できません。');
@@ -65,29 +65,45 @@ class PagesController extends Controller
                         ->where('event_id',$event_id)
                         ->where('entry_status','Y')
                         ->first();
-            if(!$entrys_self) {// 該当研修の申込ステータス確認
+            if(!$entrys_self && $user->role_id > 2) {// 該当研修の申込ステータス確認
                 dd('不正なデータです。');
             }
-            
-            // 受付番号
-            $event_id4 = sprintf('%04d',$event_id);
-            $user_id4 = sprintf('%04d',$user_id);
-            $serial_num3 = sprintf('%03d',$entrys_self->serial_number);
-            $app_num = $user_id4.'-'.$event_id4.'-'.$serial_num3;
 
-            // 所属施設
-            $company = User::where('status',1)
-                            ->where('role_id',3)
-                            ->where('company_profile_id',$user->company_profile_id)
-                            ->first();
-            $company_name = ($company) ? $company->name : null;
 
             // 研修種別
             $careerup_curriculums = $event->careerup_curriculum;
+            
+            if($user->role_id < 3) { //プレビュー表示用
+            
+                // 受付番号
+                $event_id4 = sprintf('%04d',$event_id);
+                $user_id4 = sprintf('%04d',$user_id);
+                $app_num = $user_id4.'-'.$event_id4.'-001';
+
+                // 所属施設
+                $company_name = null;
+
+            } else {
+
+                // 受付番号
+                $event_id4 = sprintf('%04d',$event_id);
+                $user_id4 = sprintf('%04d',$user_id);
+                $serial_num4 = sprintf('%04d',$entrys_self->serial_number);
+                $app_num = $user_id4.'-'.$event_id4.'-'.$serial_num4;
+
+                // 所属施設
+                $company = User::where('status',1)
+                                ->where('role_id',3)
+                                ->where('company_profile_id',$user->company_profile_id)
+                                ->first();
+                $company_name = ($company) ? $company->name : null;
+                
+            }
 
             // QRコード
             $encode = base64_encode(QrCode::format('png')->size(120)->generate($app_num));
             $qrcode = '<img src="data:image/png;base64, ' . $encode . '">';
+
 
             $data = [
                 'user' => $user,

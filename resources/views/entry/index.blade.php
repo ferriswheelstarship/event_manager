@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">研修一覧</div>
+                    <div class="card-header">申込一覧（研修から）</div>
                     
                     @if (Session::has('status'))
                     <div class="card-body">

@@ -124,9 +124,14 @@ Route::group(['middleware' => ['auth', 'can:area-higher']], function () {
 
   // 申込者確認用index
   Route::get('entry', 'EntryController@index')->name('entry.index');
-
   // 申込者一覧
   Route::get('entry/{id}', 'EntryController@show')->name('entry.show');
+  // 受講券送信
+  Route::post('entry/ticketsend', 'EntryController@ticketsend')->name('entry.ticketsend'); 
+  // 受講キャンセル
+  Route::post('entry/cancel', 'EntryController@cancel')->name('entry.cancel'); 
+  // 受講データ削除
+  Route::post('entry/destroy', 'EntryController@destroy')->name('entry.delete'); 
 
 });
 

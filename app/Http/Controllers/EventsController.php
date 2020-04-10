@@ -232,6 +232,11 @@ class EventsController extends Controller
                         ->where('event_id',$id)
                         ->where('entry_status','YC')
                         ->first();
+                        
+        $entrys_self_CW = Entry::where('user_id',Auth::id())
+                        ->where('event_id',$id)
+                        ->where('entry_status','CW')
+                        ->first();
 
         if(Gate::allows('admin-only')) { // 法人ユーザのみ所属ユーザ取得
 
@@ -285,7 +290,7 @@ class EventsController extends Controller
         $entry_end_date = new Carbon($event->entry_end_date);
         if($entry_start_date > $dt || $entry_end_date < $dt){ // 申込期間外の場合
             $applyfrag = false;
-        } 
+        }
         if($entry_start_date > $dt){
             $status_mes = "申込受付開始前のため申込できません。";
         } elseif($entry_end_date < $dt) {
@@ -293,8 +298,12 @@ class EventsController extends Controller
         } 
 
         // 通常申込 or キャンセル待ち申込み判定
-        if($event->capacity <= $entrys_cnt){// 申込数が定員に達した場合
-            $capacity_status = "定員に達したためキャンセル待ちでの申込となります。";
+        if($event->capacity == $entrys_cnt){// 申込数が定員に達した場合
+            if($entrys_self || $entrys_self_YC || $entrys_self_CW) {
+                $capacity_status = null;
+            } else {
+                $capacity_status = "当研修は申込定員に達したためキャンセル待ちでの申込となります。";
+            }
         } else {
             $capacity_status = null;
         }
@@ -303,7 +312,7 @@ class EventsController extends Controller
         return view('event.show',
                 compact(
                     'event','careerup_curriculums','event_dates','event_uploads','general_or_carrerup',
-                    'entrys_cnt','entrys_self','entrys_self_YC','applyfrag','status_mes','capacity_status',
+                    'entrys_cnt','entrys_self','entrys_self_YC','entrys_self_CW','applyfrag','status_mes','capacity_status',
                     'datas'
                 ));
     }
@@ -679,7 +688,7 @@ class EventsController extends Controller
         $entry_start_date = new Carbon($event->entry_start_date);
         $entry_end_date = new Carbon($event->entry_end_date);        
         if($entry_start_date > $dt || $entry_end_date < $dt){
-            return view('event.show',['id' => $id])->with('attention', '申込期間外のためキャンセルができません。');
+            return view('event.show',['id' => $request->event_id])->with('attention', '申込期間外のためキャンセルができません。');
         }
 
         $entrys = Entry::where('user_id',$request->user_id)

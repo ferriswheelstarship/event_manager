@@ -31,6 +31,11 @@
                             <a href="{{ route('event.edit',['id' => $event->id]) }}" class="btn btn-sm btn-primary">変更</a>
                             @endcan
                         </div>
+                        @if($applyfrag == true && isset($capacity_status))
+                        <div class="alert alert-danger">
+                            {{ $capacity_status }}
+                        </div>
+                        @endif
                         <table class="table table-striped">
                             <tbody>
                                 <tr>
@@ -130,11 +135,6 @@
                         </table>
                         @cannot('area-higher')
                         @if($applyfrag == true)
-                            @isset($capacity_status)
-                        <div class="alert alert-danger">
-                            {{ capacity_status }}
-                        </div>
-                            @endisset
 
                             @can('user-only')
 
@@ -157,6 +157,11 @@
                         <div class="alert alert-danger">
                         当研修へは申込み後キャンセルをされています。再度申込みされる場合は事務局へお電話ください。
                         </div>
+                            @elseif($entrys_self_CW)
+                        <div class="alert alert-danger">
+                        当研修へはキャンセル待ち申込みをされています。欠員が発生次第、順次繰り上げとなります。<br>
+                        繰り上げ時はメールで通知いたします。
+                        </div>
                             @else
                         <button type="button" class="apply-confirm btn-sm btn-primary" 
                         value="{{ $event->id }}" 
@@ -178,6 +183,10 @@
                                 </div>
                                 <div class="modal-body">
                                     <strong>{{ $event->title }}</strong>へ参加申込みしますか？
+                                    @if($capacity_status)
+                                    <p><span class="text-danger">現在定員数最大まで申込がございます。<br>
+                                    キャンセル待ちでの申込となりますのでご注意下さい。</span></p>
+                                    @endif
                                     <input type="hidden" name="user_id" value="{{ Auth::id() }}">
                                     <input type="hidden" name="event_id" value="{{ $event->id }}">
                                 </div>
