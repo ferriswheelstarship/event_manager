@@ -133,6 +133,19 @@ Route::group(['middleware' => ['auth', 'can:area-higher']], function () {
   // 受講データ削除
   Route::post('entry/destroy', 'EntryController@destroy')->name('entry.delete'); 
 
+  // 受付管理index（開催間近の研修）
+  Route::get('reception', 'ReceptionController@index')->name('reception.index');
+  // 受付管理index（終了した研修）
+  Route::get('reception/finished', 'ReceptionController@finished')->name('reception.finished');
+  // 受付管理 - 申込者
+  Route::get('reception/{id}', 'ReceptionController@show')->name('reception.show');
+  // 受付管理 - 手動受付
+  Route::post('reception/manual', 'ReceptionController@manual')->name('reception.manual');
+  // 受付管理 - 申込者（バーコード読取専用）
+  Route::get('reception/qr/{id}', 'ReceptionController@readqr')->name('reception.readqr');
+  // 受付管理 - バーコード読取受付
+  Route::post('reception/auto', 'ReceptionController@auto')->name('reception.auto');
+
 });
 
 // システム管理者のみ

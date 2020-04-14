@@ -25,6 +25,14 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('entry.index') }}">申込管理</a>
             </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">受付管理</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{{ route('reception.index') }}">開催間近の研修</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ route('reception.finished') }}">終了した研修</a>
+                </div>
+            </li>
             @endcan
             @can('system-only')
             <li class="nav-item dropdown">
