@@ -40,7 +40,7 @@ class PagesController extends Controller
         //dd($value);
         // $idのバリデーション例外はpdf表示不可表示
         if(!preg_match('/\-/',$id)) {
-            dd('不正なデータです。');
+            $emes = '不正なデータです。';
         } else {
             list($user_id,$event_id) = explode('-',$id);
 
@@ -48,10 +48,10 @@ class PagesController extends Controller
             $event = Event::find($event_id);
 
             if(!$user || !$event) { //ユーザ、研修
-                dd('不正なデータです。');
+                $emes = '不正なデータです。';
             } else {
                 if($user->deleted_at) {
-                    dd('退会しているため、受講券を表示できません。');
+                    $emes = '不正なデータです。';
                 }
             }
 
@@ -66,9 +66,8 @@ class PagesController extends Controller
                         ->where('entry_status','Y')
                         ->first();
             if(!$entrys_self && $user->role_id > 2) {// 該当研修の申込ステータス確認
-                dd('不正なデータです。');
+                $emes = '不正なデータです。';
             }
-
 
             // 研修種別
             $careerup_curriculums = $event->careerup_curriculum;
@@ -116,9 +115,13 @@ class PagesController extends Controller
             ];
 
         }
-
-        $pdf = PDF::loadView('ticket_pdf', compact('data'));
+        if(isset($emes)) {
+            $pdf = PDF::loadView('error_pdf', compact('emes'));
+        } else {
+            $pdf = PDF::loadView('ticket_pdf', compact('data'));
+        }
         return $pdf->stream('title.pdf');
+
     }
 
     public function info()

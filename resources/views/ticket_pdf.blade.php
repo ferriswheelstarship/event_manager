@@ -1,6 +1,6 @@
 <!doctype html>
 <html>
-<head>
+  <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <style>
         @font-face {
@@ -101,7 +101,8 @@
             font-weight: bold;
         }
     </style>
-    </head>
+  </head>
+  <body>
     <div class="header">
         <p class="tar header_first"><br />
         公益社団法人 兵庫県保育協会<br>
