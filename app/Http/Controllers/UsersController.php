@@ -52,7 +52,6 @@ class UsersController extends Controller
 
     public function firstPost(Request $request)
     {
-
         if(Gate::denies('system-only')) {
             return redirect('/account/edit/'.Auth::id());
         }
@@ -60,19 +59,32 @@ class UsersController extends Controller
         $rules = [
             'email' => 'required|string|email|max:191|unique:users',
             'password' => 'required|string|min:6|confirmed',
-            'name' => 'required|string',
-            'ruby' => 'required|string',
             'role_id' => 'not_in:0',
             'phone' => 'required|string',
             'zip' => 'required|string',
             'address' => 'required|string',
         ]; 
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
-            return redirect('/account/regist/new')
-                        ->withErrors($validator)
-                        ->withInput();    
+
+        if($request->role_id == 4) {
+            $rules = [
+                'firstname' => 'required|string',
+                'lastname' => 'required|string',
+                'firstruby' => 'required|string',
+                'lastruby' => 'required|string',
+            ];
+        } else {
+            $rules = [
+                'name' => 'required|string',
+                'ruby' => 'required|string',
+            ];
         }
+        $request->validate($rules);
+        //$validator = Validator::make($request->all(), $rules);
+        // if ($validator->fails()) {
+        //     return redirect('/account/regist/new')
+        //                 ->withErrors($validator)
+        //                 ->withInput();    
+        // }
         session()->put('firstPost', $request->all());
 
         if($request->role_id <= 2) {
@@ -91,6 +103,8 @@ class UsersController extends Controller
         }
 
         $postdata = session()->get('firstPost');
+        $postdata['name'] = ($postdata['role_id'] == 4) ? $postdata['firstname'].'　'.$postdata['lastname'] : $postdata['name'];
+        $postdata['ruby'] = ($postdata['role_id'] == 4) ? $postdata['firstruby'].'　'.$postdata['lastruby'] : $postdata['ruby'];
 
         // 施設ユーザ
         $company = User::where('role_id','3')->get();
@@ -122,6 +136,7 @@ class UsersController extends Controller
             return redirect('/account/edit/'.Auth::id());
         }
 
+
         if($request->role_id == 4) { // 個人を選択時
             
             $rules = [
@@ -135,7 +150,7 @@ class UsersController extends Controller
             if($request->company_profile_id == "なし") {
                 $rules += [            
                     'other_facility_name' => 'required|string',
-                    'other_facility_pref' => 'required|string',
+                    'other_facility_pref' => 'not_in:0',
                     'other_facility_address' => 'required|string',
                 ];
             }
@@ -146,8 +161,8 @@ class UsersController extends Controller
                 
                 if($request->childminder_status == config('const.CHILDMINDER_STATUS.0')) {// 保育士番号ありの場合
                     $rules += [
-                        'childminder_number' => 'required|string'
-                    ];
+                        'childminder_number_pref' => 'not_in:0',
+                        'childminder_number_only' => 'required|alpha_num|digits:6'                    ];
                 }
                         
             }
@@ -175,7 +190,7 @@ class UsersController extends Controller
             $other_facility_pref = ($company_profile_id) ? null : $request->other_facility_pref;
             $other_facility_address = ($company_profile_id) ? null : $request->other_facility_address;
             $childminder_status = ($request->job === config('const.JOB.0')) ? $request->childminder_status : null;
-            $childminder_number = ($request->childminder_status === config('const.CHILDMINDER_STATUS.0')) ? $request->childminder_number : null;
+            $childminder_number = ($request->childminder_status === config('const.CHILDMINDER_STATUS.0')) ? $request->childminder_number_pref.'-'.$request->childminder_number_only : null;
 
             $profile = Profile::create([
                 'birth_year' => $request['birth_year'],
@@ -267,7 +282,7 @@ class UsersController extends Controller
         $userSelf = User::find(Auth::id());
         $userSelfRole = $userSelf->role->level;
 
-        if($userSelfRole == 10) { // 個人ユーザの場合
+        if($user->role_id == 4) { // 個人ユーザの場合
             list($user->firstname,$user->lastname) = explode('　',$user->name);
             list($user->firstruby,$user->lastruby) = explode('　',$user->ruby);
         }

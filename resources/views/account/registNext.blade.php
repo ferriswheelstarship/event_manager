@@ -6,8 +6,8 @@
 
 @section('content')
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
+        <div class="row">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">ユーザ登録 - </div>
 
@@ -34,7 +34,7 @@
                                                     <option value="0">----</option>
                                                     @for ($i = 1930; $i <= 2005; $i++)
                                                         <option value="{{ $i }}"
-                                                                @if(old('birth_year') == $i) selected @endif>{{ $i }}</option>
+                                                                @if(old('birth_year') == $i) selected @endif>{{ $i.'年' }}</option>
                                                     @endfor
                                                 </select>
                                                 @if ($errors->has('birth_year'))
@@ -42,14 +42,14 @@
                                                         <strong>{{ $errors->first('birth_year') }}</strong>
                                                     </span>
                                                 @endif
-                                            </div>年
+                                            </div>
 
-                                            <div class="col-md-3">
+                                            <div class="col-md-4">
                                                 <select id="birth_month" class="form-control{{ $errors->has('birth_month') ? ' is-invalid' : '' }}" name="birth_month">
                                                     <option value="0">--</option>
                                                     @for ($i = 1; $i <= 12; $i++)
                                                         <option value="{{ $i }}"
-                                                            @if(old('birth_month') == $i) selected @endif>{{ $i }}</option>
+                                                            @if(old('birth_month') == $i) selected @endif>{{ $i.'月' }}</option>
                                                     @endfor
                                                 </select>
                                                 @if ($errors->has('birth_month'))
@@ -57,14 +57,14 @@
                                                         <strong>{{ $errors->first('birth_month') }}</strong>
                                                     </span>
                                                 @endif
-                                            </div>月
+                                            </div>
 
-                                            <div class="col-md-3">
+                                            <div class="col-md-4">
                                                 <select id="birth_day" class="form-control{{ $errors->has('birth_day') ? ' is-invalid' : '' }}" name="birth_day">
                                                     <option value="0">--</option>
                                                     @for ($i = 1; $i <= 31; $i++)
                                                         <option value="{{ $i }}"
-                                                            @if(old('birth_day') == $i) selected @endif>{{ $i }}</option>
+                                                            @if(old('birth_day') == $i) selected @endif>{{ $i.'日' }}</option>
                                                     @endfor
                                                 </select>
 
@@ -73,7 +73,7 @@
                                                         <strong>{{ $errors->first('birth_day') }}</strong>
                                                     </span>
                                                 @endif
-                                            </div>日
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -186,7 +186,7 @@
 
                                 <div id="only-nursery" 
                                     style="display: 
-                                    @if(old('job') != '保育士') none 
+                                    @if(old('job') != '保育士・保育教諭') none 
                                     @endif">
                                 <div class="form-group row">
                                     <label for="childminder_status" class="col-md-4 col-form-label text-md-right">保育士番号所持状況</label>
@@ -218,16 +218,39 @@
                                     @endif ">
                                     <label for="childminder_number" class="col-md-4 col-form-label text-md-right">保育士番号</label>
                                     <div class="col-md-6">
-                                        <input
-                                            id="childminder_number" type="text"
-                                            class="form-control{{ $errors->has('childminder_number') ? ' is-invalid' : '' }}"
-                                            name="childminder_number" value="{{ old('childminder_number') }}" >
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <select id="childminder_number_pref" 
+                                                class="form-control{{ $errors->has('childminder_number_pref') ? ' is-invalid' : '' }}" 
+                                                name="childminder_number_pref">
+                                                    <option value="0">都道府県を選択</option>
+                                                    <option value="兵庫県" @if(old('childminder_number_pref') == "兵庫県") selected @endif>兵庫県</option>
+                                                    @foreach ($pref as $item)
+                                                        <option value="{{ $item }}"
+                                                                @if(old('childminder_number_pref') == $item) selected @endif>{{ $item }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @if ($errors->has('childminder_number_pref'))
+                                                <span class="invalid-feedback">
+                                                    <strong>{{ $errors->first('childminder_number_pref') }}</strong>
+                                                </span>
+                                                @endif
+                                            </div>
 
-                                        @if ($errors->has('childminder_number'))
-                                            <span class="invalid-feedback">
-                                            <strong>{{ $errors->first('childminder_number') }}</strong>
-                                            </span>
-                                        @endif
+                                            <div class="col-md-8">
+                                                <input
+                                                    id="childminder_number_only" type="text"
+                                                    class="form-control{{ $errors->has('childminder_number_only') ? ' is-invalid' : '' }}"
+                                                    name="childminder_number_only" value="{{ old('childminder_number_only') }}" 
+                                                    placeholder="6桁の数字（半角）">
+
+                                                @if ($errors->has('childminder_number_only'))
+                                                    <span class="invalid-feedback">
+                                                    <strong>{{ $errors->first('childminder_number_only') }}</strong>
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 </div>
@@ -273,7 +296,7 @@
                                 <div class="form-group row">
                                     <label for="company_variation" class="col-md-4 col-form-label text-md-right">設置主体</label>
                                     <div class="col-md-6">
-                                        <select id="company_variation" class="form-control{{ $errors->has('area_company_variationname') ? ' is-invalid' : '' }}" name="company_variation">
+                                        <select id="company_variation" class="form-control{{ $errors->has('company_variation') ? ' is-invalid' : '' }}" name="company_variation">
                                             <option value="0">----</option>
                                             @foreach ($company_variation as $key => $val)
                                             <option value="{{ $val }}"

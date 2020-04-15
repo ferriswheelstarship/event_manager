@@ -4,8 +4,8 @@
 
 @section('content')
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8 ">
+        <div class="row">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">{{ $user->name }}</div>
                     <div class="card-body">
@@ -40,13 +40,14 @@
                                     @endif
                                     <tr>
                                         <th>住所</th>
-                                        <td>〒{{ $user->zip }}　{{ $user->address }}</td>
+                                        <td>〒{{ $user->zip }}<br />
+                                        {{ $user->address }}</td>
                                     </tr>
 
                                     @if ($user->role_id == 4)
                                     <tr>
                                         <th>生年月日</th>
-                                        <td>{{ $user->birth_year }}年{{ $user->birth_month }}月{{ $user->birth_day }}日</td>
+                                        <td>{{ $profile->birth_year }}年{{ $profile->birth_month }}月{{ $profile->birth_day }}日</td>
                                     </tr>
                                     <tr>
                                         <th>職種</th>

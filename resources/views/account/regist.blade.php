@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
+        <div class="row">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">ユーザ登録</div>
 
@@ -36,7 +36,9 @@
                                 <div class="form-group row">
                                     <label for="name" class="col-md-4 col-form-label text-md-right">権限</label>
                                     <div class="col-md-6">
-                                        <select id="role_id" class="form-control{{ $errors->has('role_id') ? ' is-invalid' : '' }}" name="role_id">
+                                        <select id="role_id" class="form-control{{ $errors->has('role_id') ? ' is-invalid' : '' }}" 
+                                        name="role_id"
+                                        onchange="changeEventName(this.value)">
                                             <option value="0">----</option>
                                             @foreach ($role_array as $key => $val)
                                                 <option value="{{ $key }}"
@@ -90,13 +92,57 @@
                                     </div>
                                 </div>
                                 
-                                <div class="form-group row">
+                                <div 
+                                    class="form-group row" 
+                                    id="fullname-section" 
+                                    style="display: 
+                                    @if(!old('role_id') || old('role_id') < 4)
+                                        none
+                                    @endif ">
+                                    <label for="name" class="col-md-4 col-form-label text-md-right">名前</label>
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input
+                                                    id="firstname" type="text"
+                                                    class="form-control{{ $errors->has('firstname') ? ' is-invalid' : '' }}"
+                                                    name="firstname" value="{{ old('firstname') }}" placeholder="兵庫" >
+
+                                                @if ($errors->has('firstname'))
+                                                    <span class="invalid-feedback">
+                                                    <strong>{{ $errors->first('firstname') }}</strong>
+                                                    </span>
+                                                @endif
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input
+                                                    id="lastname" type="text"
+                                                    class="form-control{{ $errors->has('lastname') ? ' is-invalid' : '' }}"
+                                                    name="lastname" value="{{ old('lastname') }}" placeholder="太郎" >
+
+                                                @if ($errors->has('lastname'))
+                                                    <span class="invalid-feedback">
+                                                    <strong>{{ $errors->first('lastname') }}</strong>
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div 
+                                    class="form-group row" 
+                                    id="name-section" 
+                                    style="display: 
+                                    @if(!old('role_id') || old('role_id') == 4)
+                                        none
+                                    @endif ">
                                     <label for="name" class="col-md-4 col-form-label text-md-right">名前</label>
                                     <div class="col-md-6">
                                         <input
                                             id="name" type="text"
                                             class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}"
-                                            name="name" value="{{ old('name') }}" required>
+                                            name="name" value="{{ old('name') }}" >
 
                                         @if ($errors->has('name'))
                                             <span class="invalid-feedback">
@@ -105,16 +151,59 @@
                                         @endif
                                     </div>
                                 </div>
-                                
-                                <div class="form-group row">
+
+                                <div 
+                                    class="form-group row" 
+                                    id="fullruby-section" 
+                                    style="display: 
+                                    @if(!old('role_id') || old('role_id') < 4)
+                                        none
+                                    @endif ">
+                                    <label for="name_pronunciation"
+                                           class="col-md-4 col-form-label text-md-right">フリガナ</label>
+
+                                    <div class="col-md-6">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input id="firstruby" type="text"
+                                                    class="form-control{{ $errors->has('firstruby') ? ' is-invalid' : '' }}"
+                                                    name="firstruby" value="{{ old('firstruby') }}" placeholder="ヒョウゴ">
+
+                                                @if ($errors->has('firstruby'))
+                                                    <span class="invalid-feedback">
+                                                    <strong>{{ $errors->first('firstruby') }}</strong>
+                                                    </span>
+                                                @endif
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input id="lastruby" type="text"
+                                                    class="form-control{{ $errors->has('lastruby') ? ' is-invalid' : '' }}"
+                                                    name="lastruby" value="{{ old('lastruby') }}" placeholder="タロウ">
+
+                                                @if ($errors->has('lastruby'))
+                                                    <span class="invalid-feedback">
+                                                    <strong>{{ $errors->first('lastruby') }}</strong>
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                </div>
+
+                                <div 
+                                    class="form-group row" 
+                                    id="ruby-section" 
+                                    style="display: 
+                                    @if(!old('role_id') || old('role_id') == 4)
+                                        none
+                                    @endif ">
                                     <label for="name_pronunciation"
                                            class="col-md-4 col-form-label text-md-right">フリガナ</label>
 
                                     <div class="col-md-6">
                                         <input id="ruby" type="text"
                                                class="form-control{{ $errors->has('ruby') ? ' is-invalid' : '' }}"
-                                               name="ruby" value="{{ old('ruby') }}"
-                                               required>
+                                               name="ruby" value="{{ old('ruby') }}">
 
                                         @if ($errors->has('ruby'))
                                             <span class="invalid-feedback">
@@ -187,4 +276,8 @@
         </div>
     </div>
     </div>
+@endsection
+
+@section('each-js')
+<script src="{{ asset('js/user-form-event_name.js') }}" ></script>
 @endsection

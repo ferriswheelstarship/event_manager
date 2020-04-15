@@ -6,8 +6,8 @@
 
 @section('content')
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
+        <div class="row">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">ユーザ情報変更</div>
 
@@ -35,6 +35,11 @@
 
                     @empty($message)
                     <div class="card-body">
+
+                        <div class="mb-3">
+                            <a href="{{ route('account.index') }}" class="btn btn-sm btn-info">ユーザ一覧へ戻る</a>
+                        </div>
+
                         <form method="POST" action="{{ url('account/edit/'.$user->id) }}">
                             {{ csrf_field() }}
 
