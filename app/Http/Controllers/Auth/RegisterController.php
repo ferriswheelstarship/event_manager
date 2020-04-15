@@ -167,13 +167,12 @@ class RegisterController extends Controller
     
     public function mainCheck(Request $request)
     {
-        
         $rules = [
             'password' => 'required|string|min:6|confirmed',
             'firstname' => 'required|string',
             'lastname' => 'required|string',
-            'firstruby' => 'required|string',
-            'lastruby' => 'required|string',
+            'firstruby' => 'required|string|katakana',
+            'lastruby' => 'required|string|katakana',
             'phone' => 'required|string',
             'zip' => 'required|string',
             'address' => 'required|string',

@@ -87,6 +87,7 @@ return [
     'unique'               => 'その:attributeはすでに使われています。',
     'uploaded'             => ':attributeのアップロードに失敗しました。',
     'url'                  => ':attributeには正しい形式のURLを指定してください。',
+    'katakana'             => ':attributeはカタカナで入力してください。',
 
     /*
     |--------------------------------------------------------------------------
@@ -119,8 +120,12 @@ return [
     'attributes' => [
         'email' => 'メールアドレス',
         'password' => 'パスワード',
-        'firstname' => 'お名前（姓）',
-        'lastname' => 'お名前（名）',
+        'firstname' => '名前（姓）',
+        'lastname' => '名前（名）',
+        'firstruby' => '名前（フリガナ 姓）',
+        'lastruby' => '名前（フリガナ 名）',
+        'name' => '名前',
+        'ruby' => '名前（フリガナ）',
         'birth_year' => '生年月日（年）',
         'birth_month' => '生年月日（年）',
         'birth_day' => '生年月日（日）',

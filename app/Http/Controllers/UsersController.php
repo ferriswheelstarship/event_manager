@@ -69,13 +69,13 @@ class UsersController extends Controller
             $rules = [
                 'firstname' => 'required|string',
                 'lastname' => 'required|string',
-                'firstruby' => 'required|string',
-                'lastruby' => 'required|string',
+                'firstruby' => 'required|string|katakana',
+                'lastruby' => 'required|string|katakana',
             ];
         } else {
             $rules = [
                 'name' => 'required|string',
-                'ruby' => 'required|string',
+                'ruby' => 'required|string|katakana',
             ];
         }
         $request->validate($rules);
@@ -373,8 +373,8 @@ class UsersController extends Controller
             $rules += [
                 'firstname' => 'required|string',
                 'lastname' => 'required|string',
-                'firstruby' => 'required|string',
-                'lastruby' => 'required|string',
+                'firstruby' => 'required|string|katakana',
+                'lastruby' => 'required|string|katakana',
                 'birth_year' => 'not_in:0',
                 'birth_month' => 'not_in:0',
                 'birth_day' => 'not_in:0',
@@ -406,7 +406,7 @@ class UsersController extends Controller
         } else {
             $rules += [
                 'name' => 'required|string',
-                'ruby' => 'required|string',
+                'ruby' => 'required|string|katakana',
             ];
 
             if($user->role_id == 3) { // 法人ユーザ
