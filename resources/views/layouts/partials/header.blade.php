@@ -12,7 +12,7 @@
                 <a class="nav-link" href="{{ route('dashboard') }}">ダッシュボード</a>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">研修管理</a>
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">研修</a>
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="{{ route('event.index') }}">研修一覧</a>
                     @can('area-higher')
@@ -34,6 +34,17 @@
                 </div>
             </li>
             @endcan
+
+            @can('admin-higher')
+            <li class="nav-item dropdown">
+                <a class="nav-link" href="{{ route('history.user') }}">受講履歴</a>
+            </li>
+            @else
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('history.index') }}">受講履歴</a>
+            </li>
+            @endcan
+
             @can('system-only')
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ユーザ設定</a>

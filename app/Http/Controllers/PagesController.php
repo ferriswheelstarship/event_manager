@@ -70,7 +70,7 @@ class PagesController extends Controller
             }
 
             // 研修種別
-            $careerup_curriculums = $event->careerup_curriculum;
+            $careerup_curriculums = $event->careerup_curriculums;
             
             if($user->role_id < 3) { //プレビュー表示用
             

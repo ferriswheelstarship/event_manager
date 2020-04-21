@@ -48,6 +48,12 @@ class User extends Authenticatable
     public function entrys(){
         return $this->hasMany('App\Entry');
     }
+    public function certificates(){
+        return $this->hasMany('App\Certificate');
+    }
+    public function careerup_certificates(){
+        return $this->hasMany('App\Careerup_Certificate');
+    }
 
     /**
      * パスワードリセット通知の送信をオーバーライド

@@ -1,0 +1,473 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use PDF;
+use DB;
+use Validator;
+use Auth;
+use Gate;
+use Carbon\Carbon;
+use App\Event;
+use App\User;
+use App\Profile;
+use App\Careerup_curriculum;
+use App\Event_date;
+use App\Entry;
+use App\Careerup_certificate;
+use App\Certificates;
+use Mail;
+
+class HistoryController extends Controller
+{
+    public function index()
+    {
+        $user = User::find(Auth::id());
+
+        if(Gate::allows('admin-higher')) { //個人ユーザのみ表示
+            return redirect()
+                ->route('history.user');
+        }
+
+        // 参加済
+        $entrys = Entry::select('event_id','event_date_id')
+                        ->where('user_id',Auth::id())
+                        ->where('entry_status','Y')
+                        ->where('ticket_status','Y')
+                        ->where('attend_status','Y')
+                        ->groupBy('event_id','event_date_id')->get();
+        if($entrys->count() > 0) {
+            foreach($entrys as $key => $entry) {
+                
+                // 参加済研修 
+                $event = Event::find($entry->event_id);
+                                
+                if($event->general_or_carrerup == 'carrerup') {
+
+                    $notattend_entry_cnt = Entry::where('user_id',$user->id)
+                                        ->where('event_id',$event->id)
+                                        ->where('attend_status','N')
+                                        ->get()
+                                        ->count();
+
+                    if($notattend_entry_cnt > 0) {
+                        $carrerup_data[$key] = null;
+                    } else {
+                        // 参加済キャリアアップ研修の分野          
+                        $careerup_curriculums = $event->careerup_curriculums()->get();
+                        
+                        // 参加済キャリアアップ研修の研修開催日
+                        $event_dates = $event->event_dates()->get();
+
+                        $carrerup_data[$key] = [
+                            'event' => $event,
+                            'event_dates' => $event_dates,
+                            'careerup_curriculums' => $careerup_curriculums,
+                        ];
+                    }
+
+                    $general_data[$key] = null;
+
+                } 
+                if($event->general_or_carrerup == 'general') {
+                    // 参加済一般研修の研修開催日
+                    $event_dates = $event->event_dates()->get();
+
+                    $general_data[$key] = [
+                        'event' => $event,
+                        'event_dates' => $event_dates,
+                    ];
+                    $carrerup_data[$key] = null;
+                }
+            }
+        } else {
+            $carrerup_data = [];
+            $general_data = [];
+        }
+        $carrerup_data = array_merge(array_filter($carrerup_data));
+        $general_data = array_merge(array_filter($general_data));
+
+        // キャリアアップ研修view用
+        $fields = config('const.PARENT_CURRICULUM');
+        
+        foreach($fields as $i => $val) {
+            if(count($carrerup_data) > 0) {
+                foreach($carrerup_data as $key => $item) {
+                    $careerup_curriculums_exists = false;
+                    $filterd_careerup_curriculums = null;
+                    foreach($item['careerup_curriculums'] as $careerup_curriculums){
+                        if($careerup_curriculums->parent_curriculum == $val) {
+                            $filterd_careerup_curriculums[] = $careerup_curriculums;
+                            $careerup_curriculums_exists = true;
+                        }
+                    }
+                    if($careerup_curriculums_exists === true) {
+
+                        //dd($filterd_careerup_curriculums);
+                        $sum_training_minute = 0;
+                        foreach($filterd_careerup_curriculums as $cc) {
+                            $sum_training_minute += (int)$cc['training_minute'];
+                        }
+
+                        $view_data = [
+                            'content' => $filterd_careerup_curriculums,
+                            'event' => $carrerup_data[$key]['event'],
+                            'event_dates' => $carrerup_data[$key]['event_dates'],
+                        ];
+                        $content_cnt = count($filterd_careerup_curriculums);
+                        $rowspan = $content_cnt;
+
+
+                    } else {
+                        $sum_training_minute = 0;
+                        $view_data = null;
+                        $content_cnt = 0;
+                        $rowspan = 1;
+                    }
+                }
+            } else {
+                $sum_training_minute = 0;
+                $view_data = null;
+                $content_cnt = 0;
+                $rowspan = 1;
+            }
+            
+            //修了証データ
+            $carrerup_certificates = Careerup_certificate::where('parent_curriculum',$val)
+                                        ->where('certificate_status','Y');
+
+            $carrerup_view_data[] = [
+                'fields' => $val,
+                'training_minute' => $sum_training_minute,
+                'content_cnt' => $content_cnt,
+                'rowspan' => $rowspan, 
+                'eventinfo' => $view_data,
+                'carrerup_certificates' => $carrerup_certificates,
+            ];
+
+        }
+
+        return view
+                ('history.index',
+                    compact('user','carrerup_view_data','general_data','fields','fields_item')
+                );
+    }
+
+    public function user()
+    {
+        $user_self = User::find(Auth::id());
+
+        if(Gate::allows('area-higher')){ // 支部ユーザ以上
+            $users = User::where('status',1)
+                            ->where('role_id',4)
+                            ->orderBy('id', 'desc')
+                            ->get();
+        } elseif(Gate::allows('admin-only')){ // 法人ユーザのみ
+            $users = User::where('status',1)
+                            ->where('role_id',4)
+                            ->where('company_profile_id',$user_self->company_profile_id)
+                            ->orderBy('id', 'desc')
+                            ->get();
+        }
+        foreach($users as $user) {
+            if($user->company_profile_id) {
+                $company = User::where('role_id',3)
+                                ->where('company_profile_id',$user->company_profile_id)
+                                ->first();
+                $companyname = $company->name;
+
+                if(preg_match('/村/',$company->address)){
+                    list($city,$etc) = explode("村",$company->address);
+                    $city = $city."村";
+                } elseif(preg_match('/市/',$company->address)){
+                    list($city,$etc) = explode("市",$company->address);
+                    $city = $city."市";
+                } elseif(preg_match('/郡/',$company->address)){
+                    list($city,$etc) = explode("郡",$company->address);
+                    $city = $city."郡";
+                } else {
+                    $city = $company->address;
+                }
+
+            } else {
+                $profile = $user->profile;
+                $companyname = $profile->other_facility_name;
+                $city = $profile->other_facility_pref.$profile->other_facility_address;
+            }
+
+            $datas[] = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'ruby' => $user->ruby,
+                'companyname' => $companyname,
+                'city' => $city,
+            ];
+        }
+
+        return view('history.user',compact('datas','pref'));
+    }
+
+    public function show($id) {
+
+        $user = User::find($id);
+        $user_self = User::find(Auth::id());
+
+        if(Gate::allows('user-only')) { //個人ユーザのみ
+
+            return redirect()->route('history.index');
+
+        } elseif(Gate::allows('admin-only')) { // 法人ユーザのみ
+
+            if($user->company_profile_id != $user_self->company_profile_id) {
+                return redirect('/history/user/');
+            }
+            // 参加済
+            $entrys = Entry::select('event_id','event_date_id')
+                        ->where('user_id',$user->id)
+                        ->where('entry_status','Y')
+                        ->where('ticket_status','Y')
+                        ->where('attend_status','Y')
+                        ->groupBy('event_id','event_date_id')->get();
+
+        } else { // 支部ユーザ以上
+            // 参加済
+            $entrys = Entry::select('event_id','event_date_id')
+                        ->where('user_id',$user->id)
+                        ->where('entry_status','Y')
+                        ->where('ticket_status','Y')
+                        ->where('attend_status','Y')
+                        ->groupBy('event_id','event_date_id')->get();
+
+        }
+        //dd($entrys);
+
+        if($entrys->count() > 0) {
+            foreach($entrys as $key => $entry) {
+                
+                // 参加済研修 
+                $event = Event::find($entry->event_id);
+                                
+                if($event->general_or_carrerup == 'carrerup') {
+
+                    $notattend_entry_cnt = Entry::where('user_id',$user->id)
+                                        ->where('event_id',$event->id)
+                                        ->where('attend_status','N')
+                                        ->get()
+                                        ->count();
+
+                    if($notattend_entry_cnt > 0) {
+                        $carrerup_data[$key] = null;
+                    } else {
+                        // 参加済キャリアアップ研修の分野          
+                        $careerup_curriculums = $event->careerup_curriculums()->get();
+                        
+                        // 参加済キャリアアップ研修の研修開催日
+                        $event_dates = $event->event_dates()->get();
+
+                        $carrerup_data[$key] = [
+                            'event' => $event,
+                            'event_dates' => $event_dates,
+                            'careerup_curriculums' => $careerup_curriculums,
+                        ];
+                    }
+
+                    $general_data[$key] = null;
+
+                } 
+                if($event->general_or_carrerup == 'general') {
+                    // 参加済一般研修の研修開催日
+                    $event_dates = $event->event_dates()->get();
+
+                    $general_data[$key] = [
+                        'event' => $event,
+                        'event_dates' => $event_dates,
+                    ];
+                    $carrerup_data[$key] = null;
+                }
+            }
+        } else {
+            $carrerup_data = [];
+            $general_data = [];
+        }
+        $carrerup_data = array_merge(array_filter($carrerup_data));
+        $general_data = array_merge(array_filter($general_data));
+        //dd($carrerup_data,$general_data);
+
+        // キャリアアップ研修view用
+        $fields = config('const.PARENT_CURRICULUM');
+        
+        foreach($fields as $i => $val) {
+            if(count($carrerup_data) > 0) {
+                foreach($carrerup_data as $key => $item) {
+                    $careerup_curriculums_exists = false;
+                    $filterd_careerup_curriculums = null;
+                    foreach($item['careerup_curriculums'] as $careerup_curriculums){
+                        if($careerup_curriculums->parent_curriculum == $val) {
+                            $filterd_careerup_curriculums[] = $careerup_curriculums;
+                            $careerup_curriculums_exists = true;
+                        }
+                    }
+                    if($careerup_curriculums_exists === true) {
+
+                        //dd($filterd_careerup_curriculums);
+                        $sum_training_minute = 0;
+                        foreach($filterd_careerup_curriculums as $cc) {
+                            $sum_training_minute += (int)$cc['training_minute'];
+                        }
+
+                        $view_data = [
+                            'content' => $filterd_careerup_curriculums,
+                            'event' => $carrerup_data[$key]['event'],
+                            'event_dates' => $carrerup_data[$key]['event_dates'],
+                        ];
+                        $content_cnt = count($filterd_careerup_curriculums);
+                        $rowspan = $content_cnt;
+
+
+                    } else {
+                        $sum_training_minute = 0;
+                        $view_data = null;
+                        $content_cnt = 0;
+                        $rowspan = 1;
+                    }
+                }
+            } else {
+                $sum_training_minute = 0;
+                $view_data = null;
+                $content_cnt = 0;
+                $rowspan = 1;
+            }
+            
+            //修了証データ
+            $carrerup_certificates = Careerup_certificate::where('parent_curriculum',$val)
+                                        ->where('certificate_status','Y');
+
+            $carrerup_view_data[] = [
+                'fields' => $val,
+                'training_minute' => $sum_training_minute,
+                'content_cnt' => $content_cnt,
+                'rowspan' => $rowspan, 
+                'eventinfo' => $view_data,
+                'carrerup_certificates' => $carrerup_certificates,
+            ];
+
+        }
+
+        return view
+                ('history.show',
+                    compact('user','carrerup_view_data','general_data','fields','fields_item')
+                );
+
+    }
+
+    public function attendance_pdf($id) {
+        // $idのバリデーション例外はpdf表示不可表示
+        if(!preg_match('/\-/',$id)) {
+            $emes = '不正なデータです。';
+        } else {
+            list($user_id,$event_id) = explode('-',$id);
+
+            $user = User::find($user_id);
+            $event = Event::find($event_id);
+
+            if(!$user || !$event) { //ユーザ、研修
+                $emes = '不正なデータです。';
+            } else {
+                if($user->deleted_at) {
+                    $emes = '不正なデータです。';
+                }
+            }
+
+            // 研修開催日
+            $event_dates = $event->event_dates;
+            // 未開催の開催日が残っている場合
+            //dd('研修は終了していません。');
+
+            $entrys_self = Entry::where('user_id',$user_id)
+                        ->where('event_id',$event_id)
+                        ->where('entry_status','Y')
+                        ->where('ticket_status','Y')
+                        ->where('attend_status','Y')
+                        ->first();
+            if(!$entrys_self) {// 該当研修の申込ステータス確認
+                $emes = '不正なデータです。';
+            }
+
+            // 研修種別
+            $careerup_curriculums = $event->careerup_curriculums;
+
+            if($careerup_curriculums->count() > 0) {
+                foreach($careerup_curriculums as $careerup_curriculum) {
+                    $fields[] = $careerup_curriculum->parent_curriculum;                        
+                    $training_minutes[] = $careerup_curriculum->training_minute;
+
+                    $careerup_data[] = [
+                        'parent' => $careerup_curriculum->parent_curriculum,
+                        'child' => $careerup_curriculum->child_curriculum,
+                        'training_minutes' => $careerup_curriculum->training_minute,
+                    ];
+                }
+            } else {
+                $careerup_data = null;
+            }
+
+            if($user->role_id < 3) { //プレビュー表示用
+            
+                // 所属施設
+                $company_name = null;
+
+            } else {
+
+                // 所属施設
+                $company = User::where('status',1)
+                                ->where('role_id',3)
+                                ->where('company_profile_id',$user->company_profile_id)
+                                ->first();
+                $company_name = ($company) ? $company->name : null;
+                
+            }
+
+            $data = [
+                'user' => $user,
+                'profile' => $user->profile,
+                'event' => $event,
+                'event_dates' => $event_dates,
+                'company_name' => $company_name,
+                'careerup_data' => $careerup_data,
+            ];                     
+        }
+
+        if(isset($emes)) {
+            $pdf = PDF::loadView('error_pdf', compact('emes'));
+        } else {
+            if($event->general_or_carrerup == 'carrerup') {
+                $pdf = PDF::loadView('history.attendance_pdf', compact('data'));
+            } else {
+                $pdf = PDF::loadView('history.attendance_general_pdf', compact('data'));
+            }
+        }
+        return $pdf->stream('title.pdf');
+
+    }
+
+    public function certificatesend($id) {
+
+        $user = User::find($request->user_id);
+        $parent_curriculum = $request->parent_curriculum;
+
+        $data = [
+            'username' => $user->name,
+            'parent_curriculum' => $parent_curriculum,
+            'ticketid' => $user->id.'-'.$parent_curriculum,
+        ];
+
+        $email = new CertificateSendMail($data);
+        Mail::to($user->email)->send($email);
+
+        return redirect()
+                ->route('history.show',['id' => $request->user_id])
+                ->with('status',$user->name.'へ'.$parent_curriculum.'修了証発行のメールを送信しました。');
+    }
+
+}

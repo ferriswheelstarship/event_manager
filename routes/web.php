@@ -84,6 +84,12 @@ Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
   Route::post('event/apply', 'EventsController@apply')->name('event.apply'); 
   Route::post('event/cancel', 'EventsController@cancel')->name('event.cancel'); 
 
+  Route::get('history', 'HistoryController@index')->name('history.index');
+  Route::get('history/user/{user_id}', 'HistoryController@show')->name('history.show');
+
+  // 受講証明書
+  Route::get('attendance_pdf/{id}','HistoryController@attendance_pdf')->name('history.attendance_pdf');
+
 });
 
 // 個人ユーザのみ
@@ -101,6 +107,10 @@ Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
 
   // ユーザ一覧
   Route::get('account', 'UsersController@index')->name('account.index');
+
+  // 履歴管理
+  Route::get('history/user', 'HistoryController@user')->name('history.user');
+  Route::get('history/event', 'HistoryController@event')->name('history.event');
 
 });
 

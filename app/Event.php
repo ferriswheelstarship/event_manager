@@ -38,4 +38,8 @@ class Event extends Model
     public function entrys() {
       return $this->hasMany('App\Entry');
     }
+
+    public function Certificate() {
+      return $this->hasOne('App\Certificate');
+    }
 }
