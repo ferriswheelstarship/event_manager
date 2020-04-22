@@ -56,7 +56,7 @@
                                         <th class="text-nowrap text-center align-middle" rowspan="2">分野</th>
                                         <th class="text-nowrap text-center align-middle" colspan="4">受講済研修</th>
                                         <th class="text-nowrap text-center align-middle" rowspan="2">受講時間合計</th>
-                                        <th class="text-nowrap text-center align-middle" rowspan="2">操作</th>
+                                        <th class="text-nowrap text-center align-middle" rowspan="2">ステータス</th>
                                     </tr>
                                     <tr>
                                         <th class="text-nowrap text-center align-middle">内容</th>
@@ -68,30 +68,64 @@
                                 <tbody>
                                     @foreach($carrerup_view_data as $key => $item)
                                     <tr>
-                                        <td rowspan="{{ $item['rowspan'] }}" class="text-center align-middle">{{ $item['fields'] }}</td>
+                                        <td rowspan="{{ $item['rowspan'] }}" class="text-nowrap text-center align-middle">{{ $item['fields'] }}</td>
                                         @if($item['eventinfo'] != null)
-                                        <td class="text-center align-middle">{{ $item['eventinfo']['content'][0]->child_curriculum }}</td>
+                                        <td class="text-center text-nowrap align-middle">{{ $item['eventinfo']['content'][0]->child_curriculum }}</td>
                                         <td class="text-center align-middle">{{ $item['eventinfo']['event']->title }} </td>
                                         <td class="text-center align-middle">{{ $item['eventinfo']['content'][0]->training_minute }}分</td>
                                         <td class="text-nowrap text-center align-middle">
-                                            <a href="{{ route('history.attendance_pdf',['id' => $user->id.'-'.$item['eventinfo']['event']->id]) }}" target="_blank" class="btn btn-info">受講証明書</a>
+                                            <a href="{{ route('history.attendance_pdf',['id' => $user->id.'-'.$item['eventinfo']['event']->id]) }}" 
+                                            target="_blank" class="btn btn-sm btn-info">受講証明書</a>
                                         </td>
                                         @else
                                         <td colspan="4"></td>
                                         @endif
                                         <td rowspan="{{ $item['rowspan'] }}" class="text-center align-middle">{{ $item['training_minute'] }}分</td>
                                         <td rowspan="{{ $item['rowspan'] }}" class="text-center align-middle">
-                                            @if($item['training_minute'] >= 900)
-                                            @if(isset($item['carrerup_certificates']) && $item['carrerup_certificates']->certificate_status == 'Y')
+                                            @if($item['carrerup_certificates'] === true)
                                             修了証発行済<br />
+                                            <a href="{{ route('history.certificate_pdf',['id' => $item['certificate_id']]) }}" 
+                                            target="_blank" class="btn btn-sm btn-info">修了証確認</a>
                                             @else
-                                            修了証未発行<br />
-                                            @endif
-                                            <button class="btn btn-sm btn-primary">修了証発行</button>
+                                            @if($item['training_minute'] >= 900)
+                                            修了証未発行<br>
+                                            @can('area-higher')
+                                            <br />
+                                            <button class="btn btn-sm btn-primary certificate-confirm btn-sm" value="{{ $key }}" 
+                                            data-toggle="modal" data-target="#confirm-certificate{{ $key }}">修了証発行</button>
+                                            @endcan
                                             @else
                                             受講時間15時間未満<br />
-                                            <button class="btn btn-sm btn-primary disabled">修了証発行</button>
+                                            <button class="btn btn-sm btn-danger certificate-confirm btn-sm disabled">修了証発行不可</button>
                                             @endif
+                                            @endif
+
+                                            <div class="modal fade" id="confirm-certificate{{ $key }}" tabindex="-1">
+                                                <div class="modal-dialog" role="document">
+                                                    <form role="form" class="form-inline" method="POST" 
+                                                    action="{{ route('history.certificatesend') }}">
+                                                    {{ csrf_field() }}
+                                                    <input type="hidden" name="user_id" value="{{ $user->id }}">
+                                                    <input type="hidden" name="parent_curriculum" value="{{ $item['fields'] }}">
+                                                    <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">修了証発行確認</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body text-left">
+                                                        <strong>{{ $user->name }}</strong>へ<strong>【{{ $item['fields'] }}】</strong>の修了証を発行してよろしいですか？<br>
+                                                        ユーザにも修了証が発行された旨メールが送信されます。
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+                                                        <button type="submit" class="btn btn-primary">修了証発行</button>
+                                                    </div>
+                                                    </div>
+                                                    </form>
+                                                </div>
+                                            </div>                                            
                                         </td>
                                     </tr>
                                     @if($item['content_cnt'] > 1) 
@@ -102,7 +136,8 @@
                                         <td class="text-center align-middle">{{ $item['eventinfo']['event']->title }} </td>
                                         <td class="text-center align-middle">{{ $item['eventinfo']['content'][$i]->training_minute }}分</td>
                                         <td class="text-nowrap text-center align-middle">
-                                            <a href="{{ route('history.attendance_pdf',['id' => $user->id.'-'.$item['eventinfo']['event']->id]) }}" target="_blank" class="btn btn-info">受講証明書</a>
+                                            <a href="{{ route('history.attendance_pdf',['id' => $user->id.'-'.$item['eventinfo']['event']->id]) }}" 
+                                            target="_blank" class="btn btn-sm btn-info">受講証明書</a>
                                         </td>
                                     </tr>
                                     @endif
@@ -111,6 +146,9 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            @foreach($carrerup_view_data as $key => $item)
+
+                            @endforeach
                         </div>
                         @endif
                         </div>

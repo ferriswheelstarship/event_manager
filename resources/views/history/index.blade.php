@@ -50,7 +50,7 @@
                                         <th class="text-nowrap text-center align-middle" rowspan="2">分野</th>
                                         <th class="text-nowrap text-center align-middle" colspan="4">受講済研修</th>
                                         <th class="text-nowrap text-center align-middle" rowspan="2">受講時間合計</th>
-                                        <th class="text-nowrap text-center align-middle" rowspan="2">操作</th>
+                                        <th class="text-nowrap text-center align-middle" rowspan="2">ステータス</th>
                                     </tr>
                                     <tr>
                                         <th class="text-nowrap text-center align-middle">内容</th>
@@ -75,17 +75,18 @@
                                         @endif
                                         <td rowspan="{{ $item['rowspan'] }}" class="text-center align-middle">{{ $item['training_minute'] }}分</td>
                                         <td rowspan="{{ $item['rowspan'] }}" class="text-center align-middle">
-                                            @if($item['training_minute'] >= 900)
-                                            @if(isset($item['carrerup_certificates']) && $item['carrerup_certificates']->certificate_status == 'Y')
+                                        @if($item['carrerup_certificates'] === true)
                                             修了証発行済<br />
-                                            @else
-                                            修了証未発行<br />
-                                            @endif
-                                            <button class="btn btn-sm btn-primary">修了証発行</button>
+                                            <a href="{{ route('history.certificate_pdf',['id' => $item['certificate_id']]) }}" 
+                                            target="_blank" class="btn btn-sm btn-info">修了証確認</a>
+                                        @else
+                                            @if($item['training_minute'] >= 900)
+                                            修了証未発行<br />                                            
                                             @else
                                             受講時間15時間未満<br />
-                                            <button class="btn btn-sm btn-primary disabled">修了証発行</button>
+                                            <button class="btn btn-sm btn-danger certificate-confirm btn-sm disabled">修了証発行不可</button>
                                             @endif
+                                        @endif
                                         </td>
                                     </tr>
                                     @if($item['content_cnt'] > 1) 

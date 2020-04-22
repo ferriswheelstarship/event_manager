@@ -84,11 +84,13 @@ Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
   Route::post('event/apply', 'EventsController@apply')->name('event.apply'); 
   Route::post('event/cancel', 'EventsController@cancel')->name('event.cancel'); 
 
+  // 受講履歴
   Route::get('history', 'HistoryController@index')->name('history.index');
   Route::get('history/user/{user_id}', 'HistoryController@show')->name('history.show');
-
   // 受講証明書
   Route::get('attendance_pdf/{id}','HistoryController@attendance_pdf')->name('history.attendance_pdf');
+  // 修了証
+  Route::get('certificate_pdf/{id}','HistoryController@certificate_pdf')->name('history.certificate_pdf');
 
 });
 
@@ -110,7 +112,6 @@ Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
 
   // 履歴管理
   Route::get('history/user', 'HistoryController@user')->name('history.user');
-  Route::get('history/event', 'HistoryController@event')->name('history.event');
 
 });
 
@@ -155,6 +156,9 @@ Route::group(['middleware' => ['auth', 'can:area-higher']], function () {
   Route::get('reception/qr/{id}', 'ReceptionController@readqr')->name('reception.readqr');
   // 受付管理 - バーコード読取受付
   Route::post('reception/auto', 'ReceptionController@auto')->name('reception.auto');
+
+  // 修了証送信
+  Route::post('history/certificatesend','HistoryController@certificatesend')->name('history.certificatesend');
 
 });
 

@@ -18,6 +18,7 @@ use App\Entry;
 use App\Careerup_certificate;
 use App\Certificates;
 use Mail;
+use App\Mail\CertificateSendMail;
 
 class HistoryController extends Controller
 {
@@ -135,7 +136,16 @@ class HistoryController extends Controller
             
             //修了証データ
             $carrerup_certificates = Careerup_certificate::where('parent_curriculum',$val)
-                                        ->where('certificate_status','Y');
+                                        ->where('user_id',$user->id)
+                                        ->where('certificate_status','Y')
+                                        ->first();
+            if(isset($carrerup_certificates)) {
+                $certificates = true;
+                $certificate_id = $carrerup_certificates->id;
+            } else {
+                $certificates = false;                
+                $certificate_id = null;
+            }
 
             $carrerup_view_data[] = [
                 'fields' => $val,
@@ -143,7 +153,8 @@ class HistoryController extends Controller
                 'content_cnt' => $content_cnt,
                 'rowspan' => $rowspan, 
                 'eventinfo' => $view_data,
-                'carrerup_certificates' => $carrerup_certificates,
+                'carrerup_certificates' => $certificates,
+                'certificate_id' => $certificate_id,
             ];
 
         }
@@ -208,7 +219,8 @@ class HistoryController extends Controller
         return view('history.user',compact('datas','pref'));
     }
 
-    public function show($id) {
+    public function show($id) 
+    {
 
         $user = User::find($id);
         $user_self = User::find(Auth::id());
@@ -341,7 +353,16 @@ class HistoryController extends Controller
             
             //修了証データ
             $carrerup_certificates = Careerup_certificate::where('parent_curriculum',$val)
-                                        ->where('certificate_status','Y');
+                                        ->where('user_id',$user->id)
+                                        ->where('certificate_status','Y')
+                                        ->first();
+            if(isset($carrerup_certificates)) {
+                $certificates = true;
+                $certificate_id = $carrerup_certificates->id;
+            } else {
+                $certificates = false;                
+                $certificate_id = null;
+            }
 
             $carrerup_view_data[] = [
                 'fields' => $val,
@@ -349,7 +370,8 @@ class HistoryController extends Controller
                 'content_cnt' => $content_cnt,
                 'rowspan' => $rowspan, 
                 'eventinfo' => $view_data,
-                'carrerup_certificates' => $carrerup_certificates,
+                'carrerup_certificates' => $certificates,
+                'certificate_id' => $certificate_id,
             ];
 
         }
@@ -361,7 +383,8 @@ class HistoryController extends Controller
 
     }
 
-    public function attendance_pdf($id) {
+    public function attendance_pdf($id) 
+    {
         // $idのバリデーション例外はpdf表示不可表示
         if(!preg_match('/\-/',$id)) {
             $emes = '不正なデータです。';
@@ -412,21 +435,18 @@ class HistoryController extends Controller
                 $careerup_data = null;
             }
 
-            if($user->role_id < 3) { //プレビュー表示用
-            
-                // 所属施設
-                $company_name = null;
-
-            } else {
-
-                // 所属施設
+            // 所属施設
+            if($user->company_profile_id) {
                 $company = User::where('status',1)
                                 ->where('role_id',3)
                                 ->where('company_profile_id',$user->company_profile_id)
                                 ->first();
                 $company_name = ($company) ? $company->name : null;
-                
+            } else {
+                $profile = $user->profile;
+                $company_name = $profile->other_facility_name;
             }
+
 
             $data = [
                 'user' => $user,
@@ -447,11 +467,53 @@ class HistoryController extends Controller
                 $pdf = PDF::loadView('history.attendance_general_pdf', compact('data'));
             }
         }
-        return $pdf->stream('title.pdf');
+        return $pdf->stream('attendance.pdf');
 
     }
 
-    public function certificatesend($id) {
+    public function certificate_pdf($id) 
+    {
+        $carrerup_certificates = Careerup_certificate::find($id);
+        if(!$carrerup_certificates) {
+            $emes = '不正なデータです。';
+        } else {
+            $user = User::find($carrerup_certificates->user_id);
+            $profile = $user->profile;
+
+            // 所属施設
+            if($user->company_profile_id) {
+                $company = User::where('status',1)
+                                ->where('role_id',3)
+                                ->where('company_profile_id',$user->company_profile_id)
+                                ->first();
+                $company_name = ($company) ? $company->name : null;
+            } else {
+                $company_name = $profile->other_facility_name;
+            }
+
+            $data = [
+                'carrerup_certificates' => $carrerup_certificates,
+                'user' => $user,
+                'profile' => $profile,
+                'company_name' => $company_name,
+            ];                     
+            
+        }
+
+        //dd($data);
+
+        if(isset($emes)) {
+            $pdf = PDF::loadView('error_pdf', compact('emes'));
+        } else {
+            $pdf = PDF::loadView('history.certificate_pdf', compact('data'));
+        }
+        return $pdf->stream('certificate.pdf');
+
+    }
+
+
+    public function certificatesend(Request $request) 
+    {
 
         $user = User::find($request->user_id);
         $parent_curriculum = $request->parent_curriculum;
@@ -459,15 +521,20 @@ class HistoryController extends Controller
         $data = [
             'username' => $user->name,
             'parent_curriculum' => $parent_curriculum,
-            'ticketid' => $user->id.'-'.$parent_curriculum,
         ];
 
-        $email = new CertificateSendMail($data);
-        Mail::to($user->email)->send($email);
+        $careerup_certificate = NEW Careerup_certificate;
+        $careerup_certificate->user_id = $request->user_id;
+        $careerup_certificate->parent_curriculum = $request->parent_curriculum;
+        $careerup_certificate->certificate_status = 'Y';
+        if($careerup_certificate->save()) {
+            $email = new CertificateSendMail($data);
+            Mail::to($user->email)->send($email);
+        }
 
         return redirect()
                 ->route('history.show',['id' => $request->user_id])
-                ->with('status',$user->name.'へ'.$parent_curriculum.'修了証発行のメールを送信しました。');
+                ->with('status',$user->name.'へ【'.$parent_curriculum.'】修了証発行のメールを送信しました。');
     }
 
 }
