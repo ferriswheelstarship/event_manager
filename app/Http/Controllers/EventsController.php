@@ -59,7 +59,7 @@ class EventsController extends Controller
                 $status = "削除済";
             } else {
                 if($entrys_cnt >= $event['capacity']){
-                    $status = "キャンセル待申込のみ可";
+                    $status = "キャンセル待申込";
                 } else {
                     if($entry_start_date > $dt){
                         $status = "申込開始前";
@@ -70,12 +70,38 @@ class EventsController extends Controller
                     } 
                 }
             }
+
+            if(Gate::allows('user-only')) {
+                $entry = Entry::where('event_id',$event->id)
+                                ->where('user_id',$user_self->id)
+                                ->first();
+                if(!$entry) {
+                    $entry_status = "申込なし";
+                } else {
+                    if($entry->ticket_status == 'Y') {
+                        $entry_status = "申込済・入金済";
+                    } else {
+                        if($entry->entry_status == 'Y') {
+                            $entry_status = "申込済・入金未";
+                        } elseif($entry->entry_status == 'YC') {
+                            $entry_status = "申込後キャンセル";
+                        } elseif($entry->entry_status == 'CW') {
+                            $entry_status = "キャンセル待ち申込";
+                        } else {
+                            $entry_status = "申込なし";
+                        }
+                    }
+                }
+            } else {
+                $entry_status = null;
+            }
                             
             //
             $data[] = [
                 'id' => $event->id,
                 'title' => $event->title,
                 'status' => $status,
+                'entry_status' => $entry_status,
                 'event_dates' => $event->event_dates()->select('event_date')->get(),
                 'capacity' => $event->capacity,
                 'entrys_cnt' => $entrys_cnt,

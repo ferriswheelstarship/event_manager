@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', '修了証管理')
+@section('title', '受講履歴')
 
 @section('each-head')
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-3.3.1/dt-1.10.20/r-2.2.3/sp-1.0.1/datatables.min.css"/>
@@ -32,10 +32,10 @@
 
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
-                                <a href="#tab1" class="nav-link active" data-toggle="tab">キャリアアップ研修受講状況</a>
+                                <a href="#tab1" class="nav-link active" data-toggle="tab">キャリアアップ</a>
                             </li>
                             <li class="nav-item">
-                                <a href="#tab2" class="nav-link" data-toggle="tab">受講済の一般研修</a>
+                                <a href="#tab2" class="nav-link" data-toggle="tab">一般研修</a>
                             </li>
                         </ul>
                         <div class="tab-content p-3 border border-top-0">
@@ -44,65 +44,64 @@
                         <h2 class="h4 mb-3">キャリアアップ研修受講状況</h2>
                         @if (count($carrerup_view_data) > 0)
                         <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead class="thead-light">
+                            <table class="table table-bordered tbl-carrerup">
+                                <thead class="thead-light thead">
                                     <tr>
-                                        <th class="text-nowrap text-center align-middle" rowspan="2">分野</th>
-                                        <th class="text-nowrap text-center align-middle" colspan="4">受講済研修</th>
-                                        <th class="text-nowrap text-center align-middle" rowspan="2">受講時間合計</th>
-                                        <th class="text-nowrap text-center align-middle" rowspan="2">ステータス</th>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-nowrap text-center align-middle">内容</th>
-                                        <th class="text-nowrap text-center align-middle">受講した研修</th>
-                                        <th class="text-nowrap text-center align-middle">受講時間</th>
-                                        <th class="text-nowrap text-center align-middle">受講証明書</th>
+                                        <th class="text-nowrap text-center align-middle">分野</th>
+                                        <th class="text-nowrap text-center align-middle">受講済内容・受講時間</th>
+                                        <th class="text-nowrap text-center align-middle">受講時間合計</th>
+                                        <th class="text-nowrap text-center align-middle">ステータス</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($carrerup_view_data as $key => $item)
                                     <tr>
-                                        <td rowspan="{{ $item['rowspan'] }}" class="text-center align-middle">{{ $item['fields'] }}</td>
+                                        <td class="text-center align-middle">{{ $item['fields'] }}</td>
+                                        <td class="text-center align-middle">
                                         @if($item['eventinfo'] != null)
-                                        <td class="text-center align-middle">{{ $item['eventinfo']['content'][0]->child_curriculum }}</td>
-                                        <td class="text-center align-middle">{{ $item['eventinfo']['event']->title }} </td>
-                                        <td class="text-center align-middle">{{ $item['eventinfo']['content'][0]->training_minute }}分</td>
-                                        <td class="text-nowrap text-center align-middle">
-                                            <a href="{{ route('history.attendance_pdf',['id' => $user->id.'-'.$item['eventinfo']['event']->id]) }}" target="_blank" class="btn btn-info">受講証明書</a>
-                                        </td>
+                                            <table class="table mb-0 tbl-carrerup-inner">
+                                                <thead class="thead-light thead">
+                                                    <tr>
+                                                        <th class="text-nowrap text-center align-middle">内容</th>
+                                                        <th class="text-nowrap text-center align-middle">受講済研修</th>
+                                                        <th class="text-nowrap text-center align-middle">受講時間</th>
+                                                        <th class="text-nowrap text-center align-middle">受講証明書</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($item['eventinfo']['content'] as $i => $val)                                            
+                                                    <tr>
+                                                        <td class="text-center align-middle">{{ $item['eventinfo']['content'][$i]->child_curriculum }}</td>
+                                                        <td data-label="受講済研修：" class="text-center align-middle">{{ $item['eventinfo']['event']->title }} </td>
+                                                        <td data-label="受講時間：" class="text-center align-middle">{{ $item['eventinfo']['content'][$i]->training_minute }}分</td>
+                                                        <td data-label="受講証明書：" class="text-nowrap text-center align-middle">
+                                                            <a href="{{ route('history.attendance_pdf',['id' => $user->id.'-'.$item['eventinfo']['event']->id]) }}" 
+                                                            target="_blank" class="btn btn-sm btn-info">受講証明書</a>
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
                                         @else
-                                        <td colspan="4"></td>
+                                            受講履歴なし
                                         @endif
-                                        <td rowspan="{{ $item['rowspan'] }}" class="text-center align-middle">{{ $item['training_minute'] }}分</td>
-                                        <td rowspan="{{ $item['rowspan'] }}" class="text-center align-middle">
+                                        </td>
+                                        <td data-label="受講時間合計：" class="text-center align-middle">{{ $item['training_minute'] }}分</td>
+                                        <td class="text-center align-middle">
                                         @if($item['carrerup_certificates'] === true)
                                             修了証発行済<br />
                                             <a href="{{ route('history.certificate_pdf',['id' => $item['certificate_id']]) }}" 
-                                            target="_blank" class="btn btn-sm btn-info">修了証確認</a>
+                                            target="_blank" class="btn btn-sm btn-success">修了証確認</a>
                                         @else
                                             @if($item['training_minute'] >= 900)
                                             修了証未発行<br />                                            
                                             @else
-                                            受講時間15時間未満<br />
+                                            受講15時間未満<br />
                                             <button class="btn btn-sm btn-danger certificate-confirm btn-sm disabled">修了証発行不可</button>
                                             @endif
                                         @endif
                                         </td>
                                     </tr>
-                                    @if($item['content_cnt'] > 1) 
-                                    @foreach($item['eventinfo']['content'] as $i => $val)
-                                    @if (!$loop->first)
-                                    <tr>
-                                        <td class="text-center align-middle">{{ $item['eventinfo']['content'][$i]->child_curriculum }}</td>
-                                        <td class="text-center align-middle">{{ $item['eventinfo']['event']->title }} </td>
-                                        <td class="text-center align-middle">{{ $item['eventinfo']['content'][$i]->training_minute }}分</td>
-                                        <td class="text-nowrap text-center align-middle">
-                                            <a href="{{ route('history.attendance_pdf',['id' => $user->id.'-'.$item['eventinfo']['event']->id]) }}" target="_blank" class="btn btn-info">受講証明書</a>
-                                        </td>
-                                    </tr>
-                                    @endif
-                                    @endforeach
-                                    @endif
                                     @endforeach
                                 </tbody>
                             </table>
@@ -114,8 +113,8 @@
                         <h2 class="h4 mb-3">受講済の一般研修</h2>
                         @if (count($general_data) > 0)
                         <div class="table-responsive">
-                            <table class="table table-striped" id="data-table">
-                                <thead class="thead-light">
+                            <table class="table table-striped tbl-withheading" id="data-table">
+                                <thead class="thead-light thead">
                                     <tr>
                                         <th class="text-nowrap">開催日</th>
                                         <th class="text-nowrap">研修タイトル</th>
@@ -125,7 +124,7 @@
                                 <tbody>
                                     @foreach($general_data as $key => $item)
                                     <tr>
-                                        <td>
+                                        <td data-label="開催日：">
                                             @foreach ($item['event_dates'] as $key => $edate)
                                             @php
                                             echo date('Y年m月d日', strtotime($edate->event_date));
@@ -133,9 +132,10 @@
                                             @if(!$loop->last),@endif
                                             @endforeach
                                         </td>
-                                        <td>{{ $item['event']->title }}</td>
-                                        <td>
-                                            <a href="{{ route('history.attendance_pdf',['id' => $user->id.'-'.$item['event']->id]) }}" target="_blank" class="btn btn-info">受講証明書</a>
+                                        <td data-label="研修名：">{{ $item['event']->title }}</td>
+                                        <td data-label="操作：">
+                                            <a href="{{ route('history.attendance_pdf',['id' => $user->id.'-'.$item['event']->id]) }}" 
+                                            target="_blank" class="btn btn-sm btn-info">受講証明書</a>
                                         </td>
                                     </tr>
                                     @endforeach

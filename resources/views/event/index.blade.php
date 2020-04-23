@@ -32,36 +32,48 @@
 
 @if (count($events) > 0)
     <div class="table-responsive">
-        <table class="table table-striped" id="data-table">
-            <thead>
+        <table class="table table-striped tbl-withheading" id="data-table">
+            <thead class="thead">
                 <tr>
                     <!-- <th>ID</th> -->
                     <th class="text-nowrap">開催日</th>
                     <th class="text-nowrap">研修タイトル</th>
                     <th class="text-nowrap">申込数 / 定員</th>
-                    <th class="text-nowrap">ステータス</th>
+                    <th class="text-nowrap">申込受付状況</th>
+                    @can('user-only')
+                    <th class="text-nowrap">申込状態</th>
+                    @endcan
                     <th class="text-nowrap">操作</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($data as $event)
                 <tr>
-                    <td>
+                    <td data-label="開催日：">
                         @foreach ($event['event_dates'] as $key => $edate)
                         @php
                         echo date('Y年m月d日', strtotime($edate->event_date));
                         @endphp
-                        @if(!$loop->last),@endif
+                        @if(!$loop->last) <br> @endif
                         @endforeach
                     </td>
-                    <td>{{ $event['title'] }}</td>
-                    <td>
+                    <td data-label="研修名：">{{ $event['title'] }}</td>
+                    <td data-label="申込数/定員：">
                         <span>{{ $event['entrys_cnt'] }} / {{ $event['capacity'] }}</span>
                     </td>
-                    <td>
+                    <td data-label="申込受付状況：">
                         <span>{{ $event['status']}}</span>
                     </td>
-                    <td>
+                    @can('user-only')
+                    <td data-label="申込状態：">
+                        {{ $event['entry_status']}} 
+                        @if($event['entry_status'] == '申込済・入金済')
+                        <br>
+                        <a href="{{ route('ticket_pdf',['id' => Auth::id().'-'.$event['id']]) }}" target="_blank" class="btn btn-sm btn-info">受講券</a>
+                        @endif
+                    </td>
+                    @endcan
+                    <td data-lavel="操作：">
                     @can('area-higher')
                         @if($event['deleted_at'])
 
@@ -151,7 +163,7 @@
                         </div>
                         @endif
                     @else
-                        <a href="{{ url('event/'.$event['id']) }}" class="btn btn-danger btn-sm">詳細・申込</a>
+                        <a href="{{ url('event/'.$event['id']) }}" class="btn btn-primary btn-sm">詳細</a>
                     @endcan
                     </td>
                 </tr>

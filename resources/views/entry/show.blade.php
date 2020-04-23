@@ -60,8 +60,8 @@
 
                         @if (count($entrys_y_view) > 0)
                         <div class="table-responsive">
-                            <table class="table table-striped" id="data-table">
-                                <thead>
+                            <table class="table table-striped tbl-withheading" id="data-table">
+                                <thead class="thead">
                                     <tr>
                                         <!-- <th>ID</th> -->
                                         <th class="text-nowrap">氏名</th>
@@ -74,14 +74,15 @@
                                 <tbody>
                                     @foreach ($entrys_y_view as $entry)
                                     <tr>
-                                        <td>
-                                            <span>{{ $entry['user_name'] }}（{{ $entry['user_ruby'] }}）</span>
+                                        <td data-label="氏名：">
+                                            <span>{{ $entry['user_name'] }}<br/>
+                                            （{{ $entry['user_ruby'] }}）</span>
                                         </td>
-                                        <td>
+                                        <td data-label="所属：">
                                             <span>{{ $entry['company_name'] }}</span>
                                         </td>
-                                        <td>{{ $entry['created'] }}</td>
-                                        <td>{{ $entry['status'] }}</td>
+                                        <td data-label="申込日時：">{{ $entry['created'] }}</td>
+                                        <td data-label="状況：">{{ $entry['status'] }}</td>
                                         <td>
                                             @if($entry['status'] === '受講券発行済')
                                             <a href="{{ route('ticket_pdf',['id' => $entry['user_id'].'-'.$event->id]) }}" target="_blank" class="btn btn-sm btn-info">受講券表示</a>
@@ -109,8 +110,8 @@
                         </div>
                         @if (count($entrys_yc_view) > 0)
                         <div class="table-responsive">
-                            <table class="table table-striped" id="data-table">
-                                <thead>
+                            <table class="table table-striped tbl-withheading" id="data-table">
+                                <thead class="thead">
                                     <tr>
                                         <!-- <th>ID</th> -->
                                         <th class="text-nowrap">氏名</th>
@@ -123,14 +124,15 @@
                                 <tbody>
                                     @foreach ($entrys_yc_view as $entry)
                                     <tr>
-                                        <td>
-                                            <span>{{ $entry['user_name'] }}（{{ $entry['user_ruby'] }}）</span>
+                                        <td data-label="氏名：">
+                                            <span>{{ $entry['user_name'] }}<br/>
+                                            （{{ $entry['user_ruby'] }}）</span>
                                         </td>
-                                        <td>
+                                        <td data-label="所属：">
                                             <span>{{ $entry['company_name'] }}</span>
                                         </td>
-                                        <td>{{ $entry['created'] }}</td>
-                                        <td>{{ $entry['status'] }}</td>
+                                        <td data-label="申込日時：">{{ $entry['created'] }}</td>
+                                        <td data-label="状況：">{{ $entry['status'] }}</td>
                                         <td>
                                             @if($entry['status'] != '受講券発行済')
                                             <button type="button" class="delete-confirm btn btn-sm btn-danger"
@@ -154,8 +156,8 @@
                         </div>
                         @if (count($entrys_cw_view) > 0)
                         <div class="table-responsive">
-                            <table class="table table-striped" id="data-table">
-                                <thead>
+                            <table class="table table-striped tbl-withheading" id="data-table">
+                                <thead class="thead">
                                     <tr>
                                         <!-- <th>ID</th> -->
                                         <th class="text-nowrap">氏名</th>
@@ -166,13 +168,13 @@
                                 <tbody>
                                     @foreach ($entrys_cw_view as $entry)
                                     <tr>
-                                        <td>
+                                        <td data-label="氏名：">
                                             <span>{{ $entry['user_name'] }}（{{ $entry['user_ruby'] }}）</span>
                                         </td>
-                                        <td>
+                                        <td data-label="所属：">
                                             <span>{{ $entry['company_name'] }}</span>
                                         </td>
-                                        <td>{{ $entry['created'] }}</td>
+                                        <td data-label="申込日時：">{{ $entry['created'] }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>

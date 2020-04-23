@@ -54,7 +54,7 @@ class EntryController extends Controller
                 $status = "削除済";
             } else {
                 if($entrys_cnt >= $event['capacity']){
-                    $status = "キャンセル待申込のみ可";
+                    $status = "キャンセル待申込";
                 } else {
                     if($entry_start_date > $dt){
                         $status = "申込開始前";

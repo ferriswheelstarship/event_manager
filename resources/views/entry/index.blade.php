@@ -32,8 +32,8 @@
 
                     @if (count($events) > 0)
                         <div class="table-responsive">
-                            <table class="table table-striped" id="data-table">
-                                <thead>
+                            <table class="table table-striped tbl-withheading" id="data-table">
+                                <thead class="thead">
                                     <tr>
                                         <!-- <th>ID</th> -->
                                         <th class="text-nowrap">状態</th>
@@ -46,22 +46,22 @@
                                 <tbody>
                                     @foreach ($data as $event)
                                     <tr>
-                                        <td>
+                                        <td data-label="状態：">
                                             <span>{{ $event['status']}}</span>
                                         </td>
-                                        <td>
+                                        <td data-label="申込数/定員：">
                                             <span>{{ $event['entrys_cnt'] }} / {{ $event['capacity'] }}</span>
                                         </td>
-                                        <td>
+                                        <td data-label="開催日：">
                                             @foreach ($event['event_dates'] as $key => $edate)
                                             @php
                                             echo date('Y年m月d日', strtotime($edate->event_date));
                                             @endphp
-                                            @if(!$loop->last),@endif
+                                            @if(!$loop->last) <br> @endif
                                             @endforeach
                                         </td>
-                                        <td>{{ $event['title'] }}</td>
-                                        <td>
+                                        <td data-label="開催日：">{{ $event['title'] }}</td>
+                                        <td  data-label="操作：">
                                             <a href="{{ url('entry/'.$event['id']) }}" class="btn btn-info btn-sm">申込者一覧</a>
                                         </td>
                                     </tr>

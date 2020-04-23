@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">ユーザ一覧</div>
+                    <div class="card-header">受講履歴（ユーザ一覧）</div>
                     
                     @if (Session::has('status'))
                     <div class="card-body">
@@ -24,8 +24,8 @@
                     <div class="card-body">
                     @if (count($datas) > 0)
                         <div class="table-responsive">
-                            <table class="table table-striped" id="data-table">
-                                <thead>
+                            <table class="table table-striped tbl-withheading" id="data-table">
+                                <thead class="thead">
                                     <tr>
                                         <th class="text-nowrap">名前</th>
                                         <th class="text-nowrap">所属</th>
@@ -35,9 +35,9 @@
                                 <tbody>
                                     @foreach ($datas as $user)
                                     <tr>
-                                        <td>{{ $user['name'] }}（{{ $user['ruby'] }}）</td>
-                                        <td>{{ $user['companyname'] }}（{{ $user['city'] }}）</td>
-                                        <td>
+                                        <td data-label="名前：">{{ $user['name'] }}（{{ $user['ruby'] }}）</td>
+                                        <td data-label="所属：">{{ $user['companyname'] }}（{{ $user['city'] }}）</td>
+                                        <td data-label="操作：">
                                             <a href="{{ url('history/user/'.$user['id']) }}" class="btn btn-info btn-sm">受講状況詳細</a>
                                         </td>
                                     </tr>

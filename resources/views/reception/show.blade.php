@@ -52,11 +52,11 @@
                                 <span><a href="{{ url('reception/qr/'.$event->id.'-'.$event_date->id) }}" class="btn btn-sm btn-info" target="_blank">QRコード受付画面を表示</a></span>
                             </div>
                         <div class="table-responsive">
-                            <table class="table table-striped" id="data-table">
-                                <thead>
+                            <table class="table table-striped tbl-withheading" id="data-table">
+                                <thead class="thead">
                                     <tr>
                                         <th class="text-nowrap">状態</th>
-                                        <th class="text-nowrap">氏名</th>
+                                        <th class="text-nowrap">名前</th>
                                         <th class="text-nowrap">所属</th>
                                         <th class="text-nowrap">操作</th>
                                     </tr>
@@ -65,9 +65,9 @@
                                     @if (count($entrys_view) > 0)
                                     @foreach ($entrys_view as $entry)
                                     <tr>
-                                        <td>{{ $entry['status'] }}</td>
-                                        <td>{{ $entry['user_name'] }}（{{ $entry['user_ruby'] }}）</td>
-                                        <td>{{ $entry['company_name'] }}</td>
+                                        <td data-label="状態：">{{ $entry['status'] }}</td>
+                                        <td data-label="名前：">{{ $entry['user_name'] }}（{{ $entry['user_ruby'] }}）</td>
+                                        <td data-label="所属：">{{ $entry['company_name'] }}</td>
                                         <td>
                                             @if($entry['status'] != '参加受付済')
                                             <button type="button" class="apply-confirm btn btn-sm btn-primary" 

@@ -1,0 +1,111 @@
+.footer {
+    position:absolute;
+    bottom:0;
+    width:100%;
+    display:block;
+    height:40px;
+    line-height:40px;
+    padding:0 .5em;
+}
+
+@media screen and (max-width: 640px) {
+    /* 詳細ページth,tdの2カラム用 */
+    .tbl-2column {
+        width: 100%;
+    }
+    .tbl-2column tr {
+        margin-bottom: 20px;
+    }
+    .tbl-2column td {
+        border-top: none;
+    }
+
+    .tbl-2column th,
+    .tbl-2column td {
+        border-bottom: none;
+        display: block;
+        width: 100%;
+    }
+
+    /* 一覧表示用 */
+    .tbl-withheading {
+        width: 100%;
+    } 
+    .tbl-withheading .thead {
+        display: none;
+    }
+    .tbl-withheading tr,
+    .tbl-withheading td{
+        display: block;
+        width: calc(100% -20px);
+        position: relative;
+    }
+    .tbl-withheading tr {
+        margin-bottom: 40px;
+    }
+    .tbl-withheading td:before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+}
+
+@media screen and (max-width: 1028px) {
+    /* キャリアアップ研修履歴表示用　*/
+    .tbl-carrerup {
+        width: 100%;
+    } 
+    .tbl-carrerup .thead {
+        display: none;
+    }
+    .tbl-carrerup > tbody > tr,
+    .tbl-carrerup > tbody > tr > td{
+        display: block;
+        width: calc(100% -20px);
+        position: relative;
+    }
+    .tbl-carrerup > tbody > tr {
+        margin-bottom: 40px;
+    }
+    .tbl-carrerup > tbody > tr > td:first-child {
+        background-color:#17a2b8;
+        color: #ffffff;
+        font-weight: bold;
+    }
+    .tbl-carrerup > tbody > tr > td:before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    .tbl-carrerup-inner {
+        width: 100%;
+    } 
+    .tbl-carrerup-inner .thead {
+        display: none;
+    }
+    .tbl-carrerup-inner > tbody > tr,
+    .tbl-carrerup-inner > tbody > tr > td{
+        display: block;
+        width: calc(100% -20px);
+        position: relative;
+    }
+    .tbl-carrerup-inner > tbody > tr {
+        margin-bottom: 10px;
+    }
+    .tbl-carrerup-inner > tbody > tr > td:first-child {
+        background-color: #e2e6ea;
+        font-weight: bold;
+    }
+    .tbl-carrerup-inner > tbody > tr > td:before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+}
+ 

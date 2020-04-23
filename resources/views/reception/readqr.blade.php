@@ -73,8 +73,8 @@
                                 </div>
                                 <p class="text-danger">※ QRコード受付（当画面）では受付完了者のみが表示されます。</p>
                             <div class="table-responsive">
-                                <table class="table table-striped" id="data-table">
-                                    <thead>
+                                <table class="table table-striped tbl-withheading">
+                                    <thead class="thead">
                                         <tr>
                                             <th class="text-nowrap">状態</th>
                                             <th class="text-nowrap">氏名</th>

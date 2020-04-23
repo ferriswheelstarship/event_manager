@@ -32,8 +32,8 @@
 
                     @if (count($events) > 0)
                         <div class="table-responsive">
-                            <table class="table table-striped" id="data-table">
-                                <thead>
+                            <table class="table table-striped tbl-withheading" id="data-table">
+                                <thead class="thead">
                                     <tr>
                                         <!-- <th>ID</th> -->
                                         <th class="text-nowrap">開催日</th>
@@ -45,13 +45,13 @@
                                 <tbody>
                                     @foreach ($data as $event)
                                     <tr>
-                                        <td>
+                                        <td data-label="開催日：">
                                             @php
                                             echo date('Y年m月d日', strtotime($event['event_date']));
                                             @endphp                                            
                                         </td>
-                                        <td>{{ $event['reception_cnt'] }} / {{ $event['entrys_cnt'] }}</td>
-                                        <td>{{ $event['title'] }}</td>
+                                        <td data-label="受付数/受講券発行者数：">{{ $event['reception_cnt'] }} / {{ $event['entrys_cnt'] }}</td>
+                                        <td data-label="研修タイトル：">{{ $event['title'] }}</td>
                                         <td>
                                             <a href="{{ url('reception/'.$event['event_id'].'-'.$event['event_date_id']) }}" class="btn btn-info btn-sm">受付者一覧</a>
                                         </td>

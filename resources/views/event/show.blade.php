@@ -36,7 +36,7 @@
                             {{ $capacity_status }}
                         </div>
                         @endif
-                        <table class="table table-striped">
+                        <table class="table table-striped tbl-2column">
                             <tbody>
                                 <tr>
                                     <th>研修種別</th>

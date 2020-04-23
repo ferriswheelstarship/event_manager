@@ -7,14 +7,14 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">{{ $user->name }}</div>
+                    <div class="card-header">ユーザ詳細（{{ $user->name }}）</div>
                     <div class="card-body">
                         <div class="mb-3">
                             <a href="{{ route('account.index') }}" class="btn btn-sm btn-info">ユーザ一覧へ戻る</a>
-                            <a href="{{ route('account.edit',['user_id' => $user->id]) }}" class="btn btn-sm btn-primary">情報変更</a>
+                            <a href="{{ route('account.edit',['user_id' => $user->id]) }}" class="btn btn-sm btn-primary">変更</a>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-striped table-hover">
+                            <table class="table table-striped tbl-2column">
                                 <tbody>
                                     <tr>
                                         <th>メールアドレス</th>

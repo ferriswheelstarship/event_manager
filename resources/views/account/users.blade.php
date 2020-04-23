@@ -1,7 +1,7 @@
 @if (count($users) > 0)
     <div class="table-responsive">
-        <table class="table table-striped" id="data-table">
-            <thead>
+        <table class="table table-striped tbl-withheading" id="data-table">
+            <thead class="thead">
                 <tr>
                     <!-- <th>ID</th> -->
                     <th class="text-nowrap">名前</th>
@@ -19,13 +19,13 @@
                 @endphp
                 <tr>
                     <!-- <td>{{ $user->id }}</td> -->
-                    <td>{{ $user->name }}</td>
-                    <td>{{ $user->email }}</td>
-                    <td>
+                    <td data-label="名前：">{{ $user->name }}</td>
+                    <td data-label="メールアドレス：">{{ $user->email }}</td>
+                    <td data-label="権限：">
                     @if($user->role_id)
                     {{ $role_array[$user->role_id] }}
                     @endif</td>
-                    <td>{{ $account_status[$account_status_val]}}</td>
+                    <td data-label="アカウント：">{{ $account_status[$account_status_val]}}</td>
                     <td>
                     @can('system-only')
                         @if( $user->deleted_at )
@@ -89,7 +89,7 @@
 
                         @else
                         <a href="{{ url('account/'.$user->id) }}" class="btn btn-info btn-sm">詳細</a>
-                        <a href="{{ url('account/edit/'.$user->id) }}" class="btn btn-primary btn-sm">編集</a>
+                        <a href="{{ url('account/edit/'.$user->id) }}" class="btn btn-primary btn-sm">変更</a>
                         <button type="button" class="delete-confirm btn-sm btn-danger" value="{{ $user->id }}" data-toggle="modal" data-target="#confirm-delete{{ $user->id }}">退会</button>
                         <!-- {{ Form::open(['route' => ['account.softDelete', $user->id], 'method' => 'delete']) }}
                             {{ Form::hidden('id', $user->id) }}
