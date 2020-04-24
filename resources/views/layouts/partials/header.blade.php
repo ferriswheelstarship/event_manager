@@ -6,15 +6,46 @@
     </button>
 
     <div class="collapse navbar-collapse mt-3" id="navbarsExampleDefault">
-        @auth
+        @guest
         <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">ユーザ登録</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">ログイン</a></li>
+        </ul>
+        @else
+        <div class="w-100 nav-item dropdown my-3 p-2 bg-light">
+            <a class="dropdown-toggle w-100 account" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">                
+                <i class="fa fa-2x fa-user text-info"></i>　
+                <small class="align-top">{{ Auth::user()->name }}</small>
+            </a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="{{ route('account.edit',['user_id' => Auth::id()]) }}">登録内容変更</a>
+                @can('user-only')
+                <a class="dropdown-item" href="{{ route('account.withdrawalconfirm') }}">退会（休止）</a>
+                @endcan
+                <a class="dropdown-item" href="{{ route('logout') }}"
+                    onclick="event.preventDefault();
+                    document.getElementById('logout-form').submit();">
+                    ログアウト
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    {{ csrf_field() }}
+                </form>
+                </a>
+            </div>
+        </div>
+        @endguest
+        @auth
+        <ul class="navbar-nav mt-3">
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('dashboard') }}">ダッシュボード</a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">研修</a>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="{{ route('event.index') }}">研修一覧</a>
+                    <!-- <a class="dropdown-item" href="{{ route('event.index') }}">全ての研修</a>
+                    <div class="dropdown-divider"></div> -->
+                    <a class="dropdown-item" href="{{ route('event.before') }}">開催前の研修</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ route('event.finished') }}">終了した研修</a>
                     @can('area-higher')
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{ route('event.create') }}">研修登録</a>
@@ -22,8 +53,15 @@
                 </div>
             </li>
             @can('area-higher')
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('entry.index') }}">申込管理</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">申込管理</a>
+                <div class="dropdown-menu">
+                    <!-- <a class="dropdown-item" href="{{ route('entry.index') }}">全ての研修</a>
+                    <div class="dropdown-divider"></div> -->
+                    <a class="dropdown-item" href="{{ route('entry.interm') }}">受付中の研修</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ route('entry.finished') }}">受付終了した研修</a>
+                </div>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">受付管理</a>
@@ -64,29 +102,5 @@
             @endcan
         </ul>
         @endauth
-        <ul class="navbar-nav">
-            @guest
-            <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">ユーザ登録</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">ログイン</a></li>
-            @else
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ Auth::user()->name }}</a>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="{{ route('account.edit',['user_id' => Auth::id()]) }}">登録内容変更</a>
-                    @can('user-only')
-                    <a class="dropdown-item" href="{{ route('account.withdrawalconfirm') }}">退会（休止）</a>
-                    @endcan
-                    <a class="dropdown-item" href="{{ route('logout') }}"
-                        onclick="event.preventDefault();
-                        document.getElementById('logout-form').submit();">
-                        ログアウト
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        {{ csrf_field() }}
-                    </form>
-                    </a>
-                </div>
-            </li>
-            @endguest
-        </ul>
     </div>
 </nav>    

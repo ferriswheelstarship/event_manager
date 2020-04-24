@@ -35,10 +35,9 @@
                             <table class="table table-striped tbl-withheading" id="data-table">
                                 <thead class="thead">
                                     <tr>
-                                        <!-- <th>ID</th> -->
+                                        <th class="text-nowrap">開催日</th>
                                         <th class="text-nowrap">状態</th>
                                         <th class="text-nowrap">申込数 / 定員</th>
-                                        <th class="text-nowrap">開催日</th>
                                         <th class="text-nowrap">研修タイトル</th>
                                         <th class="text-nowrap">操作</th>
                                     </tr>
@@ -46,12 +45,6 @@
                                 <tbody>
                                     @foreach ($data as $event)
                                     <tr>
-                                        <td data-label="状態：">
-                                            <span>{{ $event['status']}}</span>
-                                        </td>
-                                        <td data-label="申込数/定員：">
-                                            <span>{{ $event['entrys_cnt'] }} / {{ $event['capacity'] }}</span>
-                                        </td>
                                         <td data-label="開催日：">
                                             @foreach ($event['event_dates'] as $key => $edate)
                                             @php
@@ -59,6 +52,12 @@
                                             @endphp
                                             @if(!$loop->last) <br> @endif
                                             @endforeach
+                                        </td>
+                                        <td data-label="状態：">
+                                            <span>{{ $event['status']}}</span>
+                                        </td>
+                                        <td data-label="申込数/定員：">
+                                            <span>{{ $event['entrys_cnt'] }} / {{ $event['capacity'] }}</span>
                                         </td>
                                         <td data-label="開催日：">{{ $event['title'] }}</td>
                                         <td  data-label="操作：">

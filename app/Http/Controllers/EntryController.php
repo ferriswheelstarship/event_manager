@@ -80,6 +80,126 @@ class EntryController extends Controller
         return view('entry.index',compact('events','data'));
     }
 
+    public function interm()
+    {
+        $user_self = User::find(Auth::id());
+
+        if(Gate::allows('system-only')) { //特権ユーザのみ
+            $events = Event::where('entry_start_date','<=',now())
+                                ->where('entry_end_date','>',now())
+                                ->orderBy('id', 'desc')->get();
+        } elseif(Gate::allows('area-only')) { //支部ユーザのみ
+            $events = Event::where('user_id',$user_self)
+                                ->where('entry_start_date','<=',now())
+                                ->where('entry_end_date','>',now())
+                                ->orderBy('id', 'desc')->get();
+        }
+
+        foreach($events as $event) {
+
+            // 研修申込期間
+            $dt = Carbon::now();
+            $entry_start_date = new Carbon($event['entry_start_date']);
+            $entry_end_date = new Carbon($event['entry_end_date']);
+
+            // 申込数
+            $entrys_cnt = Entry::select('user_id')
+                            ->where('event_id',$event['id'])
+                            ->where(function($q){
+                                $q->where('entry_status','Y')
+                                    ->orWhere('entry_status','YC');
+                            })->groupBy('user_id')->get()->count();
+
+            // ステータス
+            if($event->deleted_at) {
+                $status = "削除済";
+            } else {
+                if($entrys_cnt >= $event['capacity']){
+                    $status = "キャンセル待申込";
+                } else {
+                    if($entry_start_date > $dt){
+                        $status = "申込開始前";
+                    } elseif($entry_end_date < $dt) {
+                        $status = "申込受付終了";
+                    } else {
+                        $status = "申込受付中";
+                    } 
+                }
+            }
+                            
+            $data[] = [
+                'id' => $event->id,
+                'title' => $event->title,
+                'status' => $status,
+                'event_dates' => $event->event_dates()->select('event_date')->get(),
+                'capacity' => $event->capacity,
+                'entrys_cnt' => $entrys_cnt,
+                'deleted_at' => $event->deleted_at,
+            ];
+        }
+
+        return view('entry.interm',compact('events','data'));
+    }
+
+    public function finished()
+    {
+        $user_self = User::find(Auth::id());
+
+        if(Gate::allows('system-only')) { //特権ユーザのみ
+            $events = Event::where('entry_end_date','<',now())
+                                ->orderBy('id', 'desc')->get();
+        } elseif(Gate::allows('area-only')) { //支部ユーザのみ
+            $events = Event::where('user_id',$user_self)
+                                ->where('entry_end_date','<',now())
+                                ->orderBy('id', 'desc')->get();
+        } 
+
+        foreach($events as $event) {
+
+            // 研修申込期間
+            $dt = Carbon::now();
+            $entry_start_date = new Carbon($event['entry_start_date']);
+            $entry_end_date = new Carbon($event['entry_end_date']);
+
+            // 申込数
+            $entrys_cnt = Entry::select('user_id')
+                            ->where('event_id',$event['id'])
+                            ->where(function($q){
+                                $q->where('entry_status','Y')
+                                    ->orWhere('entry_status','YC');
+                            })->groupBy('user_id')->get()->count();
+
+            // ステータス
+            if($event->deleted_at) {
+                $status = "削除済";
+            } else {
+                if($entrys_cnt >= $event['capacity']){
+                    $status = "キャンセル待申込";
+                } else {
+                    if($entry_start_date > $dt){
+                        $status = "申込開始前";
+                    } elseif($entry_end_date < $dt) {
+                        $status = "申込受付終了";
+                    } else {
+                        $status = "申込受付中";
+                    } 
+                }
+            }
+                            
+            $data[] = [
+                'id' => $event->id,
+                'title' => $event->title,
+                'status' => $status,
+                'event_dates' => $event->event_dates()->select('event_date')->get(),
+                'capacity' => $event->capacity,
+                'entrys_cnt' => $entrys_cnt,
+                'deleted_at' => $event->deleted_at,
+            ];
+        }
+
+        return view('entry.finished',compact('events','data'));
+    }
+
     public function show($id)
     {
         $event = Event::find($id);

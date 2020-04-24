@@ -81,7 +81,9 @@ Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
   // Route::get('event/create', 'EventsController@create')->name('event.create'); 
   // Route::get('event/{id}/edit', 'EventsController@edit')->name('event.edit');
   Route::resource('event', 'EventsController');
-  Route::post('event/apply', 'EventsController@apply')->name('event.apply'); 
+  Route::get('event/list/before', 'EventsController@before')->name('event.before');
+  Route::get('event/list/finished', 'EventsController@finished')->name('event.finished');
+  Route::post('event/apply', 'EventsController@apply')->name('event.apply');
   Route::post('event/cancel', 'EventsController@cancel')->name('event.cancel'); 
 
   // 受講履歴
@@ -135,6 +137,8 @@ Route::group(['middleware' => ['auth', 'can:area-higher']], function () {
 
   // 申込者確認用index
   Route::get('entry', 'EntryController@index')->name('entry.index');
+  Route::get('entry/list/interm', 'EntryController@interm')->name('entry.interm');
+  Route::get('entry/list/finished', 'EntryController@finished')->name('entry.finished');
   // 申込者一覧
   Route::get('entry/{id}', 'EntryController@show')->name('entry.show');
   // 受講券送信
