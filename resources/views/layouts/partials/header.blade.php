@@ -13,8 +13,8 @@
         </ul>
         @else
         <div class="w-100 nav-item dropdown my-3 p-2 bg-light">
-            <a class="dropdown-toggle w-100 account" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">                
-                <i class="fa fa-2x fa-user text-info"></i>　
+            <a class="dropdown-toggle w-100 d-inline-block align-middle account " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">                
+                <i class="fa fa-2x fa-user text-info mr-1"></i>
                 <small class="align-top">{{ Auth::user()->name }}</small>
             </a>
             <div class="dropdown-menu">
