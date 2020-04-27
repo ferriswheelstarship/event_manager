@@ -313,8 +313,9 @@
                                         削除したデータは復元できませんのでご注意ください。</span></p>
 
                                         @if($max_frag == true && count($entrys_cw_view) > 0)
-                                        <p><span class="text-danger">また、現在定員数最大まで申込がございます。<br>
-                                        削除後は申込数が1枠減少しますので、↓の「キャンセル待ちユーザ」から「申込者」へ繰り上げを行って下さい。</span></p>
+                                        <p><span class="text-danger">また、現在定員数最大まで申込があります。<br>
+                                        削除後は申込数が1枠減少しますので、↓の「キャンセル待ちユーザ」から「申込者」へ繰り上げを行って下さい。<br>
+                                        繰り上げをしたユーザへはその旨メールが送信されます。</span></p>
 
                                         <div class="mb-2"><strong>繰り上げユーザの選択</strong></div>
                                         <select name="upgrade_user_id" class="form-control mb-2">

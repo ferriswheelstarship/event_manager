@@ -31,11 +31,6 @@
                             <a href="{{ route('event.edit',['id' => $event->id]) }}" class="btn btn-sm btn-primary">変更</a>
                             @endcan
                         </div>
-                        @if($applyfrag == true && isset($capacity_status))
-                        <div class="alert alert-danger">
-                            {{ $capacity_status }}
-                        </div>
-                        @endif
                         <table class="table table-striped tbl-2column">
                             <tbody>
                                 <tr>
@@ -134,14 +129,14 @@
                             </tbody>
                         </table>
                         @cannot('area-higher')
+
+                        @can('user-only')
+
                         @if($applyfrag == true)
-
-                            @can('user-only')
-
                             @if($entrys_self)
                                 @if($entrys_self->ticket_status != 'Y')
                         <div class="alert alert-danger">
-                        現在、当研修に申込み中です。メールで入金のご案内をお送りしておりますのでご入金いただくことで受講券の発券、確認ができます。
+                        現在、当研修に申込み中です。申込期間終了後に受講券を発行しますので今しばらくお待ち下さい。
                         </div>
                         <button type="button" class="apply-cancel btn-sm btn-danger" 
                         value="{{ $event->id }}" 
@@ -149,7 +144,7 @@
                                 @else
                         <div class="alert alert-danger">
                         現在、当研修への申し込みは完了しております。<br>
-                        チケット発券（ダウンロード）はお忘れのないようにし、研修当日の受付時チケット内のバーコードのご提示をお願い致します。
+                        受講券の発券（ダウンロード）をお忘れのないようにし、研修当日の受付時に受講券内のQEコードのご提示をお願い致します。
                         </div>
                         <a href="{{ route('ticket_pdf',['id' => Auth::id().'-'.$event->id]) }}" target="_blank" class="btn btn-info">受講券を表示</a>
                                 @endif
@@ -167,6 +162,7 @@
                         value="{{ $event->id }}" 
                         data-toggle="modal" data-target="#confirm-apply">参加申込</button>
                             @endif
+
 
                         <!-- Modal(apply) -->
                         <div class="modal fade" id="confirm-apply" tabindex="-1">
@@ -225,8 +221,19 @@
                                 </form>
                             </div>
                         </div>
+                        @else
+                        <div class="alert alert-danger">
+                            {{ $status_mes }}
+                        </div>
+                        @endif
 
-                            @elsecan('admin-only')
+                        @elsecan('admin-only')
+                        @if($applyfrag == false)
+                        <div class="alert alert-danger">
+                            {{ $status_mes }}
+                        </div>
+                        @endif
+
                             <h3 class="h5 mt-5">所属ユーザ申込状況</h3>
                             <div >
                                 <table class="table">
@@ -244,24 +251,30 @@
                                             <td>{{ $item['entry_status'] }}</td>
                                             <td>
                                                 @if($item['entry_status'] == '申込なし')
+                                                    @if($applyfrag == true)
+                                                    @if(!$capacity_status)
                                                 <button type="button" class="apply-confirm btn-sm btn-primary" 
                                                 value="{{ $item['id'] }}" 
                                                 data-toggle="modal" data-target="#confirm-apply{{ $item['id'] }}">参加申込</button>
-                                                @elseif($item['entry_status'] == 'キャンセル待ち申込')
+                                                    @else
                                                 <button type="button" class="apply-confirm btn-sm btn-primary" 
                                                 value="{{ $item['id'] }}" 
                                                 data-toggle="modal" data-target="#confirm-apply{{ $item['id'] }}">キャンセル待ち申込</button>
-                                                @elseif($item['entry_status'] == '申込済・入金未')
+                                                    @endif
+                                                    @else
+                                                    申込不可
+                                                    @endif
+                                                @elseif($item['entry_status'] == '受講券発行待ち')
                                                 <button type="button" class="apply-cancel btn-sm btn-danger" 
                                                 value="{{ $event->id }}" 
                                                 data-toggle="modal" data-target="#confirm-cancel{{ $item['id'] }}">申込みキャンセル</button>
-                                                @elseif($item['entry_status'] == '申込済・入金済')
+                                                @elseif($item['entry_status'] == '申込済')
                                                 <a href="{{ route('ticket_pdf',['id' => $item['id'].'-'.$event->id]) }}" 
                                                 target="_blank" class="btn btn-sm btn-info">受講券を表示</a>
                                                 @elseif($item['entry_status'] == '申込後キャンセル')
-                                                申込み後キャンセル
+                                                
                                                 @elseif($item['entry_status'] == 'キャンセル待ち申込')
-                                                キャンセル待ち申込
+                                                
                                                 @endif
                                             </td>
                                         </tr>
@@ -333,14 +346,8 @@
                                 @endforeach
 
                             
-                            @endcan
+                        @endcan
 
-
-                        @else
-                        <div class="alert alert-danger">
-                            {{ $status_mes }}
-                        </div>
-                        @endif
 
                         @endcannot
 

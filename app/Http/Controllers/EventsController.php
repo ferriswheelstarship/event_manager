@@ -479,7 +479,7 @@ class EventsController extends Controller
                         $entry_status = "申込済・入金済";
                     } else {
                         if($entry->entry_status == 'Y') {
-                            $entry_status = "申込済・入金未";
+                            $entry_status = "受講券発行待ち";
                         } elseif($entry->entry_status == 'YC') {
                             $entry_status = "申込後キャンセル";
                         } elseif($entry->entry_status == 'CW') {
@@ -515,6 +515,16 @@ class EventsController extends Controller
             $status_mes = "申込受付開始前のため申込できません。";
         } elseif($entry_end_date < $dt) {
             $status_mes = "申込受付が終了したため申込できません。";
+        }
+
+        if(count($event_dates) > 0) {
+            foreach($event_dates as $event_date) {
+                if($event_date->event_date < $dt) {
+                    $applyfrag = false;
+                    $status_mes = "当研修は開催修了しています。";
+                    break;
+                }
+            }
         } 
 
         // 通常申込 or キャンセル待ち申込み判定
@@ -527,7 +537,6 @@ class EventsController extends Controller
         } else {
             $capacity_status = null;
         }
-
         
         return view('event.show',
                 compact(
