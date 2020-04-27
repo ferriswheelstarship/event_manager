@@ -16,6 +16,7 @@ use App\Event_date;
 use App\Event_upload;
 use App\Entry;
 use Mail;
+use App\Http\Traits\Csv;
 
 class ReceptionController extends Controller
 {
