@@ -42,9 +42,37 @@
                         <div class="row p-3">
                             <h3 class="h5 col-md-4">受付完了者 {{ $reception_cnt }}名 / 参加予定者 {{ count($entrys_view) }}名</h3>
                             <div class="col-md-8">
-                                <a href="" class="btn btn-sm btn-primary">CSVダウンロード</a>
+                                <button type="button" class="csv-confirm btn btn-sm btn-primary"
+                                data-toggle="modal" data-target="#confirm-csv">CSVダウンロード</button>                                        
                             </div>
                         </div>
+
+                        @can('area-higher')
+                        <div class="modal fade" id="confirm-csv" tabindex="-1">
+                            <div class="modal-dialog" role="document">
+                                <form role="form" class="form-inline" method="POST" action="{{ route('reception.reception_csv') }}">
+                                {{ csrf_field() }}
+
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">CSVダウンロード</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    ユーザ一覧をCSVでダウンロードしますか？
+                                    <input type="hidden" name="event_id" value="{{ $event->id }}">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+                                    <button type="submit" class="btn btn-primary">CSVダウンロード</button>
+                                </div>
+                                </div>
+                                </form>
+                            </div>
+                        </div>                    
+                        @endcan
 
                         <div class="px-3 py-5">
                             <div class="row">

@@ -38,7 +38,7 @@
 
                         @can('admin-higher')
                         <div class="mb-3">
-                            <a href="{{ route('account.index') }}" class="btn btn-sm btn-info">ユーザ一覧へ戻る</a>
+                            <a href="{{ route('account.index') }}" class="btn btn-sm btn-info">ユーザ一覧</a>
                         </div>
                         @endcan
 

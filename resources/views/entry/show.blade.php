@@ -53,10 +53,39 @@
                         <div class="row p-3">
                             <h3 class="h5 col-md-4">申込者 {{ count($entrys_y_view) }}名/ 定員 {{ $event->capacity }}名</h3>
                             <div class="col-md-8">
-                                <a href="" class="btn btn-sm btn-primary">CSVダウンロード</a>
+                                <button type="button" class="csv-confirm btn btn-sm btn-primary"
+                                data-toggle="modal" data-target="#confirm-csv">CSVダウンロード</button>                                        
+
                                 <a href="{{ route('ticket_pdf',['id' => Auth::id().'-'.$event->id]) }}" target="_blank" class="btn btn-sm btn-info">受講券プレビュー</a>
                             </div>
                         </div>
+
+                        @can('area-higher')
+                        <div class="modal fade" id="confirm-csv" tabindex="-1">
+                            <div class="modal-dialog" role="document">
+                                <form role="form" class="form-inline" method="POST" action="{{ route('entry.entry_csv') }}">
+                                {{ csrf_field() }}
+
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">CSVダウンロード</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    申込完了ユーザの一覧をCSVでダウンロードしますか？
+                                    <input type="hidden" name="event_id" value="{{ $event->id }}">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+                                    <button type="submit" class="btn btn-primary">CSVダウンロード</button>
+                                </div>
+                                </div>
+                                </form>
+                            </div>
+                        </div>                    
+                        @endcan
 
                         @if (count($entrys_y_view) > 0)
                         <div class="table-responsive">
@@ -203,11 +232,11 @@
                                     <div class="modal-body">
                                         <strong>ユーザ：{{ $entry['user_name'] }} </strong><br><br>
                                         <p><strong>{{ $event->title }}</strong>の受講券を発行しますか？<br><br>
-                                        @if($entry['status'] === '未入金')
-                                        <span class="text-danger">一度受講券を発行するとステータスが<strong>受講券発行済</strong>となります。<br>
-                                        入金を確認したユーザかどうかご確認ください。</span>
+                                        @if($entry['status'] === '受講券未')
+                                        <span class="text-danger">一度受講券を発行するとステータスが<strong>{{ $entry['status'] }}</strong>となります。<br>
+                                        受講券を案内して問題ないかご確認ください。</span>
                                         @else
-                                        <span class="text-danger">当ユーザへは<strong>受講券発行済</strong>です。<br>
+                                        <span class="text-danger">当ユーザへは<strong>{{ $entry['status'] }}</strong>です。<br>
                                         再度メールを案内することになりますが本当によろしいですか？</span>
                                         @endif
                                         </p>
@@ -239,8 +268,8 @@
                                     <div class="modal-body">
                                         <strong>ユーザ：{{ $entry['user_name'] }} </strong><br><br>
                                         <p><strong>{{ $event->title }}</strong>の受講をキャンセルしますか？<br><br>
-                                        @if($entry['status'] === '未入金')
-                                        <span class="text-danger">当ユーザはステータスが<strong>入金未</strong>です。<br>
+                                        @if($entry['status'] === '受講券未')
+                                        <span class="text-danger">当ユーザはステータスが<strong>{{ $entry['status'] }}</strong>です。<br>
                                         キャンセル後は「申込後キャンセル」タブでデータが残ります。<br>
                                         必要に応じて「削除」、「キャンセル待ち繰り上げ」を行って下さい。</span>
                                         @else
@@ -280,15 +309,15 @@
                                     <div class="modal-body">
                                         <strong>ユーザ：{{ $entry['user_name'] }} </strong><br><br>
                                         <p><strong>{{ $event->title }}</strong>のデータを削除しますか？<br><br>
-                                        <span class="text-danger">当ユーザはステータスが<strong>入金未</strong>です。<br>                                        
+                                        <span class="text-danger">当ユーザは<strong>{{ $entry['status'] }}</strong>です。<br>                                        
                                         削除したデータは復元できませんのでご注意ください。</span></p>
 
                                         @if($max_frag == true && count($entrys_cw_view) > 0)
                                         <p><span class="text-danger">また、現在定員数最大まで申込がございます。<br>
-                                        削除後は申込数が1枠減少しますので、「キャンセル待ち」から「申込者」へ繰り上げを行って下さい。</span></p>
+                                        削除後は申込数が1枠減少しますので、↓の「キャンセル待ちユーザ」から「申込者」へ繰り上げを行って下さい。</span></p>
 
                                         <div class="mb-2"><strong>繰り上げユーザの選択</strong></div>
-                                        <select name="upgrade_user_id" class="mb-2">
+                                        <select name="upgrade_user_id" class="form-control mb-2">
                                             @foreach ($entrys_cw_view as $entry_cw)
                                             <option value="{{ $entry_cw['user_id'] }}">【申込日時：{{ $entry_cw['created'] }}】{{ $entry_cw['user_name'] }}</option>
                                             @endforeach

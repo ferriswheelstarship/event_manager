@@ -104,15 +104,15 @@
   </head>
   <body>
     <div class="header">
-        <p class="tar header_first"><br />
+      <!-- <p class="tar header_first"><br />
         公益社団法人 兵庫県保育協会<br>
         事務局</p>
-      <p class="header_second">関係各位</p>
-      <h1 class="header_heading tac" >{{ $data['event']->title }}の受講について</h1>
-      <div class="header_comment">　時下ますますご清栄のこととお慶び申し上げます。<br />
+      <p class="header_second">関係各位</p> -->
+      <h1 class="header_heading tac" >「{{ $data['event']->title }}」受講券</h1>
+      <!-- <div class="header_comment">　時下ますますご清栄のこととお慶び申し上げます。<br />
       この度は{{ $data['event']->title }}へお申込み頂き、ありがとうございました。<br />
       受講券内のQRコードで受付を行いますので、<br />
-      印刷した紙面または現在ご覧の画面を受付でご提示ください。
+      印刷した紙面または現在ご覧の画面を受付でご提示ください。 -->
       </div>
     </div>
     <div class="content">
@@ -157,6 +157,10 @@
                     @endif
                     @endforeach
                     @endif
+                    @if(count($data['event_dates']) > 1)
+                    <br>
+                    ※この受講券は全開催日で有効です。
+                    @endif
                     </td>
                 </tr>
                 <tr>
@@ -176,6 +180,8 @@
             <td class="tac">{!! $data['qrcode'] !!}</td>
           </tr>
         </table>
+        <p class="h6 mb-0"><small>※研修当日の受付は受講券内のQRコードで行いますので、
+        紙面へ印刷したもの、または受講券が表示された画面をご提示ください。</small></p>
       </div>
     </div>
   </body>

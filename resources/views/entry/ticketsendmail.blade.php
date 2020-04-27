@@ -23,6 +23,5 @@ echo date('Y年m月d日', strtotime($val['event_date']));
 受講券は↓よりご確認ください。
 {{url('/ticket_pdf/'.$ticketid)}}
 
-
 研修当日の受付は受講券内のQRコードで行いますので、
 紙面へ印刷したもの、または受講券が表示された画面をご提示ください。

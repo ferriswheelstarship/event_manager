@@ -11,10 +11,12 @@ use App\User;
 use App\Role;
 use App\Profile;
 use App\Company_profile;
+use App\Http\Traits\Csv;
 
 
 class UsersController extends Controller
 {
+
     public function index()
     {
         $user_self = User::find(Auth::id());
@@ -28,6 +30,60 @@ class UsersController extends Controller
             $users = User::where('status',1)
                             ->where('role_id',4)
                             ->where('company_profile_id',$user_self->company_profile_id)
+                            ->orderBy('id', 'desc')
+                            ->get();
+        } else {
+            return redirect('/account/edit/'.Auth::id());
+        }
+        $account_status = [1=>'有効',2=>'退会'];
+        $role_array = config('const.AUTH_STATUS_JP');
+        return view('account.index',compact('users','role_array','account_status'));
+    }
+
+    public function branch_user()
+    {
+        $user_self = User::find(Auth::id());
+
+        if(Gate::allows('system-only')){ // 特権ユーザのみ
+            $users = User::withTrashed()
+                            ->where('role_id',2)
+                            ->where('status',1)
+                            ->orderBy('id', 'desc')
+                            ->get();
+        } else {
+            return redirect('/account/edit/'.Auth::id());
+        }
+        $account_status = [1=>'有効',2=>'退会'];
+        $role_array = config('const.AUTH_STATUS_JP');
+        return view('account.index',compact('users','role_array','account_status'));
+    }
+
+    public function company_user()
+    {
+        $user_self = User::find(Auth::id());
+
+        if(Gate::allows('system-only')){ // 特権ユーザのみ
+            $users = User::withTrashed()
+                            ->where('role_id',3)
+                            ->where('status',1)
+                            ->orderBy('id', 'desc')
+                            ->get();
+        } else {
+            return redirect('/account/edit/'.Auth::id());
+        }
+        $account_status = [1=>'有効',2=>'退会'];
+        $role_array = config('const.AUTH_STATUS_JP');
+        return view('account.index',compact('users','role_array','account_status'));
+    }
+
+    public function general_user()
+    {
+        $user_self = User::find(Auth::id());
+
+        if(Gate::allows('system-only')){ // 特権ユーザのみ
+            $users = User::withTrashed()
+                            ->where('role_id',4)
+                            ->where('status',1)
                             ->orderBy('id', 'desc')
                             ->get();
         } else {
@@ -547,5 +603,107 @@ class UsersController extends Controller
         $user = User::onlyTrashed()->find($id);
         $user->forceDelete();
         return redirect()->route('account.index')->with('status','指定ユーザのアカウントを削除しました。削除したユーザは復元できません。');
+    }
+
+    public function user_csv(Request $request) 
+    {
+        if(Gate::denies('system-only')) {
+            return redirect()->route('account.index');
+        }
+
+        // リスト
+        $users = User::where('role_id',$request->role_id)->get();
+        if($users->count() > 0) {
+            foreach($users as $user) {
+                if($request->role_id == 1 || $request->role_id == 2) {
+                    $lists[] = [
+                        $user['name'],
+                        $user['email'],
+                    ];
+                } else {
+                    if($request->role_id == 3) {
+
+                        // profile
+                        $company_profile = $user->company_profile()->first();
+
+                        $lists[] = [
+                            $company_profile->area_name,
+                            $company_profile->branch_name,
+                            $company_profile->company_variation,
+                            $company_profile->public_or_private,
+                            $company_profile->category,
+                            $user['name'],
+                            $user['ruby'],
+                            $user['email'],
+                            $user['phone'],
+                            $company_profile->fax,
+                            $user['zip'],
+                            $user['address'],
+                            $company_profile->kyokai_number,
+                        ];
+
+                    } elseif($request->role_id == 4) {
+
+                        // profile
+                        $profile = $user->profile()->first();
+
+                        // 所属施設名
+                        if($user->company_profile_id) {
+                            $company = User::where('role_id',3)->where('company_profile_id',$user->company_profile_id)->first();
+                            $company_name = $company->name.'(兵庫県下)';
+                        } else {
+                            $company = $user->profile;
+                            $company_name = $company->other_facility_name.'('.$company->other_facility_pref.')';
+                        }
+                        
+                        $lists[] = [
+                            $user['name'],
+                            $user['ruby'],
+                            $user['email'],
+                            $user['phone'],
+                            $user['zip'],
+                            $user['address'],
+                            $profile->birth_year.'年'.$profile->birth_month.'月'.$profile->birth_day.'日',
+                            $company_name,
+                            $profile->job,
+                            $profile->childminder_status,
+                            $profile->childminder_number,
+                        ];
+                    }
+
+                }
+            }
+
+        } else {
+            $lists = [];
+        }
+
+        $filename = 'user.csv';
+        $file = Csv::createCsv($filename);
+
+        // 見出し
+        if($request->role_id == 1 || $request->role_id == 2) {
+            $heading = ['名前','メールアドレス'];
+        } elseif($request->role_id == 3) {
+            $heading = ['地区名','支部名','設置主体','公・私','こども園類型','施設名','フリガナ','メールアドレス','電話番号','FAX番号','郵便番号','住所','協会NO'];
+        } elseif($request->role_id == 4) {
+            $heading = ['名前','フリガナ','メールアドレス','電話番号','郵便番号','住所','生年月日','所属','職種','保育士番号所持状況','保育士番号'];
+        }
+
+        Csv::write($file,$heading); 
+
+        // data insert
+        foreach ($lists as $data) {
+            Csv::write($file, $data);
+        }
+        $response = file_get_contents($file);
+
+        // ストリームに入れたら実ファイルは削除
+        Csv::purge($filename);
+
+        return response($response, 200)
+                ->header('Content-Type', 'text/csv')
+                ->header('Content-Disposition', 'attachment; filename='.$filename);
+
     }
 }

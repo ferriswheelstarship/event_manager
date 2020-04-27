@@ -85,18 +85,22 @@
 
             @can('system-only')
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ユーザ設定</a>
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ユーザ管理</a>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="{{ route('account.index') }}">ユーザ情報</a>
+                    <a class="dropdown-item" href="{{ route('account.branch_user') }}">支部ユーザ</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ route('account.company_user') }}">法人ユーザ</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ route('account.general_user') }}">個人ユーザ</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{ route('account.regist') }}">ユーザ登録</a>
                 </div>
             </li>
             @elsecan('admin-only')
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ユーザ設定</a>
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ユーザ管理</a>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="{{ route('account.index') }}">ユーザ情報</a>
+                    <a class="dropdown-item" href="{{ route('account.index') }}">ユーザ一覧</a>
                 </div>
             </li>            
             @endcan

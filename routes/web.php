@@ -147,6 +147,8 @@ Route::group(['middleware' => ['auth', 'can:area-higher']], function () {
   Route::post('entry/cancel', 'EntryController@cancel')->name('entry.cancel'); 
   // 受講データ削除
   Route::post('entry/destroy', 'EntryController@destroy')->name('entry.delete'); 
+  // 申込者一覧CSV
+  Route::post('entry/entry_csv', 'EntryController@entry_csv')->name('entry.entry_csv'); 
 
   // 受付管理index（開催間近の研修）
   Route::get('reception', 'ReceptionController@index')->name('reception.index');
@@ -160,6 +162,8 @@ Route::group(['middleware' => ['auth', 'can:area-higher']], function () {
   Route::get('reception/qr/{id}', 'ReceptionController@readqr')->name('reception.readqr');
   // 受付管理 - バーコード読取受付
   Route::post('reception/auto', 'ReceptionController@auto')->name('reception.auto');
+  // 受付管理 - 受付者一覧CSV
+  Route::post('reception/reception_csv', 'ReceptionController@reception_csv')->name('reception.reception_csv'); 
 
   // 修了証送信
   Route::post('history/certificatesend','HistoryController@certificatesend')->name('history.certificatesend');
@@ -168,6 +172,13 @@ Route::group(['middleware' => ['auth', 'can:area-higher']], function () {
 
 // システム管理者のみ
 Route::group(['middleware' => ['auth', 'can:system-only']], function () {
+
+  // ユーザ一覧（支部）
+  Route::get('account/branch/user', 'UsersController@branch_user')->name('account.branch_user');
+  // ユーザ一覧（法人）
+  Route::get('account/company/user', 'UsersController@company_user')->name('account.company_user');
+  // ユーザ一覧（支部）
+  Route::get('account/general/user', 'UsersController@general_user')->name('account.general_user');
 
   // ユーザ登録
   Route::get('account/regist/new', 'UsersController@regist')->name('account.regist');
@@ -181,5 +192,8 @@ Route::group(['middleware' => ['auth', 'can:system-only']], function () {
   Route::post('account/restore/{user_id}', 'UsersController@restore')->name('account.restore');
   // ユーザ物理削除
   Route::delete('account/forceDelete/{user_id}', 'UsersController@forceDelete')->name('account.forceDelete');
+  // csvダウンロード（権限別）
+  Route::post('account/user_csv', 'UsersController@user_csv')->name('account.user_csv');
+
 
 });

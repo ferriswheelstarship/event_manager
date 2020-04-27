@@ -376,4 +376,72 @@ class ReceptionController extends Controller
                     ->with('status',$user->name.'様を受付完了にしました。');
 
     }
+
+    public function reception_csv(Request $request) 
+    {
+        if(Gate::denies('area-higher')) {
+            return redirect()->route('event.index');
+        }
+ 
+        // 受付完了者
+        $entrys_y = Entry::select('user_id','created_at','ticket_status','ticket_status')
+                        ->where('event_id',$request->event_id)
+                        ->where('entry_status','Y')
+                        ->where('ticket_status','Y')
+                        ->groupBy('user_id','created_at','ticket_status')
+                        ->get();
+
+        if($entrys_y->count() > 0){
+            foreach($entrys_y as $entry) {
+                
+                // ユーザ名
+                $user = User::find($entry->user_id);
+                // 所属施設名
+                if($user->company_profile_id) {
+                    $company = User::where('role_id',3)->where('company_profile_id',$user->company_profile_id)->first();
+                    $company_name = $company->name;
+                } else {
+                    $company = $user->profile;
+                    $company_name = $company->other_facility_name;
+                }
+                // 状態
+                if($entry['attend_status'] == 'Y') {
+                    $status = "受付完了";
+                } else {
+                    $status = "受付未";
+                }
+
+                $lists[] = [
+                    $user->name,
+                    $user->ruby,
+                    $company_name,
+                    $status,
+                ];
+            }
+        } else {
+            $lists = [];
+        }
+
+        $filename = 'entry.csv';
+        $file = Csv::createCsv($filename);
+
+        // 見出し
+        $heading = ['名前','フリガナ','所属','状況'];
+
+        Csv::write($file,$heading); 
+
+        // data insert
+        foreach ($lists as $data) {
+            Csv::write($file, $data);
+        }
+        $response = file_get_contents($file);
+
+        // ストリームに入れたら実ファイルは削除
+        Csv::purge($filename);
+
+        return response($response, 200)
+                ->header('Content-Type', 'text/csv')
+                ->header('Content-Disposition', 'attachment; filename='.$filename);
+
+    }
 }
