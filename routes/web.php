@@ -206,4 +206,9 @@ Route::group(['middleware' => ['auth', 'can:system-only']], function () {
   // Route::delete('information/{id}', 'InformationController@destroy')->name('information.destroy');
   // Route::get('information/create', 'InformationController@create')->name('information.create'); 
   // Route::get('information/{id}/edit', 'InformationController@edit')->name('information.edit');
+
+  // 問い合わせ
+  Route::get('inquiry','ContactController@index')->name('inquiry.index');
+  Route::get('inquiry/{id}','ContactController@show')->name('inquiry.show');
+  
 });

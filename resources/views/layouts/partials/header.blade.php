@@ -101,7 +101,7 @@
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="{{ route('information.index') }}">インフォメーション</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{{ route('information.index') }}">お問い合わせ</a>
+                    <a class="dropdown-item" href="{{ route('inquiry.index') }}">お問い合わせ</a>
                 </div>
             </li>
             @elsecan('admin-only')
