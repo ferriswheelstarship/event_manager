@@ -12,6 +12,8 @@ use App\Event;
 use App\Careerup_curriculum;
 use App\Event_date;
 use App\Entry;
+use App\Contact;
+use Mail;
 
 class PagesController extends Controller
 {
@@ -132,6 +134,63 @@ class PagesController extends Controller
     public function contact()
     {
         return view('contact');
+    }
+
+    public function comfirm(Request $request)
+    {
+        $this->validate($request, [
+            'cname' => 'required|string',
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'cmail' => 'required|same:email',
+            'comment' => 'required',
+        ]);
+
+        $contact = $request->all();
+
+        return view('comfirm',compact('contact'));
+    }
+
+    public function complete(Request $request)
+    {
+        $input = $request->except('action');
+        
+        if($request->action === '戻る') {
+            return redirect()->route('contact')->withInput($input);
+        }
+
+        if(!isset($input['_token'])){
+            return redirect()->route('contact');
+        }
+        
+        $contact = Contact::create($request->all());        
+
+        // 二重送信防止
+        $request->session()->regenerateToken();
+
+        if($contact) {
+            // 自動返信
+            Mail::send(new \App\Mail\Contact([
+                'to' => $request->email,
+                'subject' => '【自動返信】お問い合わせありがとうございました。',
+                'cname' => $request->cname,
+                'name' => $request->name,
+                'email' => $request->email,
+                'comment' => $request->comment
+            ]));
+        
+            // 管理者宛
+            Mail::send(new \App\Mail\Contact([
+                'to' => 'ito@mj-inc.jp',
+                'subject' => '研修サイトからお問い合わせ',
+                'cname' => $request->cname,
+                'name' => $request->name,
+                'email' => $request->email,
+                'comment' => $request->comment
+            ], 'from'));
+        }
+            
+        return view('complete');
     }
 
 }

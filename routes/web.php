@@ -46,6 +46,8 @@ Route::get('links', 'PagesController@links')->name('links');
 Route::get('privacy', 'PagesController@privacy')->name('privacy');
 Route::get('info', 'PagesController@info')->name('info');
 Route::get('contact', 'PagesController@contact')->name('contact');
+Route::post('contact/comfirm', 'PagesController@comfirm')->name('comfirm');
+Route::post('contact/complete', 'PagesController@complete')->name('complete');
 
 // 退会後表示
 Route::get('afterwithdrawal', 'PagesController@afterwithdrawal')->name('afterwithdrawal');

@@ -108,101 +108,13 @@ Internet Explorerの安全ではないバージョンをお使いのようです
       <div class="contents-section-inner fadeInUp">
         <article class="contact-box">
           <header class="contact-box-header">
-            <h2 class="contact-box-header-h2">電話でのお問い合わせ</h2>
+            <h2 class="contact-box-header-h2">お問い合わせフォーム</h2>
           </header>
           <div class="contact-box-body">
-            <div class="contact-box-tel">
-              <a href="tel:0782424623" class="contact-box-tel-a">078-242-4623</a>
-              受付時間：10:00〜17:00（月〜金）
-            </div>
-            <div class="contact-box-address">
-              <div class="contact-box-address-name">公益社団法人 兵庫県保育協会</div>
-              〒651-0062<br />兵庫県神戸市中央区坂口通2丁目1番1号 <span class="ilb">兵庫県福祉センター内</span>
-            </div>
+            お問い合わせの送信が完了しました。<br>
+            回答まで今しばらくお待ち下さい。
           </div>
         </article>
-        <form id="form" class="contact-form" method="POST" action="{{ route('comfirm') }}#form" >
-          {{ csrf_field() }}
-          <article class="contact-form-box">
-            <header class="contact-box-header">
-              <h2 class="contact-box-header-h2">お問い合わせフォーム</h2>
-            </header>
-            <div class="contact-form-body">
-              <table class="tbl-normal">
-                <tr>
-                  <th class="th-w25prc required">施設名または会社／組織名</th>
-                  <td>
-                    <input type="text" class="form-textbox form-control{{ $errors->has('cname') ? ' is-invalid' : '' }}" 
-                    name="cname" value="{{ old('cname') }}" />
-                    @if ($errors->has('cname'))
-                    <span class="invalid-feedback note">
-                      <strong>{{ $errors->first('cname') }}</strong>
-                    </span>
-                    @endif
-                  </td>
-                </tr>
-                <tr>
-                  <th class="th-w25prc required">氏名</th>
-                  <td>
-                    <input type="text" class="form-textbox form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" 
-                    name="name" value="{{ old('name') }}" />
-                    @if ($errors->has('name'))
-                    <span class="invalid-feedback note">
-                      <strong>{{ $errors->first('name') }}</strong>
-                    </span>
-                    @endif
-                  </td>
-                </tr>
-                <tr>
-                  <th class="th-w25prc required">メールアドレス</th>
-                  <td>
-                    <input type="text" class="form-textbox form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" 
-                    name="email" value="{{ old('email') }}" />
-                    @if ($errors->has('email'))
-                    <span class="invalid-feedback note">
-                      <strong>{{ $errors->first('email') }}</strong>
-                    </span>
-                    @else
-                    <div class="note">※半角英数字</div>
-                    @endif
-                  </td>
-                </tr>
-                <tr>
-                  <th class="th-w25prc required">メールアドレス再入力</th>
-                  <td>
-                    <input type="text" class="form-textbox form-control{{ $errors->has('cmail') ? ' is-invalid' : '' }}" 
-                    name="cmail" value="{{ old('cmail') }}" />
-                    @if ($errors->has('cmail'))
-                    <span class="invalid-feedback note">
-                      <strong>{{ $errors->first('cmail') }}</strong>
-                    </span>
-                    @else
-                    <div class="note">※再入力してください</div>
-                    @endif
-                  </td>
-                </tr>
-                <tr>
-                  <th class="th-w25prc required">お問い合わせ内容</th>
-                  <td>
-                    <textarea name="comment" 
-                    class="form-textarea form-control{{ $errors->has('comment') ? ' is-invalid' : '' }}" >{{ old('comment') }}</textarea>
-                    @if ($errors->has('comment'))
-                    <span class="invalid-feedback note">
-                      <strong>{{ $errors->first('comment') }}</strong>
-                    </span>
-                    @endif
-                  </td>
-                </tr>
-              </table>
-              <div class="form-submit-btn-box">
-                <button type="submit" class="form-submit-btn">
-                  入力内容を確認する
-                </button>
-              </div>
-            </div>
-          </article>
-        </form>
-      </div>
     </section>
 
   </div><!-- main -->

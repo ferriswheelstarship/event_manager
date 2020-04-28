@@ -119,12 +119,15 @@ return [
 
     'attributes' => [
         'email' => 'メールアドレス',
+        'cmail' => 'メールアドレス再入力',
         'password' => 'パスワード',
         'firstname' => '名前（姓）',
         'lastname' => '名前（名）',
         'firstruby' => '名前（フリガナ 姓）',
         'lastruby' => '名前（フリガナ 名）',
         'name' => '名前',
+        'cname' => '施設名または会社／組織名',
+        'comment' => 'お問い合わせ内容',
         'ruby' => '名前（フリガナ）',
         'birth_year' => '生年月日（年）',
         'birth_month' => '生年月日（年）',
