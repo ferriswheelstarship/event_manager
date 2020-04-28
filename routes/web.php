@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'PagesController@index');
 
 // make:auth利用
 // Auth::routes();
@@ -45,6 +43,7 @@ Route::get('greeting', 'PagesController@greeting')->name('greeting');
 Route::get('links', 'PagesController@links')->name('links');
 Route::get('privacy', 'PagesController@privacy')->name('privacy');
 Route::get('info', 'PagesController@info')->name('info');
+Route::get('info/{id}', 'PagesController@infodetail')->name('infodetail');
 Route::get('contact', 'PagesController@contact')->name('contact');
 Route::post('contact/comfirm', 'PagesController@comfirm')->name('comfirm');
 Route::post('contact/complete', 'PagesController@complete')->name('complete');
@@ -197,5 +196,14 @@ Route::group(['middleware' => ['auth', 'can:system-only']], function () {
   // csvダウンロード（権限別）
   Route::post('account/user_csv', 'UsersController@user_csv')->name('account.user_csv');
 
-
+  // インフォーメーション
+  Route::resource('information', 'InformationController');
+  // Route::get('information', 'InformationController@index')->name('information.index');
+  // Route::get('information/{id}', 'InformationController@show')->name('information.show');
+  // Route::get('information', 'InformationController@index')->name('information.index');
+  // Route::post('information', 'InformationController@store')->name('information.store'); 
+  // Route::put('information/{id}', 'InformationController@update')->name('information.update'); 
+  // Route::delete('information/{id}', 'InformationController@destroy')->name('information.destroy');
+  // Route::get('information/create', 'InformationController@create')->name('information.create'); 
+  // Route::get('information/{id}/edit', 'InformationController@edit')->name('information.edit');
 });

@@ -4,3 +4,55 @@
 .text-center {
   text-align: center;
 }
+
+.info-ul {
+  margin-bottom: 30px;
+}
+
+.pagination {
+  align-items: stretch;
+  box-sizing: content-box;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
+  flex-flow: row wrap;
+  -ms-flex-direction: row;
+  -ms-flex-pack: center;
+  -ms-flex-wrap: wrap;
+  -webkit-box-align: stretch;
+  -webkit-box-direction: normal;
+  -webkit-box-orient: horizontal;
+  -webkit-box-pack: center;
+  justify-content: center;
+  margin: 0px auto 30px;
+}
+
+.pagination > li {
+  flex-basis: 50px;
+}
+
+.pagination > li > a,
+.pagination > li > span {
+  border: 1px solid #00a3af;
+  color: #00a3af;
+  display: block;
+  height: 40px;
+  line-height: 40px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  width: 40px;
+}
+
+.pagination > li.active > span {
+  background: #ebf6f7;
+}
+
+.pagination > li > a:hover {
+  background: #00a3af;
+  color: #fff;
+  text-decoration: none;
+}
+
+

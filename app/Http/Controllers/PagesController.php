@@ -13,6 +13,7 @@ use App\Careerup_curriculum;
 use App\Event_date;
 use App\Entry;
 use App\Contact;
+use App\Information;
 use Mail;
 
 class PagesController extends Controller
@@ -20,6 +21,12 @@ class PagesController extends Controller
     public function afterwithdrawal()
     {
         return view('afterwithdrawal');
+    }
+
+    public function index() 
+    {
+        $infos = Information::orderBy('article_date','desc')->limit(3)->get();        
+        return view('welcome',compact('infos'));
     }
 
     public function greeting()
@@ -128,7 +135,16 @@ class PagesController extends Controller
 
     public function info()
     {
-        return view('info');
+        $infos = Information::orderBy('article_date','desc')->paginate(10);        
+        return view('info.index',compact('infos'));
+    }
+    public function infodetail($id)
+    {
+        $information = Information::find($id);
+        if(!$information) {
+            return redirect()->route('info');
+        }
+        return view('info.show',compact('information'));
     }
 
     public function contact()

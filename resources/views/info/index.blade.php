@@ -16,6 +16,7 @@
 
 <link href="{{ asset('css/web/swiper.css') }}" rel="stylesheet">
 <link href="{{ asset('css/web/style.css') }}" rel="stylesheet">
+<link href="{{ asset('css/web/add.css') }}" rel="stylesheet">
 
 </head>
 <body id="home">
@@ -100,115 +101,28 @@ Internet Explorerの安全ではないバージョンをお使いのようです
   </header>
 
   <div id="main" class="contents">
-    <div class="top-mainvis-outer">
-      <div id="mainVis" class="swiper-container mainvis-box">
-        <div class="top-mainvis">
-          <img src="/img/top-mainvis-01.jpg" class="top-mainvis-img" alt="" />
-        </div>
-        <!-- <ul class="swiper-wrapper">
-          <li class="swiper-slide"><img src="img/top-mainvis-01.jpg" class="img-mainvis" alt="" /></li>
-          <li class="swiper-slide"><img src="img/top-mainvis-02.jpg" class="img-mainvis" alt="" /></li>
-          <li class="swiper-slide"><img src="img/top-mainvis-03.jpg" class="img-mainvis" alt="" /></li>
-        </ul> -->
-      </div>
-      <div class="top-mainvis-txt-box-3steps">
-        <div class="top-mainvis-txt-box-3steps-catch"><img src="./img/top-text-catch.png" class="top-mainvis-txt-box-3steps-catch-img" alt="登録はとっても簡単！" /></div>
-        <ul class="top-mainvis-txt-box-3steps-ul">
-          <li class="top-mainvis-txt-box-3steps-ul-li top-mainvis-txt-box-3steps-ul-li-01">
-            <div class="top-mainvis-txt-box-3steps-ul-li-num-outer"><div class="top-mainvis-txt-box-3steps-ul-li-num top-mainvis-txt-box-3steps-ul-li-num-01">1</div></div>
-            <div class="top-mainvis-txt-box-3steps-ul-li-txt">空メールを送信</div>
-          </li>
-          <li class="top-mainvis-txt-box-3steps-ul-li top-mainvis-txt-box-3steps-ul-li-02">
-            <div class="top-mainvis-txt-box-3steps-ul-li-num-outer"><div class="top-mainvis-txt-box-3steps-ul-li-num top-mainvis-txt-box-3steps-ul-li-num-02">2</div></div>
-            <div class="top-mainvis-txt-box-3steps-ul-li-txt">受信したメールから認証先へアクセス</div>
-          </li>
-          <li class="top-mainvis-txt-box-3steps-ul-li top-mainvis-txt-box-3steps-ul-li-03">
-            <div class="top-mainvis-txt-box-3steps-ul-li-num-outer"><div class="top-mainvis-txt-box-3steps-ul-li-num top-mainvis-txt-box-3steps-ul-li-num-03">3</div></div>
-            <div class="top-mainvis-txt-box-3steps-ul-li-txt">パスワード設定・プロフィール登録</div>
-          </li>
-        </ul>
-      </div>
-      <!-- <div class="top-mainvis-txt-box"><div class="top-mainvis-txt">登録は簡単<br />3ステップ</div></div> -->
-    </div><!-- top-mainvis-outer -->
+    <div class="second-mainvis-box info-mainvis">
+      <h1 class="second-mainvis-pagetitle"><span class="info-pagetitle">インフォメーション</span></h1>
+    </div>
 
     <section class="contents-section">
       <div class="contents-section-inner fadeInUp">
 
-        <div class="top-info-box">
-          <header class="top-info-header">
-            <div class="top-info-header-inner">
-              <h2 class="top-header-h2 top-info-header-h2">インフォメーション</h2>
-              <div class="top-header-tolist-box"><a href="/info" class="top-header-tolist-a">記事一覧へ</a></div>
-            </div>
-          </header>
-          <ul class="top-info-ul">
-          @if (count($infos) > 0)
-            @foreach($infos as $info)
-            <li class="top-info-ul-li"><a href="/info/{{ $info->id }}" class="top-info-ul-li-a"><span class="top-info-ul-li-date">@php echo date('Y.m.d', strtotime($info['article_date'])); @endphp</span><span class="top-info-ul-li-body"><span class="top-info-ul-li-body-inner">{{ $info->title }}</span></span></a></li>
-            @endforeach
-          @else
-            <li style="text-align:center">現在準備中です。</li>
-          @endif
-          </ul>
-        </div>
-
-      </div>
-    </section>
-
-    <section class="contents-section">
-      <div class="contents-section-inner fadeInUp">
-        <ul class="top-btns-ul">
-          <li class="top-btns-ul-li">
-            <a href="{{ route('greeting') }}" class="top-btns-ul-li-a top-btns-ul-li-a-01">
-              <img src="img/icon-message.png" class="top-btns-img" alt="ごあいさつ" />
-              <span class="top-btns-txt-outer">
-                <span class="top-btns-txt">ごあいさつ</span>
-              </span>
-            </a>
-          </li>
-          <li class="top-btns-ul-li">
-            <a href="javascript:alert('現在準備中です');" class="top-btns-ul-li-a top-btns-ul-li-a-02">
-              <img src="img/icon-book.png" class="top-btns-img" alt="操作マニュアル" />
-              <span class="top-btns-txt-outer">
-                <span class="top-btns-txt">操作マニュアル</span>
-              </span>
-            </a>
-          </li>
-          <li class="top-btns-ul-li">
-            <a href="{{ route('register') }}" class="top-btns-ul-li-a top-btns-ul-li-a-03">
-              <img src="img/icon-pen.png" class="top-btns-img" alt="ユーザー新規登録" />
-              <span class="top-btns-txt-outer">
-                <span class="top-btns-txt">ユーザ新規登録</span>
-              </span>
-            </a>
-          </li>
-          <li class="top-btns-ul-li">
-            <a href="{{ route('login') }}" class="top-btns-ul-li-a top-btns-ul-li-a-04">
-              <img src="img/icon-person.png" class="top-btns-img" alt="ユーザーログイン" />
-              <span class="top-btns-txt-outer">
-                <span class="top-btns-txt">ユーザログイン</span>
-              </span>
-            </a>
-          </li>
-          <li class="top-btns-ul-li">
-            <a href="{{ route('login') }}" class="top-btns-ul-li-a top-btns-ul-li-a-05">
-              <img src="img/icon-house.png" class="top-btns-img" alt="施設ログイン" />
-              <span class="top-btns-txt-outer">
-                <span class="top-btns-txt">施設ログイン</span>
-              </span>
-            </a>
-          </li>
-          <li class="top-btns-ul-li">
-            <a href="{{ route('login') }}" class="top-btns-ul-li-a top-btns-ul-li-a-06">
-              <img src="img/icon-persons.png" class="top-btns-img" alt="事務局ログイン" />
-              <span class="top-btns-txt-outer">
-                <span class="top-btns-txt">事務局ログイン</span>
-              </span>
-            </a>
-          </li>
+        @if (count($infos) > 0)
+        <ul class="info-ul">
+          @foreach($infos as $info)
+          <li class="info-ul-li"><a href="/info/{{ $info->id }}" class="info-ul-li-a">
+            <span class="info-ul-li-date">@php echo date('Y.m.d', strtotime($info['article_date'])); @endphp</span>
+            <span class="info-ul-li-body"><span class="info-ul-li-body-inner">{{ $info['title'] }}</span></span>
+          </a></li>
+          @endforeach
         </ul>
-      </div>
+        {{ $infos->links() }}
+        @else
 
+        @endif
+
+      </div>
     </section>
 
   </div><!-- main -->

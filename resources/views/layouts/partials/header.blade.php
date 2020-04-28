@@ -96,6 +96,14 @@
                     <a class="dropdown-item" href="{{ route('account.regist') }}">ユーザ登録</a>
                 </div>
             </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">サイトコンテンツ</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{{ route('information.index') }}">インフォメーション</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ route('information.index') }}">お問い合わせ</a>
+                </div>
+            </li>
             @elsecan('admin-only')
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ユーザ管理</a>
