@@ -89,9 +89,15 @@ $(function(){
                                         class="mb-2 form-control{{ $errors->has('carrerup.child_curriculum.*') ? ' is-invalid' : '' }}" 
                                         name="carrerup[child_curriculum][]">
                                         <option value="">----</option>
-                                        @foreach ($child_curriculum as $val)
+                                        @foreach ($parent_curriculum as $i => $item)
+                                        <optgroup label="{{ $item }}">
+                                        @foreach ($child_curriculum as $j => $val)
+                                            @if($i+1 > $j / 5 && $j / 5 >= $i)
                                             <option value="{{ $val }}"
                                                 @if(old('carrerup.child_curriculum.0') == $val) selected @endif>{{ $val }}</option>
+                                            @endif
+                                        @endforeach
+                                        </optgroup>
                                         @endforeach
                                     </select>
                                     @if ($errors->has('carrerup.child_curriculum.*'))
