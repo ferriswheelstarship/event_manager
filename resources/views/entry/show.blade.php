@@ -30,7 +30,7 @@
 
                     <div class="card-body">
 
-                        <h2 class="h4 mb-4 col-md-6">【{{ $general_or_carrerup }}】{{ $event->title }}</h2>
+                        <h2 class="h4 mb-4">【{{ $general_or_carrerup }}】{{ $event->title }}</h2>
 
                         <div class="mb-4">
                             <a href="{{ route('entry.index') }}" class="btn btn-sm btn-info">一覧へ戻る</a>

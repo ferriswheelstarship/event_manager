@@ -20,7 +20,7 @@
             <div class="dropdown-menu">
                 <a class="dropdown-item" href="{{ route('account.edit',['user_id' => Auth::id()]) }}">登録内容変更</a>
                 @can('user-only')
-                <a class="dropdown-item" href="{{ route('account.withdrawalconfirm') }}">退会（休止）</a>
+                <a class="dropdown-item" href="{{ route('account.withdrawalconfirm') }}">退会</a>
                 @endcan
                 <a class="dropdown-item" href="{{ route('logout') }}"
                     onclick="event.preventDefault();
