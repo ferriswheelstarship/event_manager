@@ -867,16 +867,16 @@ class EventsController extends Controller
         }
 
         // キャリアアップ研修のみ保育士かどうか、所属施設の確認
-        if($event->general_or_carrerup == 'carrerup') {
-            $entrying_user = User::find($request->user_id);
-            if($entrying_user->profile->job != config('const.JOB.0')) {
-                return redirect()->route('event.show',['id' => $request->event_id])->with('attention', 'キャリアアップ研修は保育士専用の研修です。該当ユーザの職種が保育士でないため申込みができません。');
-            } else {
-                if($entrying_user->company_profile_id == null && !$entrying_user->profile->other_facility_name) {
-                    return redirect()->route('event.show',['id' => $request->event_id])->with('attention', '所属施設が兵庫県外で所属施設名の設定がないため申込みができません。');
-                }
-            }
-        }
+        // if($event->general_or_carrerup == 'carrerup') {
+        //     $entrying_user = User::find($request->user_id);
+        //     if($entrying_user->profile->job != config('const.JOB.0')) {
+        //         return redirect()->route('event.show',['id' => $request->event_id])->with('attention', 'キャリアアップ研修は保育士専用の研修です。該当ユーザの職種が保育士でないため申込みができません。');
+        //     } else {
+        //         if($entrying_user->company_profile_id == null && !$entrying_user->profile->other_facility_name) {
+        //             return redirect()->route('event.show',['id' => $request->event_id])->with('attention', '所属施設が兵庫県外で所属施設名の設定がないため申込みができません。');
+        //         }
+        //     }
+        // }
 
         $entry = New Entry;
         foreach($event_dates as $key => $item){
