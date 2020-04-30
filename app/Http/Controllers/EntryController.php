@@ -497,6 +497,9 @@ class EntryController extends Controller
                     $user->ruby,
                     $company_name,
                     $status,
+                    $user->profile->birth_year."年".$user->profile->birth_month."月".$user->profile->birth_day."日",
+                    $user->profile->job,
+                    $user->profile->childminder_number,
                     $entry['created_at'],
                 ];
             }
@@ -508,7 +511,7 @@ class EntryController extends Controller
         $file = Csv::createCsv($filename);
 
         // 見出し
-        $heading = ['名前','フリガナ','所属','状況','申込日時'];
+        $heading = ['名前','フリガナ','所属','状況','生年月日','職種','保育士番号','申込日時'];
 
         Csv::write($file,$heading); 
 
