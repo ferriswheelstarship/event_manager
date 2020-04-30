@@ -37,7 +37,7 @@ class RolesTableSeeder extends Seeder
         // 特権、支部ユーザマスターデータ
         DB::table('users')->insert([
             ['name' => 'MJ管理用', 'email' => 'fujita@mj-inc.jp', 'password' => '$2y$10$Mnim6miR/o.J9FjerERD7O6uGt973ioa29Mu9AVdEYD1CipE.yF1W', 'role_id' => '1', 'status' => '1', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'), ],
-            ['name' => '兵庫県保育園協会事務局', 'email' => 'hokyo@fancy.ocn.ne.jp', 'password' => '$2y$10$meyTLmysP.Qncmq.vh7VCuoNWAq2WHgU/..ykJJQMHrX5yNZqW0gq', 'role_id' => '1', 'status' => '1', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'), ],
+            ['name' => '兵庫県保育協会事務局', 'email' => 'hokyo@fancy.ocn.ne.jp', 'password' => '$2y$10$meyTLmysP.Qncmq.vh7VCuoNWAq2WHgU/..ykJJQMHrX5yNZqW0gq', 'role_id' => '1', 'status' => '1', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'), ],
             ['name' => '糸田川', 'email' => 'ito@mj-inc.jp', 'password' => '$2y$10$0Tas4AndA5G1ym8c1ExjnODTQ6j1B73GUaGaKqgmeJy/fxt.4wR.y', 'role_id' => '1', 'status' => '1', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'), ],
             ['name' => '尼崎', 'email' => 'dammy1@example.com', 'password' => '$2y$10$rsRrwhXSgJC5Q02RHKkjmeIbyq8rJ/N4senBlZGxQ7B5eHO.53EwC', 'role_id' => '2', 'status' => '1', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'), ],
             ['name' => '芦屋', 'email' => 'dammy2@example.com', 'password' => '$2y$10$Vriv.pdnlKsyQwzjI/ruiexB89IcYmRQnkIpFj2M46ZqZZyZOAZHe', 'role_id' => '2', 'status' => '1', 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'), ],
