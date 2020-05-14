@@ -54,6 +54,9 @@ class User extends Authenticatable
     public function careerup_certificates(){
         return $this->hasMany('App\Careerup_Certificate');
     }
+    public function group_users(){
+        return $this->hasMany('App\Group_user');
+    }
 
     /**
      * パスワードリセット通知の送信をオーバーライド

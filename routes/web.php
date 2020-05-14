@@ -75,7 +75,6 @@ Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
   // 研修
   // Route::get('event', 'EventsController@index')->name('event.index');
   // Route::get('event/{id}', 'EventsController@show')->name('event.show');
-  // Route::get('event', 'EventsController@index')->name('event.index');
   // Route::post('event', 'EventsController@store')->name('event.store'); 
   // Route::put('event/{id}', 'EventsController@update')->name('event.update'); 
   // Route::delete('event/{id}', 'EventsController@destroy')->name('event.destroy');
@@ -195,6 +194,32 @@ Route::group(['middleware' => ['auth', 'can:system-only']], function () {
   Route::delete('account/forceDelete/{user_id}', 'UsersController@forceDelete')->name('account.forceDelete');
   // csvダウンロード（権限別）
   Route::post('account/user_csv', 'UsersController@user_csv')->name('account.user_csv');
+
+
+  // メール配信（送信済一覧、下書き）  
+  Route::get('mail', 'EmailController@index')->name('mail.index');
+  // メール配信（メール作成）
+  Route::get('mail/create', 'EmailController@create')->name('mail.create');
+  Route::post('mail', 'EmailController@store')->name('mail.store');
+  // メール配信（メール詳細）
+  Route::get('mail/{id}', 'EmailController@show')->name('mail.show');
+  // メール配信（メール編集）
+  Route::get('mail/{id}/edit', 'EmailController@edit')->name('mail.edit');
+  Route::put('mail/{id}', 'EmailController@update')->name('mail.update'); 
+  Route::delete('mail/{id}', 'EmailController@destroy')->name('mail.destroy');
+
+  // メール配信（グループ設定一覧）
+  Route::get('mailgroup', 'MailgroupController@index')->name('mailgroup.index');
+  // メール配信（グループ作成）
+  Route::get('mailgroup/create', 'MailgroupControllerp@create')->name('mailgroup.create');
+  Route::post('mailgroup', 'MailgroupController@store')->name('mailgroup.store');
+  // メール配信（グループ詳細）
+  Route::get('mailgroup/{id}', 'MailgroupController@show')->name('mailgroup.show');
+  // メール配信（メール編集）
+  Route::get('mailgroup/{id}/edit', 'MailgroupController@edit')->name('mailgroup.edit');
+  Route::put('mailgroup/{id}', 'MailgroupController@update')->name('mailgroup.update'); 
+  Route::delete('mailgroup/{id}', 'MailgroupController@destroy')->name('mailgroup.destroy');
+
 
   // インフォーメーション
   Route::resource('information', 'InformationController');

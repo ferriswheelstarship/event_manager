@@ -85,6 +85,18 @@
 
             @can('system-only')
             <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">メール</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{{ route('mail.index') }}">メール一覧（下書き・送信済）</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ route('mail.create') }}">メール作成</a>
+                    <!-- <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ route('mailgroup.index') }}">グループ一覧</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ route('mailgroup.create') }}">グループ作成</a> -->
+                </div>
+            </li>
+            <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ユーザ管理</a>
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="{{ route('account.branch_user') }}">支部ユーザ</a>
