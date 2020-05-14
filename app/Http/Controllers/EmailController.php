@@ -140,7 +140,8 @@ class EmailController extends Controller
      */
     public function show($id)
     {
-        //
+        $email = Email::find($id);
+        return view('mail.show',compact('email'));
     }
 
     /**
