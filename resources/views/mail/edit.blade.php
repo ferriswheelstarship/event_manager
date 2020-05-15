@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'メール作成')
+@section('title', 'メール編集')
 
 @section('content')
     <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">メール作成</div>
+                    <div class="card-header">メール編集</div>
 
                     @if (Session::has('status'))
                     <div class="card-body">
@@ -31,8 +31,9 @@
                             <a href="{{ route('mailgroup.create') }}" class="btn btn-sm btn-info">グループ作成</a> -->
                         </div>
 
-                        <form method="POST" action="{{ route('mail.store') }}" >
+                        <form method="POST" action="{{ route('mail.update',['id' => $email->id]) }}" >
                             {{ csrf_field() }}
+                            <input type="hidden" name="_method" value="PUT">
 
                             <div class="form-group row">
                                 <label for="default_group" class="col-md-4 col-form-label text-md-right">送信先</label>
@@ -43,7 +44,7 @@
                                         <option value="">----</option>
                                         @foreach ($group as $key => $val)
                                             <option value="{{ $val }}"
-                                                @if(old('default_group') == $val) selected @endif>{{ $val }}</option>
+                                                @if(old('default_group',$email->default_group) == $val) selected @endif>{{ $val }}</option>
                                         @endforeach
                                     </select>
                                     @if ($errors->has('default_group'))
@@ -59,7 +60,7 @@
                                 <div class="col-md-6">
                                     <input id="title" type="text" 
                                         class="form-control{{ $errors->has('title') ? ' is-invalid' : '' }}" 
-                                        name="title" value="{{ old('title') }}" required>
+                                        name="title" value="{{ old('title',$email->title) }}" required>
                                     @if ($errors->has('title'))
                                         <span class="invalid-feedback">
                                             <strong>{{ $errors->first('title') }}</strong>
@@ -73,13 +74,7 @@
                                 <div class="col-md-6">
                                     <textarea 
                                         id="comment" class="form-control{{ $errors->has('comment') ? ' is-invalid' : '' }}" 
-                                        name="comment" rows="10" required>{{ old('comment') }}
-@if(!old('comment'))
-
-
--------------------
-兵庫県保育協会　事務局
-@endif</textarea>
+                                        name="comment" rows="10" required>{{ old('comment',$email->comment) }}</textarea>
 
                                     @if ($errors->has('comment'))
                                         <span class="invalid-feedback">

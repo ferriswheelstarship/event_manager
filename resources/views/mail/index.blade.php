@@ -57,8 +57,8 @@
                                         <tr>
                                             <!-- <th>ID</th> -->
                                             <th class="text-nowrap">作成日時</th>
-                                            <th class="text-nowrap">送信先</th>
                                             <th class="text-nowrap">件名</th>
+                                            <th class="text-nowrap">送信先</th>
                                             <th class="text-nowrap">操作</th>
                                         </tr>
                                     </thead>
@@ -68,19 +68,15 @@
                                             <td data-label="作成日時">
                                                 <span>{{ $item['created_at'] }}</span>
                                             </td>
-                                            <td data-label="送信先：">
-                                                <span>{{ $item['default_group'] }}</span>
-                                            </td>
                                             <td data-label="件名：">
                                                 <span>{{ $item['title'] }}</span>
                                             </td>
+                                            <td data-label="送信先：">
+                                                <span>{{ $item['default_group'] }}</span>
+                                            </td>
                                             <td>
-                                                <a href="{{ route('mail.show',['id' => $item['id']]) }}" 
-                                                class="btn btn-sm btn-info">変更</a>
-                                                <button type="button" class="send-confirm btn btn-sm btn-primary" 
-                                                    value="{{ $item['id'] }}" 
-                                                    data-toggle="modal" 
-                                                    data-target="#confirm-send{{ $item['user_id'] }}">メール送信</button>
+                                                <a href="{{ route('mail.edit',['id' => $item['id']]) }}" 
+                                                class="btn btn-sm btn-primary">編集 / メール送信</a>
                                                 <button type="button" class="delete-confirm btn btn-sm btn-danger"
                                                     value="{{ $item['id'] }}" 
                                                     data-toggle="modal" 
@@ -105,8 +101,8 @@
                                         <tr>
                                             <!-- <th>ID</th> -->
                                             <th class="text-nowrap">送信日時</th>
-                                            <th class="text-nowrap">送信先</th>
                                             <th class="text-nowrap">件名</th>
+                                            <th class="text-nowrap">送信先</th>
                                             <th class="text-nowrap">操作</th>
                                         </tr>
                                     </thead>
@@ -116,11 +112,11 @@
                                             <td data-label="作成日時">
                                                 <span>{{ $item['updated_at'] }}</span>
                                             </td>
-                                            <td data-label="送信先：">
-                                                <span>{{ $item['default_group'] }}</span>
-                                            </td>
                                             <td data-label="件名：">
                                                 <span>{{ $item['title'] }}</span>
+                                            </td>
+                                            <td data-label="送信先：">
+                                                <span>{{ $item['default_group'] }}</span>
                                             </td>
                                             <td>
                                                 <a href="{{ route('mail.show',['id' => $item['id']]) }}" 

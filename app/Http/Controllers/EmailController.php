@@ -73,25 +73,25 @@ class EmailController extends Controller
                     $users = User::where('status',1)->get();
                     break;
                 case "全ユーザ（特権ユーザ除く）":
-                    $users = User::where('status',1)->where('role_id','>',1)->get();
+                    $users = User::where('role_id','>',1)->get();
                     break;
                 case "支部ユーザ":
-                    $users = User::where('status',1)->where('role_id',2)->get();
+                    $users = User::where('role_id',2)->get();
                     break;
                 case "法人ユーザ":
-                    $users = User::where('status',1)->where('role_id',3)->get();
+                    $users = User::where('role_id',3)->get();
                     break;
                 case "個人ユーザ":
-                    $users = User::where('status',1)->where('role_id',4)->get();
+                    $users = User::where('role_id',4)->get();
                     break;
                 case "支部+法人ユーザ":
-                    $users = User::where('status',1)->where('role_id',2)->orWhere('role_id',3)->get();                
+                    $users = User::where('role_id',2)->orWhere('role_id',3)->get();                
                     break;
                 case "支部+個人ユーザ":
-                    $users = User::where('status',1)->where('role_id',2)->orWhere('role_id',4)->get();                
+                    $users = User::where('role_id',2)->orWhere('role_id',4)->get();                
                     break;
                 case "法人+個人ユーザ":
-                    $users = User::where('status',1)->where('role_id',3)->orWhere('role_id',4)->get();                
+                    $users = User::where('role_id',3)->orWhere('role_id',4)->get();                
                     break;
                 case "研修申込者から選択":
 
@@ -152,7 +152,9 @@ class EmailController extends Controller
      */
     public function edit($id)
     {
-        //
+        $group = config('const.TO');
+        $email = Email::find($id);
+        return view('mail.edit',compact('group','email'));
     }
 
     /**
@@ -164,7 +166,87 @@ class EmailController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $rules = [
+            'default_group' => 'required|string',
+            'title' => 'required|string',
+            'comment' => 'required|string',
+        ];
+        $request->validate($rules);
+
+        $action = $request->get('action','下書き保存');        
+        $input = $request->except('action');
+
+        $email = Email::find($id);
+
+        $email->default_group = $request->default_group;
+        $email->title = $request->title;
+        $email->comment = $request->comment;
+        $email->group_id = null;
+        $email->status = ($action == 'メール送信') ? 'Y' : 'N';
+
+        if($action == 'メール送信') {
+            switch($email->default_group) {
+                case "全ユーザ（特権ユーザ含む）":
+                    $users = User::where('status',1)->get();
+                    break;
+                case "全ユーザ（特権ユーザ除く）":
+                    $users = User::where('role_id','>',1)->get();
+                    break;
+                case "支部ユーザ":
+                    $users = User::where('role_id',2)->get();
+                    break;
+                case "法人ユーザ":
+                    $users = User::where('role_id',3)->get();
+                    break;
+                case "個人ユーザ":
+                    $users = User::where('role_id',4)->get();
+                    break;
+                case "支部+法人ユーザ":
+                    $users = User::where('role_id',2)->orWhere('role_id',3)->get();                
+                    break;
+                case "支部+個人ユーザ":
+                    $users = User::where('role_id',2)->orWhere('role_id',4)->get();                
+                    break;
+                case "法人+個人ユーザ":
+                    $users = User::where('role_id',3)->orWhere('role_id',4)->get();                
+                    break;
+                case "研修申込者から選択":
+
+                    break;
+            }
+
+            // Sendgrid Personalizations用に成形
+            $personalizations = [];
+            $regstr = "/(\W|^)[\w.\-]{0,25}@(example)\.(com|net)(\W|$)/";            
+            foreach($users as $user) {
+                if(!preg_match($regstr,$user->email)) {//ダミーアドレスを除外（ @example.com | @example.net )
+                    $personalizations[]['to'] = [
+                        'email' => $user->email
+                    ];
+                }
+            }
+            if(count($personalizations) == 0) {
+                return redirect()->route('mail.create')
+                    ->withInput($input)
+                    ->with('attention', '指定した送信先に有効なメールアドレスがないため送信できません。');
+            }
+            $data = [
+                'title' => $request->title,
+                'body' => $request->comment,
+                'to' => $personalizations,// Sendgrid Personalizations用
+            ];
+            $emails = new Sendmail($data);
+            Mail::send($emails);
+            
+            $mes ="メールを送信を実行しました。";
+
+        } else {
+            $mes ="下書き保存しました。";
+        }
+
+        $email->save();
+        return redirect()->route('mail.index')->with('status',$mes);
+
     }
 
     /**
@@ -175,6 +257,12 @@ class EmailController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $email = Email::find($id);
+        if($email->status == 'Y') {
+            return redirect()->route('mail.index')->with('attention','指定のメールは送信済のため削除できません。');
+        } else {
+            $email->delete();
+            return redirect()->route('mail.index')->with('status','指定したメールを削除しました。');
+        }
     }
 }

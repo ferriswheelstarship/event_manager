@@ -238,7 +238,7 @@ class EntryController extends Controller
             foreach($entrys_y as $entry) {
                 
                 // ユーザ名
-                $user = User::find($entry->user_id);
+                $user = User::withTrashed()->find($entry->user_id);
                 // 所属施設名
                 if($user->company_profile_id) {
                     $company = User::where('role_id',3)->where('company_profile_id',$user->company_profile_id)->first();
@@ -258,6 +258,7 @@ class EntryController extends Controller
                     'user_id' => $entry['user_id'],
                     'user_name' => $user->name,
                     'user_ruby' => $user->ruby,
+                    'user_deleted_at' => $user->deleted_at,
                     'company_name' => $company_name,
                     'created' => $entry['created_at'],
                     'status' => $status,
@@ -278,7 +279,7 @@ class EntryController extends Controller
             foreach($entrys_yc as $entry) {
                 
                 // ユーザ名
-                $user = User::find($entry->user_id);
+                $user = User::withTrashed()->find($entry->user_id);
                 // 所属施設名
                 if($user->company_profile_id) {
                     $company = User::where('role_id',3)->where('company_profile_id',$user->company_profile_id)->first();
@@ -298,6 +299,7 @@ class EntryController extends Controller
                     'user_id' => $entry['user_id'],
                     'user_name' => $user->name,
                     'user_ruby' => $user->ruby,
+                    'user_deleted_at' => $user->deleted_at,
                     'company_name' => $company_name,
                     'created' => $entry['created_at'],
                     'status' => $status,
@@ -319,7 +321,7 @@ class EntryController extends Controller
             foreach($entrys_cw as $entry_cw) {
                 
                 // ユーザ名
-                $user = User::find($entry_cw->user_id);
+                $user = User::withTrashed()->find($entry_cw->user_id);
                 // 所属施設名
                 if($user->company_profile_id) {
                     $company = User::where('role_id',3)->where('company_profile_id',$user->company_profile_id)->first();
@@ -335,6 +337,7 @@ class EntryController extends Controller
                     'user_id' => $entry_cw['user_id'],
                     'user_name' => $user->name,
                     'user_ruby' => $user->ruby,
+                    'user_deleted_at' => $user->deleted_at,
                     'company_name' => $company_name,
                     'created' => $entry_cw['created_at'],
                     'status' => $status,

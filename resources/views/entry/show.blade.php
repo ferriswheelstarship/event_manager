@@ -113,15 +113,22 @@
                                         <td data-label="申込日時：">{{ $entry['created'] }}</td>
                                         <td data-label="状況：">{{ $entry['status'] }}</td>
                                         <td>
-                                            @if($entry['status'] === '受講券発行済')
-                                            <a href="{{ route('ticket_pdf',['id' => $entry['user_id'].'-'.$event->id]) }}" target="_blank" class="btn btn-sm btn-info">受講券表示</a>
+                                            @if($entry['user_deleted_at'])
+                                                ユーザ退会済のため受講券の操作不可<br>
+                                                <button type="button" class="cancel-confirm btn btn-sm btn-danger"
+                                                    value="{{ $entry['user_id'] }}" 
+                                                    data-toggle="modal" data-target="#confirm-cancel{{ $entry['user_id'] }}">キャンセル</button>
+                                            @else
+                                                @if($entry['status'] === '受講券発行済')
+                                                <a href="{{ route('ticket_pdf',['id' => $entry['user_id'].'-'.$event->id]) }}" target="_blank" class="btn btn-sm btn-info">受講券表示</a>
+                                                @endif
+                                                <button type="button" class="apply-confirm btn btn-sm btn-primary" 
+                                                    value="{{ $entry['user_id'] }}" 
+                                                    data-toggle="modal" data-target="#confirm-ticketsend{{ $entry['user_id'] }}">受講券送信</button>
+                                                <button type="button" class="cancel-confirm btn btn-sm btn-danger"
+                                                    value="{{ $entry['user_id'] }}" 
+                                                    data-toggle="modal" data-target="#confirm-cancel{{ $entry['user_id'] }}">キャンセル</button>
                                             @endif
-                                            <button type="button" class="apply-confirm btn btn-sm btn-primary" 
-                                                value="{{ $entry['user_id'] }}" 
-                                                data-toggle="modal" data-target="#confirm-ticketsend{{ $entry['user_id'] }}">受講券送信</button>
-                                            <button type="button" class="cancel-confirm btn btn-sm btn-danger"
-                                                value="{{ $entry['user_id'] }}" 
-                                                data-toggle="modal" data-target="#confirm-cancel{{ $entry['user_id'] }}">キャンセル</button>
                                         </td>
                                     </tr>
                                     @endforeach
@@ -139,7 +146,7 @@
                         </div>
                         @if (count($entrys_yc_view) > 0)
                         <div class="table-responsive">
-                            <table class="table table-striped tbl-withheading" id="data-table">
+                            <table class="table table-striped tbl-withheading" id="data-table2">
                                 <thead class="thead">
                                     <tr>
                                         <!-- <th>ID</th> -->
@@ -163,12 +170,13 @@
                                         <td data-label="申込日時：">{{ $entry['created'] }}</td>
                                         <td data-label="状況：">{{ $entry['status'] }}</td>
                                         <td>
+                                            @if($entry['user_deleted_at'])
+                                                ユーザ退会済<br />
+                                            @endif
                                             @if($entry['status'] != '受講券発行済')
                                             <button type="button" class="delete-confirm btn btn-sm btn-danger"
                                                 value="{{ $entry['user_id'] }}" 
                                                 data-toggle="modal" data-target="#confirm-delete{{ $entry['user_id'] }}">削除</button>                                        
-                                            @else
-                                            -
                                             @endif
                                         </td>
                                     </tr>
@@ -185,7 +193,7 @@
                         </div>
                         @if (count($entrys_cw_view) > 0)
                         <div class="table-responsive">
-                            <table class="table table-striped tbl-withheading" id="data-table">
+                            <table class="table table-striped tbl-withheading" id="data-table3">
                                 <thead class="thead">
                                     <tr>
                                         <!-- <th>ID</th> -->
@@ -354,3 +362,6 @@
 </div>
 @endsection                    
 
+@section('each-js')
+    <script src="{{ asset('js/datatables_base.js') }}" ></script>
+@endsection
