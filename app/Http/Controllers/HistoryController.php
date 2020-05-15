@@ -170,18 +170,38 @@ class HistoryController extends Controller
         $user_self = User::find(Auth::id());
 
         if(Gate::allows('area-higher')){ // 支部ユーザ以上
-            $users = User::where('status',1)
-                            ->where('role_id',4)
-                            ->orderBy('id', 'desc')
-                            ->get();
+            // $users = User::where('status',1)
+            //                 ->where('role_id',4)
+            //                 ->orderBy('id', 'desc')
+            //                 ->get();
+            $users = [];
+            DB::table('users')
+            ->where('status',1)
+            ->where('role_id',4)
+            ->orderBy('id', 'desc')
+            ->chunk(100, function ($data) use (&$users) {
+                $users[] = $data;
+            });
+
         } elseif(Gate::allows('admin-only')){ // 法人ユーザのみ
-            $users = User::where('status',1)
-                            ->where('role_id',4)
-                            ->where('company_profile_id',$user_self->company_profile_id)
-                            ->orderBy('id', 'desc')
-                            ->get();
+            // $users = User::where('status',1)
+            //                 ->where('role_id',4)
+            //                 ->where('company_profile_id',$user_self->company_profile_id)
+            //                 ->orderBy('id', 'desc')
+            //                 ->get();
+            $users = [];
+            DB::table('users')
+            ->where('status',1)
+            ->where('role_id',4)
+            ->where('company_profile_id',$user_self->company_profile_id)
+            ->orderBy('id', 'desc')
+            ->chunk(100, function ($data) use (&$users) {
+                $users[] = $data;
+            });
         }
-        foreach($users as $user) {
+        
+        foreach($users as $chunk) {
+        foreach($chunk as $user) {
             if($user->company_profile_id) {
                 $company = User::where('role_id',3)
                                 ->where('company_profile_id',$user->company_profile_id)
@@ -202,7 +222,7 @@ class HistoryController extends Controller
                 }
 
             } else {
-                $profile = $user->profile;
+                $profile = Profile::find($user->profile_id);
                 $companyname = $profile->other_facility_name;
                 $city = $profile->other_facility_pref.$profile->other_facility_address;
             }
@@ -214,6 +234,7 @@ class HistoryController extends Controller
                 'companyname' => $companyname,
                 'city' => $city,
             ];
+        }
         }
 
         return view('history.user',compact('datas','pref'));
