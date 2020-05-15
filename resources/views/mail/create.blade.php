@@ -46,6 +46,7 @@
                                                 @if(old('default_group') == $val) selected @endif>{{ $val }}</option>
                                         @endforeach
                                     </select>
+                                    <div class="text-danger mx-1">※選択した権限を持つユーザ全てに送信されます。</div>
                                     @if ($errors->has('default_group'))
                                         <span class="invalid-feedback">
                                             <strong>{{ $errors->first('default_group') }}</strong>

@@ -159,6 +159,8 @@ return [
         'carrerup.training_minute.*' => '受講時間',
         'event_dates.*' => '研修開催日',
         'files.*' => 'アップロードファイル',
+
+        'default_group' => '送信先',
     ],
 
 ];
