@@ -122,14 +122,14 @@ class UsersController extends Controller
         ]; 
 
         if($request->role_id == 4) {
-            $rules = [
+            $rules += [
                 'firstname' => 'required|string',
                 'lastname' => 'required|string',
                 'firstruby' => 'required|string|katakana',
                 'lastruby' => 'required|string|katakana',
             ];
         } else {
-            $rules = [
+            $rules += [
                 'name' => 'required|string',
                 'ruby' => 'required|string|katakana',
             ];
