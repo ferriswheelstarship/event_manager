@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use DB;
 use Validator;
 use Auth;
 use Gate;
@@ -22,16 +23,33 @@ class UsersController extends Controller
         $user_self = User::find(Auth::id());
 
         if(Gate::allows('system-only')){ // 特権ユーザのみ
-            $users = User::withTrashed()
-                            ->where('status',1)
-                            ->orderBy('id', 'desc')
-                            ->get();
+            // $users = User::withTrashed()
+            //                 ->where('status',1)
+            //                 ->orderBy('id', 'desc')
+            //                 ->get();
+            $users = [];
+            DB::table('users')
+            ->where('status',1)
+            ->orderBy('id','desc')
+            ->chunk(100, function ($data) use (&$users) {
+                $users[] = $data;
+            });
+
         } elseif(Gate::allows('admin-only')){ // 法人ユーザのみ
-            $users = User::where('status',1)
-                            ->where('role_id',4)
-                            ->where('company_profile_id',$user_self->company_profile_id)
-                            ->orderBy('id', 'desc')
-                            ->get();
+            // $users = User::where('status',1)
+            //                 ->where('role_id',4)
+            //                 ->where('company_profile_id',$user_self->company_profile_id)
+            //                 ->orderBy('id', 'desc')
+            //                 ->get();
+            $users = [];
+            DB::table('users')
+            ->where('role_id',4)
+            ->where('company_profile_id',$user_self->company_profile_id)
+            ->where('status',1)
+            ->orderBy('id','desc')
+            ->chunk(100, function ($data) use (&$users) {
+                $users[] = $data;
+            });
         } else {
             return redirect('/account/edit/'.Auth::id());
         }
@@ -45,11 +63,21 @@ class UsersController extends Controller
         $user_self = User::find(Auth::id());
 
         if(Gate::allows('system-only')){ // 特権ユーザのみ
-            $users = User::withTrashed()
-                            ->where('role_id',2)
-                            ->where('status',1)
-                            ->orderBy('id', 'desc')
-                            ->get();
+            // $users = User::withTrashed()
+            //                 ->where('role_id',2)
+            //                 ->where('status',1)
+            //                 ->orderBy('id', 'desc')
+            //                 ->get();
+            $users = [];
+            DB::table('users')
+            ->where('role_id',2)
+            ->where('status',1)
+            ->orderBy('id','desc')
+            ->chunk(100, function ($data) use (&$users) {
+                $users[] = $data;
+            });
+            //dd($users);
+
         } else {
             return redirect('/account/edit/'.Auth::id());
         }
@@ -63,11 +91,21 @@ class UsersController extends Controller
         $user_self = User::find(Auth::id());
 
         if(Gate::allows('system-only')){ // 特権ユーザのみ
-            $users = User::withTrashed()
-                            ->where('role_id',3)
-                            ->where('status',1)
-                            ->orderBy('id', 'desc')
-                            ->get();
+            // $users = User::withTrashed()
+            //                 ->where('role_id',3)
+            //                 ->where('status',1)
+            //                 ->orderBy('id', 'desc')
+            //                 ->get();
+            $users = [];
+            DB::table('users')
+            ->where('role_id',3)
+            ->where('status',1)
+            ->orderBy('id','desc')
+            ->chunk(100, function ($data) use (&$users) {
+                $users[] = $data;
+            });
+            //dd($users);
+            
         } else {
             return redirect('/account/edit/'.Auth::id());
         }
@@ -81,11 +119,19 @@ class UsersController extends Controller
         $user_self = User::find(Auth::id());
 
         if(Gate::allows('system-only')){ // 特権ユーザのみ
-            $users = User::withTrashed()
-                            ->where('role_id',4)
-                            ->where('status',1)
-                            ->orderBy('id', 'desc')
-                            ->get();
+            // $users = User::withTrashed()
+            //                 ->where('role_id',4)
+            //                 ->where('status',1)
+            //                 ->orderBy('id', 'desc')
+            //                 ->get();
+            $users = [];
+            DB::table('users')
+            ->where('role_id',4)
+            ->where('status',1)
+            ->orderBy('id','desc')
+            ->chunk(100, function ($data) use (&$users) {
+                $users[] = $data;
+            });
         } else {
             return redirect('/account/edit/'.Auth::id());
         }

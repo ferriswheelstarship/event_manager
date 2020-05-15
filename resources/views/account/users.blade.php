@@ -12,7 +12,8 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($users as $user)
+                @foreach ($users as $chunk)
+                @foreach ($chunk as $user)
 
                 @php
                     $account_status_val = is_null($user->deleted_at) ? 1 : 2;
@@ -154,6 +155,7 @@
                     @endcan
                     </td>
                 </tr>
+                @endforeach
                 @endforeach
             </tbody>
         </table>
