@@ -14,7 +14,13 @@ class ContactController extends Controller
 {
     public function index()
     {
-        $inquirys = Contact::orderBy('created_at','desc')->get();        
+        $inquirys = [];
+        DB::table('contacts')
+        ->orderBy('created_at','desc')
+        ->chunk(100, function ($data) use (&$inquirys) {
+            $inquirys[] = $data;
+        });
+
         return view('inquiry.index',compact('inquirys'));
     }
 

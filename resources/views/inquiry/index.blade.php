@@ -42,19 +42,21 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($inquirys as $inquiry)
+                                    @foreach ($inquirys as $chunk)
+                                    @foreach ($chunk as $inquiry)
                                     <tr>
                                         <td data-label="送信日時：">
                                             @php
-                                            echo date('Y年m月d日H時i分', strtotime($inquiry['created_at']));
+                                            echo date('Y年m月d日H時i分', strtotime($inquiry->created_at));
                                             @endphp
                                         </td>
-                                        <td data-label="施設名または会社／組織名：">{{ $inquiry['cname'] }}</td>
-                                        <td data-label="氏名：">{{ $inquiry['name'] }}</td>
+                                        <td data-label="施設名または会社／組織名：">{{ $inquiry->cname }}</td>
+                                        <td data-label="氏名：">{{ $inquiry->name }}</td>
                                         <td data-lavel="操作：">
-                                            <a href="{{ url('inquiry/'.$inquiry['id']) }}" class="btn btn-info btn-sm">詳細</a>
+                                            <a href="{{ url('inquiry/'.$inquiry->id) }}" class="btn btn-info btn-sm">詳細</a>
                                         </td>
                                     </tr>
+                                    @endforeach
                                     @endforeach
                                 </tbody>
                             </table>
