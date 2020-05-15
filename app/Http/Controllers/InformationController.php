@@ -23,7 +23,13 @@ class InformationController extends Controller
             return redirect('/event');
         }
 
-        $infos = Information::orderBy('article_date','desc')->get();        
+        $infos = [];
+        DB::table('information')
+        ->orderBy('article_date','desc')
+        ->chunk(100, function ($data) use (&$infos) {
+            $infos[] = $data;
+        });
+
         return view('information.index',compact('infos'));
     }
 

@@ -32,7 +32,6 @@ class EmailController extends Controller
         ->chunk(100, function ($data) use (&$email_drafts) {
             $email_drafts[] = $data;
         });
-        //dd($email_drafts);
 
         $email_finished = [];
         DB::table('emails')

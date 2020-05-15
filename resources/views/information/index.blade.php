@@ -46,22 +46,23 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($infos as $info)
+                                    @foreach ($infos as $chunk)
+                                    @foreach ($chunk as $info)
                                     <tr>
                                         <td data-label="開催日：">
                                             @php
-                                            echo date('Y年m月d日', strtotime($info['article_date']));
+                                            echo date('Y年m月d日', strtotime($info->article_date));
                                             @endphp
                                         </td>
-                                        <td data-label="タイトル：">{{ $info['title'] }}</td>
+                                        <td data-label="タイトル：">{{ $info->title }}</td>
                                         <td data-lavel="操作：">
 
-                                            <button type="button" class="forcedelete-confirm btn-sm btn-danger" value="{{ $info['id'] }}" 
-                                            data-toggle="modal" data-target="#confirm-forcedelete{{ $info['id'] }}">削除</button>
+                                            <button type="button" class="forcedelete-confirm btn-sm btn-danger" value="{{ $info->id }}" 
+                                            data-toggle="modal" data-target="#confirm-forcedelete{{ $info->id }}">削除</button>
                                             <!-- Modal -->
-                                            <div class="modal fade" id="confirm-forcedelete{{ $info['id'] }}" tabindex="-1">
+                                            <div class="modal fade" id="confirm-forcedelete{{ $info->id }}" tabindex="-1">
                                                 <div class="modal-dialog" role="document">
-                                                    <form role="form" class="form-inline" method="POST" action="{{ route('information.destroy', $info['id']) }}">
+                                                    <form role="form" class="form-inline" method="POST" action="{{ route('information.destroy', $info->id) }}">
                                                     {{ csrf_field() }}
                                                     <input name="_method" type="hidden" value="DELETE">
 
@@ -73,7 +74,7 @@
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <strong>{{ $info['title'] }}</strong>を本当に削除してよろしいですか？<br>
+                                                        <strong>{{ $info->title }}</strong>を本当に削除してよろしいですか？<br>
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
@@ -83,10 +84,11 @@
                                                     </form>
                                                 </div>
                                             </div>
-                                            <a href="{{ url('information/'.$info['id']) }}" class="btn btn-info btn-sm">詳細</a>
-                                            <a href="{{ url('information/'.$info['id'] .'/edit') }}" class="btn btn-primary btn-sm">編集</a>
+                                            <a href="{{ url('information/'.$info->id) }}" class="btn btn-info btn-sm">詳細</a>
+                                            <a href="{{ url('information/'.$info->id .'/edit') }}" class="btn btn-primary btn-sm">編集</a>
                                         </td>
                                     </tr>
+                                    @endforeach
                                     @endforeach
                                 </tbody>
                             </table>
