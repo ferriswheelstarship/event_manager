@@ -52,7 +52,7 @@
                             </div>
                             @if (count($email_drafts) > 0)
                             <div class="table-responsive">
-                                <table class="table table-striped tbl-withheading" id="data-table1">
+                                <table class="table table-striped tbl-withheading data-table-no-order">
                                     <thead class="thead">
                                         <tr>
                                             <!-- <th>ID</th> -->
@@ -80,7 +80,33 @@
                                                 <button type="button" class="delete-confirm btn btn-sm btn-danger"
                                                     value="{{ $item['id'] }}" 
                                                     data-toggle="modal" 
-                                                    data-target="#confirm-delete{{ $item['user_id'] }}">削除</button>
+                                                    data-target="#confirm-delete{{ $item['id'] }}">削除</button>
+
+                                                <div class="modal fade" id="confirm-delete{{ $item['id'] }}" tabindex="-1">
+                                                    <div class="modal-dialog" role="document">
+                                                        <form role="form" class="form-inline" method="POST" action="{{ route('mail.destroy', $item['id']) }}">
+                                                        {{ csrf_field() }}
+                                                        <input name="_method" type="hidden" value="DELETE">
+                                                        <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">削除確認</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            件名：「<strong>{{ $item->title }}</strong>」を本当に削除してよろしいですか？<br>
+                                                            削除した場合復元できませんのでご注意下さい。
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+                                                            <button type="submit" class="btn btn-danger">削除</button>
+                                                        </div>
+                                                        </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+
                                             </td>
                                         </tr>
                                         @endforeach
@@ -96,7 +122,7 @@
                             </div>
                             @if (count($email_finished) > 0)
                             <div class="table-responsive">
-                                <table class="table table-striped tbl-withheading" id="data-table2">
+                                <table class="table table-striped tbl-withheading data-table-no-order">
                                     <thead class="thead">
                                         <tr>
                                             <!-- <th>ID</th> -->

@@ -1,6 +1,6 @@
 @if (count($users) > 0)
     <div class="table-responsive">
-        <table class="table table-striped tbl-withheading" id="data-table">
+        <table class="table table-striped tbl-withheading data-table-no-order">
             <thead class="thead">
                 <tr>
                     <!-- <th>ID</th> -->

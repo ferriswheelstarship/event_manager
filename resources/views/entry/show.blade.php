@@ -89,7 +89,7 @@
 
                         @if (count($entrys_y_view) > 0)
                         <div class="table-responsive">
-                            <table class="table table-striped tbl-withheading" id="data-table">
+                            <table class="table table-striped tbl-withheading data-table-no-order">
                                 <thead class="thead">
                                     <tr>
                                         <!-- <th>ID</th> -->
@@ -146,7 +146,7 @@
                         </div>
                         @if (count($entrys_yc_view) > 0)
                         <div class="table-responsive">
-                            <table class="table table-striped tbl-withheading" id="data-table2">
+                            <table class="table table-striped tbl-withheading data-table-no-order">
                                 <thead class="thead">
                                     <tr>
                                         <!-- <th>ID</th> -->
@@ -193,7 +193,7 @@
                         </div>
                         @if (count($entrys_cw_view) > 0)
                         <div class="table-responsive">
-                            <table class="table table-striped tbl-withheading" id="data-table3">
+                            <table class="table table-striped tbl-withheading data-table-no-order">
                                 <thead class="thead">
                                     <tr>
                                         <!-- <th>ID</th> -->

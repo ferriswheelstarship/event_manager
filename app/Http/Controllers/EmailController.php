@@ -25,8 +25,8 @@ class EmailController extends Controller
      */
     public function index()
     {
-        $email_drafts = Email::where('status','N')->get();
-        $email_finished = Email::where('status','Y')->get();
+        $email_drafts = Email::where('status','N')->orderBy('created_at', 'desc')->get();
+        $email_finished = Email::where('status','Y')->orderBy('updated_at', 'desc')->get();
 
         return view('mail.index',compact('email_drafts','email_finished'));
     }

@@ -11,10 +11,11 @@ $(function(){
     },
     "paging": true,
   });
-  $("#data-table2").DataTable({
+  $(".data-table-no-order").DataTable({
     "language": {
       "url": "//cdn.datatables.net/plug-ins/3cfcc339e89/i18n/Japanese.json"
     },
     "paging": true,
+    "ordering": false,
   });
 });
