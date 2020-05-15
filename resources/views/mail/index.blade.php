@@ -63,28 +63,29 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($email_drafts as $item)
+                                        @foreach ($email_drafts as $chunk)
+                                        @foreach ($chunk as $item)
                                         <tr>
                                             <td data-label="作成日時">
-                                                <span>{{ $item['created_at'] }}</span>
+                                                <span>{{ $item->created_at }}</span>
                                             </td>
                                             <td data-label="件名：">
-                                                <span>{{ $item['title'] }}</span>
+                                                <span>{{ $item->title }}</span>
                                             </td>
                                             <td data-label="送信先：">
-                                                <span>{{ $item['default_group'] }}</span>
+                                                <span>{{ $item->default_group }}</span>
                                             </td>
                                             <td>
-                                                <a href="{{ route('mail.edit',['id' => $item['id']]) }}" 
+                                                <a href="{{ route('mail.edit',['id' => $item->id]) }}" 
                                                 class="btn btn-sm btn-primary">編集 / メール送信</a>
                                                 <button type="button" class="delete-confirm btn btn-sm btn-danger"
-                                                    value="{{ $item['id'] }}" 
+                                                    value="{{ $item->id }}" 
                                                     data-toggle="modal" 
-                                                    data-target="#confirm-delete{{ $item['id'] }}">削除</button>
+                                                    data-target="#confirm-delete{{ $item->id }}">削除</button>
 
-                                                <div class="modal fade" id="confirm-delete{{ $item['id'] }}" tabindex="-1">
+                                                <div class="modal fade" id="confirm-delete{{ $item->id }}" tabindex="-1">
                                                     <div class="modal-dialog" role="document">
-                                                        <form role="form" class="form-inline" method="POST" action="{{ route('mail.destroy', $item['id']) }}">
+                                                        <form role="form" class="form-inline" method="POST" action="{{ route('mail.destroy', $item->id) }}">
                                                         {{ csrf_field() }}
                                                         <input name="_method" type="hidden" value="DELETE">
                                                         <div class="modal-content">
@@ -110,6 +111,7 @@
                                             </td>
                                         </tr>
                                         @endforeach
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -133,22 +135,24 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($email_finished as $item)
+                                        @foreach ($email_finished as $chunk)
+                                        @foreach ($chunk as $item)
                                         <tr>
                                             <td data-label="作成日時">
-                                                <span>{{ $item['updated_at'] }}</span>
+                                                <span>{{ $item->updated_at }}</span>
                                             </td>
                                             <td data-label="件名：">
-                                                <span>{{ $item['title'] }}</span>
+                                                <span>{{ $item->title }}</span>
                                             </td>
                                             <td data-label="送信先：">
-                                                <span>{{ $item['default_group'] }}</span>
+                                                <span>{{ $item->default_group }}</span>
                                             </td>
                                             <td>
-                                                <a href="{{ route('mail.show',['id' => $item['id']]) }}" 
+                                                <a href="{{ route('mail.show',['id' => $item->id]) }}" 
                                                 class="btn btn-sm btn-info">詳細</a>
                                             </td>
                                         </tr>
+                                        @endforeach
                                         @endforeach
                                     </tbody>
                                 </table>

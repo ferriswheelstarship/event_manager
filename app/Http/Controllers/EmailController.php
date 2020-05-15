@@ -25,8 +25,22 @@ class EmailController extends Controller
      */
     public function index()
     {
-        $email_drafts = Email::where('status','N')->orderBy('created_at', 'desc')->get();
-        $email_finished = Email::where('status','Y')->orderBy('updated_at', 'desc')->get();
+        $email_drafts = [];
+        DB::table('emails')
+        ->where('status','N')
+        ->orderBy('created_at','desc')
+        ->chunk(100, function ($data) use (&$email_drafts) {
+            $email_drafts[] = $data;
+        });
+        //dd($email_drafts);
+
+        $email_finished = [];
+        DB::table('emails')
+        ->where('status','Y')
+        ->orderBy('updated_at','desc')
+        ->chunk(100, function ($data) use (&$email_finished) {
+            $email_finished[] = $data;
+        });
 
         return view('mail.index',compact('email_drafts','email_finished'));
     }
