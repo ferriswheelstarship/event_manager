@@ -81,9 +81,6 @@ class InformationController extends Controller
      */
     public function show($id)
     {
-        if(Gate::denies('system-only')){ // 特権ユーザ以外
-            return redirect('/event');
-        }
         $information = Information::find($id);
         return view('information.show',compact('information'));
     }

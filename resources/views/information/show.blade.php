@@ -25,10 +25,20 @@
                     @endif
 
                     <div class="card-body">
+                        @can('system-only')
                         <div class="mb-4">
                             <a href="{{ route('information.index') }}" class="btn btn-sm btn-info">記事一覧</a>
                             <a href="{{ route('information.edit',['id' => $information->id]) }}" class="btn btn-sm btn-primary">変更</a>
                         </div>
+                        @else
+                        <div class="mb-4">
+                            @can('user-only')
+                            <a href="{{ route('dashboard') }}" class="btn btn-sm btn-info">ダッシュボード</a>
+                            @elsecan('admin-only')
+                            <a href="{{ route('dashboard') }}" class="btn btn-sm btn-info">ダッシュボード</a>
+                            @endcan
+                        </div>
+                        @endcan
                         <table class="table table-striped tbl-2column">
                             <tbody>
                                 <tr>
@@ -36,12 +46,12 @@
                                     <td>{{ $information->title }}</td>
                                 </tr>
                                 <tr>
-                                    <th>掲載日</th>
+                                    <th>日付</th>
                                     <td>@php echo date('Y年m月d日H時i分', strtotime($information->article_date)); @endphp</td>
                                 </tr>
                                 <tr>
                                     <th>内容詳細</th>
-                                    <td>{{ $information->comment }}</td>
+                                    <td>{!! nl2br($information->comment) !!}</td>
                                 </tr>
                             </tbody>
                         </table>

@@ -11,7 +11,7 @@ use App\Event;
 use App\User;
 use App\Role;
 use App\Profile;
-use App\Careerup_curriculum;
+use App\Information;
 use App\Event_date;
 use App\Entry;
 
@@ -65,6 +65,7 @@ class HomeController extends Controller
             // 開催間近の研修
             $events = Event::orderBy('id', 'desc')->get();
             $data_cnt = false;
+            $event_data_cnt = false;
             foreach($events as $event) {
 
                 // 申込数（受講券発行者数）
@@ -107,11 +108,84 @@ class HomeController extends Controller
             }
             $data['event'] = ($event_data_cnt === true) ? $event_data : [];
             //dd($data['event']);
-        }
+        } else {
+            
+            $infos = Information::orderBy('article_date','desc')
+                                    ->limit(10)
+                                    ->get();
+            $data['infos'] = $infos;
+
+            if(Gate::allows('user-only')) { //個人ユーザ用
+
+                // 開催間近の研修（受講券発行済）
+                $entry_ticket_sended = Entry::select('event_id','user_id')
+                                        ->where('user_id',Auth::id())
+                                        ->where('entry_status','Y')
+                                        ->where('ticket_status','Y')
+                                        ->groupBy('event_id', 'user_id')->get();
+
+                $event_ticket_sended_data_cnt = false;
+                foreach($entry_ticket_sended as $entry) {
+
+                    $event = Event::find($entry['event_id']);
+
+                    // 研修開催日
+                    $dt = new Carbon(date('Y').'-'.date('m').'-'.date('d'));
+                    $dt7daysafter = $dt->addDays(28);
+                    $nowdt = new Carbon(date('Y').'-'.date('m').'-'.date('d'));
+                    $event_dates = $event->event_dates()->get();
+
+                    foreach($event_dates as $i => $date) {
+                        $event_date = new Carbon($date['event_date']);
+                        if($nowdt <= $event_date && $dt7daysafter >= $event_date) {// 研修開催日が現在から2週間以内であれば
+                            $data_event_ticket_sended[] = [
+                                'event_id' => $event->id,
+                                'event_date_id' => $date['id'],
+                                'title' => $event->title,
+                                'event_date' => $event_date,                        
+                            ];
+                            $event_ticket_sended_data_cnt = true;
+                        }
+                    }
+                }
+                $data['event_ticket_sended'] = ($event_ticket_sended_data_cnt === true) ? $data_event_ticket_sended : [];
 
 
-        if(Gate::allows('user-only')) { //個人ユーザ用
-        
+                // 開催間近の研修（受講券未発行）
+                $entry_ticket_none = Entry::select('event_id','user_id')
+                                        ->where('user_id',Auth::id())
+                                        ->where('entry_status','Y')
+                                        ->where('ticket_status','N')
+                                        ->groupBy('event_id', 'user_id')->get();
+
+                $event_ticket_none_data_cnt = false;
+                foreach($entry_ticket_none as $entry) {
+                    
+                    $event = Event::find($entry['event_id']);
+
+                    // 研修開催日
+                    $current_dt = new Carbon(date('Y').'-'.date('m').'-'.date('d'));
+                    $current_dt7daysafter = $current_dt->addDays(14);
+                    $now_dt = new Carbon(date('Y').'-'.date('m').'-'.date('d'));
+                    $event_dates = $event->event_dates()->get();
+                                
+                    foreach($event_dates as $date) {
+                        $event_date = new Carbon($date['event_date']);
+                        if($now_dt <= $event_date && $current_dt7daysafter >= $event_date) {// 研修開催日が現在から2週間以内であれば
+                            $data_event_ticket_none[] = [
+                                'event_id' => $event->id,
+                                'event_date_id' => $date['id'],
+                                'title' => $event->title,
+                                'event_date' => $event_date,                        
+                            ];
+                            $event_ticket_none_data_cnt = true;
+                        }
+                    }
+                }
+                $data['event_ticket_none'] = ($event_ticket_none_data_cnt === true) ? $data_event_ticket_none : [];
+            } else {
+
+            }
         }
 
 

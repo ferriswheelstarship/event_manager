@@ -132,9 +132,9 @@
 
                         @can('user-only')
 
-                        @if($applyfrag == true)
-                            @if($entrys_self)
-                                @if($entrys_self->ticket_status != 'Y')
+
+                        @if($entrys_self)
+                            @if($entrys_self->ticket_status != 'Y')
                         <div class="alert alert-danger">
                         現在、当研修に申込み中です。研修会の1週間前を目途に受講券の発行をしますので今しばらくお待ち下さい。
                         </div>
@@ -144,7 +144,7 @@
                                 @else
                         <div class="alert alert-danger">
                         現在、当研修への申し込みは完了しております。<br>
-                        受講券の発券（ダウンロード）をお忘れのないようにし、研修当日の受付時に受講券内のQEコードのご提示をお願い致します。
+                        受講券の発券（ダウンロード）をお忘れのないようにし、研修当日の受付時に受講券内のQRコードのご提示をお願い致します。
                         </div>
                         <a href="{{ route('ticket_pdf',['id' => Auth::id().'-'.$event->id]) }}" target="_blank" class="btn btn-info">受講券を表示</a>
                                 @endif
@@ -158,9 +158,15 @@
                         繰り上げ時はメールで通知いたします。
                         </div>
                             @else
+                                @if($applyfrag == false)
+                                <div class="alert alert-danger">
+                                    {{ $status_mes }}
+                                </div>
+                                @else
                         <button type="button" class="apply-confirm btn-sm btn-primary" 
                         value="{{ $event->id }}" 
                         data-toggle="modal" data-target="#confirm-apply">参加申込</button>
+                                @endif
                             @endif
 
 
@@ -221,11 +227,6 @@
                                 </form>
                             </div>
                         </div>
-                        @else
-                        <div class="alert alert-danger">
-                            {{ $status_mes }}
-                        </div>
-                        @endif
 
                         @elsecan('admin-only')
                         @if($applyfrag == false)

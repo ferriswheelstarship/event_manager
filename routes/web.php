@@ -64,6 +64,8 @@ Route::get('ticket_pdf/{id}','PagesController@ticket_pdf')->name('ticket_pdf');
 Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
 
   Route::get('dashboard', 'HomeController@index')->name('dashboard');
+  // インフォーメーション一覧
+  Route::get('information/{id}', 'InformationController@show')->name('information.show');
 
   // ユーザ詳細
   Route::get('account/{user_id}', 'UsersController@show')->name('account.show');
