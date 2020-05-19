@@ -9,10 +9,11 @@
                 <div class="card">
                     <div class="card-header">ユーザ詳細（{{ $user->name }}）</div>
                     <div class="card-body">
+                        @can('system-only')
                         <div class="mb-3">
-                            <a href="{{ route('account.index') }}" class="btn btn-sm btn-info">ユーザ一覧へ戻る</a>
                             <a href="{{ route('account.edit',['user_id' => $user->id]) }}" class="btn btn-sm btn-primary">変更</a>
                         </div>
+                        @endcan
                         <div class="table-responsive">
                             <table class="table table-striped tbl-2column">
                                 <tbody>

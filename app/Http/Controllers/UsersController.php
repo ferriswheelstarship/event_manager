@@ -307,6 +307,8 @@ class UsersController extends Controller
             ]);            
             $user->profile_id = $profile->id;
             $user->company_profile_id = $company_profile_id;
+
+            $redirectTo = 'UsersController@general_user';
             
         } elseif($request->role_id == 3) { // 法人ユーザを選択時company_profiles生成
             
@@ -323,6 +325,10 @@ class UsersController extends Controller
             ]);
             $user->company_profile_id = $company_profile->id;
 
+            $redirectTo = 'UsersController@company_user';
+
+        } else {
+            $redirectTo = 'UsersController@branch_user';
         }
 
         $user->email = $request->email;
@@ -337,7 +343,7 @@ class UsersController extends Controller
         $user->status = 1;
         $user->save();
         
-        return redirect()->route('account.index')->with('status','ユーザ情報の登録が完了しました。');
+        return redirect()->action($redirectTo)->with('status','ユーザ情報の登録が完了しました。');
     }
 
     public function show($id)
@@ -597,7 +603,7 @@ class UsersController extends Controller
         $user = User::find($id);
         $user->company_profile_id = null;
         $user->save();
-        return redirect()->route('account.index')->with('status','指定ユーザの所属施設設定を解除しました。');
+        return redirect()->back()->with('status','指定ユーザの所属施設設定を解除しました。');
     }
 
     public function destroy($id)
@@ -607,7 +613,7 @@ class UsersController extends Controller
         }
         $user = User::find($id);
         $user->delete();
-        return redirect()->route('account.index')->with('status',"指定ユーザを退会にしました。");
+        return redirect()->back()->with('status',"指定ユーザを退会にしました。");
     }
 
     public function withdrawalconfirm() {
@@ -615,7 +621,7 @@ class UsersController extends Controller
         if($user_self->role_id == 4) {
             return view('account.withdrawalconfirm',compact('user_self'));
         } else {
-            return redirect()->route('account.index');
+            return redirect()->back()->with('attention','操作できません。');
         }                
     }
 
@@ -639,7 +645,7 @@ class UsersController extends Controller
         }
         $user = User::onlyTrashed()->find($id);
         $user->restore();
-        return redirect()->route('account.index')->with('status','指定ユーザを復元しました。');
+        return redirect()->back()->with('status','指定ユーザを復元しました。');
     }
 
     public function forceDelete($id) {
@@ -648,13 +654,13 @@ class UsersController extends Controller
         }
         $user = User::onlyTrashed()->find($id);
         $user->forceDelete();
-        return redirect()->route('account.index')->with('status','指定ユーザのアカウントを削除しました。削除したユーザは復元できません。');
+        return redirect()->back()->with('status','指定ユーザのアカウントを削除しました。削除したユーザは復元できません。');
     }
 
     public function user_csv(Request $request) 
     {
         if(Gate::denies('system-only')) {
-            return redirect()->route('account.index');
+            return redirect()->back();
         }
 
         // リスト

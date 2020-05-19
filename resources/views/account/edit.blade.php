@@ -38,12 +38,6 @@
                     @empty($message)
                     <div class="card-body">
 
-                        @can('admin-higher')
-                        <div class="mb-3">
-                            <a href="{{ route('account.index') }}" class="btn btn-sm btn-info">ユーザ一覧</a>
-                        </div>
-                        @endcan
-
                         <form method="POST" action="{{ url('account/edit/'.$user->id) }}">
                             {{ csrf_field() }}
 

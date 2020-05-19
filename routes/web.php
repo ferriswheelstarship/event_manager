@@ -180,7 +180,7 @@ Route::group(['middleware' => ['auth', 'can:system-only']], function () {
   Route::get('account/branch/user', 'UsersController@branch_user')->name('account.branch_user');
   // ユーザ一覧（法人）
   Route::get('account/company/user', 'UsersController@company_user')->name('account.company_user');
-  // ユーザ一覧（支部）
+  // ユーザ一覧（個人）
   Route::get('account/general/user', 'UsersController@general_user')->name('account.general_user');
 
   // ユーザ登録
