@@ -132,6 +132,11 @@
 
                         @can('user-only')
 
+                        @if($applyfrag == false)
+                                <div class="alert alert-danger">
+                                    {{ $status_mes }}
+                                </div>
+                        @else
 
                         @if($entrys_self)
                             @if($entrys_self->ticket_status != 'Y')
@@ -141,33 +146,27 @@
                         <button type="button" class="apply-cancel btn-sm btn-danger" 
                         value="{{ $event->id }}" 
                         data-toggle="modal" data-target="#confirm-cancel">申込みキャンセル</button>
-                                @else
+                            @else
                         <div class="alert alert-danger">
                         現在、当研修への申し込みは完了しております。<br>
                         受講券の発券（ダウンロード）をお忘れのないようにし、研修当日の受付時に受講券内のQRコードのご提示をお願い致します。
                         </div>
                         <a href="{{ route('ticket_pdf',['id' => Auth::id().'-'.$event->id]) }}" target="_blank" class="btn btn-info">受講券を表示</a>
-                                @endif
-                            @elseif($entrys_self_YC)
+                            @endif
+                        @elseif($entrys_self_YC)
                         <div class="alert alert-danger">
                         当研修へは申込み後キャンセルをされています。再度申込みされる場合は事務局へお電話ください。
                         </div>
-                            @elseif($entrys_self_CW)
+                        @elseif($entrys_self_CW)
                         <div class="alert alert-danger">
                         当研修へはキャンセル待ち申込みをされています。欠員が発生次第、順次繰り上げとなります。<br>
                         繰り上げ時はメールで通知いたします。
                         </div>
-                            @else
-                                @if($applyfrag == false)
-                                <div class="alert alert-danger">
-                                    {{ $status_mes }}
-                                </div>
-                                @else
+                        @else
                         <button type="button" class="apply-confirm btn-sm btn-primary" 
                         value="{{ $event->id }}" 
                         data-toggle="modal" data-target="#confirm-apply">参加申込</button>
-                                @endif
-                            @endif
+                        @endif
 
 
                         <!-- Modal(apply) -->
@@ -228,6 +227,8 @@
                             </div>
                         </div>
 
+                        @endif
+
                         @elsecan('admin-only')
                         @if($applyfrag == false)
                         <div class="alert alert-danger">
@@ -251,6 +252,9 @@
                                             <td>{{ $item['name'] }}</td>
                                             <td>{{ $item['entry_status'] }}</td>
                                             <td>
+                                            @if($applyfrag == false)
+                                                -
+                                            @else
                                                 @if($item['entry_status'] == '申込なし')
                                                     @if($applyfrag == true)
                                                     @if(!$capacity_status)
@@ -277,6 +281,7 @@
                                                 @elseif($item['entry_status'] == 'キャンセル待ち申込')
                                                 
                                                 @endif
+                                            @endif
                                             </td>
                                         </tr>
                                 @endforeach
