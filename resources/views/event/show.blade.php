@@ -273,7 +273,7 @@
                                                 <button type="button" class="apply-cancel btn-sm btn-danger" 
                                                 value="{{ $event->id }}" 
                                                 data-toggle="modal" data-target="#confirm-cancel{{ $item['id'] }}">申込みキャンセル</button>
-                                                @elseif($item['entry_status'] == '申込済')
+                                                @elseif($item['entry_status'] == '受講券発行済')
                                                 <a href="{{ route('ticket_pdf',['id' => $item['id'].'-'.$event->id]) }}" 
                                                 target="_blank" class="btn btn-sm btn-info">受講券を表示</a>
                                                 @elseif($item['entry_status'] == '申込後キャンセル')

@@ -476,7 +476,7 @@ class EventsController extends Controller
                     $entry_status = "申込なし";
                 } else {
                     if($entry->ticket_status == 'Y') {
-                        $entry_status = "申込済・入金済";
+                        $entry_status = "受講券発行済";
                     } else {
                         if($entry->entry_status == 'Y') {
                             $entry_status = "受講券発行待ち";

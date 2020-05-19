@@ -131,7 +131,7 @@ class HomeController extends Controller
 
                     // 研修開催日
                     $dt = new Carbon(date('Y').'-'.date('m').'-'.date('d'));
-                    $dt7daysafter = $dt->addDays(28);
+                    $dt7daysafter = $dt->addDays(14);
                     $nowdt = new Carbon(date('Y').'-'.date('m').'-'.date('d'));
                     $event_dates = $event->event_dates()->get();
 
@@ -148,7 +148,9 @@ class HomeController extends Controller
                         }
                     }
                 }
-                $data['event_ticket_sended'] = ($event_ticket_sended_data_cnt === true) ? $data_event_ticket_sended : [];
+                $data['event_ticket_sended'] = 
+                    ($event_ticket_sended_data_cnt === true) 
+                        ? HomeController::getUniqueArray($data_event_ticket_sended,'event_date') : [];
 
 
                 // 開催間近の研修（受講券未発行）
@@ -182,7 +184,9 @@ class HomeController extends Controller
                         }
                     }
                 }
-                $data['event_ticket_none'] = ($event_ticket_none_data_cnt === true) ? $data_event_ticket_none : [];
+                $data['event_ticket_none'] = 
+                    ($event_ticket_none_data_cnt === true) 
+                        ? HomeController::getUniqueArray($data_event_ticket_none,'event_date') : [];
 
             } elseif(Gate::allows('admin-only')) {
 
@@ -204,22 +208,22 @@ class HomeController extends Controller
                                             ->where('entry_status','Y')
                                             ->where('ticket_status','Y')
                                             ->groupBy('event_id', 'user_id')->get();
-                    dd($entry_ticket_sended);
+
                     $event_ticket_sended_data_cnt = false;
-                    foreach($entry_ticket_sended as $entry) {
+                    foreach($entry_ticket_sended as $j => $entry) {
 
                         $event = Event::find($entry['event_id']);
 
                         // 研修開催日
                         $dt = new Carbon(date('Y').'-'.date('m').'-'.date('d'));
-                        $dt7daysafter = $dt->addDays(28);
+                        $dt7daysafter = $dt->addDays(80);
                         $nowdt = new Carbon(date('Y').'-'.date('m').'-'.date('d'));
                         $event_dates = $event->event_dates()->get();
 
                         foreach($event_dates as $date) {
                             $event_date = new Carbon($date['event_date']);
                             if($nowdt <= $event_date && $dt7daysafter >= $event_date) {// 研修開催日が現在から2週間以内であれば
-                                $data_event_ticket_sended[$i] = [
+                                $data_event_ticket_sended[$j] = [
                                     'event_id' => $event->id,
                                     'event_date_id' => $date['id'],
                                     'title' => $event->title,
@@ -229,43 +233,48 @@ class HomeController extends Controller
                             }
                         }
                     }
-                    $data['event_ticket_sended'] = ($event_ticket_sended_data_cnt === true) ? $data_event_ticket_sended : [];
+                    $data['event_ticket_sended'] = 
+                        ($event_ticket_sended_data_cnt === true) 
+                            ? HomeController::getUniqueArray($data_event_ticket_sended,'event_date') : [];
                 }
-                dd($data['event_ticket_sended']);
 
 
                 // 開催間近の研修（受講券未発行）
-                $entry_ticket_none = Entry::select('event_id','user_id')
-                                        ->where('user_id',Auth::id())
-                                        ->where('entry_status','Y')
-                                        ->where('ticket_status','N')
-                                        ->groupBy('event_id', 'user_id')->get();
+                foreach($belonging_users_ids as $i => $belonging_users_id) {
+                    $entry_ticket_none = Entry::select('event_id','user_id')
+                                            ->where('user_id',$belonging_users_id)
+                                            ->where('entry_status','Y')
+                                            ->where('ticket_status','N')
+                                            ->groupBy('event_id', 'user_id')->get();
 
-                $event_ticket_none_data_cnt = false;
-                foreach($entry_ticket_none as $entry) {
-                    
-                    $event = Event::find($entry['event_id']);
+                    $event_ticket_none_data_cnt = false;
+                    foreach($entry_ticket_none as $j => $entry) {
+                        
+                        $event = Event::find($entry['event_id']);
 
-                    // 研修開催日
-                    $current_dt = new Carbon(date('Y').'-'.date('m').'-'.date('d'));
-                    $current_dt7daysafter = $current_dt->addDays(14);
-                    $now_dt = new Carbon(date('Y').'-'.date('m').'-'.date('d'));
-                    $event_dates = $event->event_dates()->get();
-                                
-                    foreach($event_dates as $date) {
-                        $event_date = new Carbon($date['event_date']);
-                        if($now_dt <= $event_date && $current_dt7daysafter >= $event_date) {// 研修開催日が現在から2週間以内であれば
-                            $data_event_ticket_none[] = [
-                                'event_id' => $event->id,
-                                'event_date_id' => $date['id'],
-                                'title' => $event->title,
-                                'event_date' => $event_date,                        
-                            ];
-                            $event_ticket_none_data_cnt = true;
+                        // 研修開催日
+                        $current_dt = new Carbon(date('Y').'-'.date('m').'-'.date('d'));
+                        $current_dt7daysafter = $current_dt->addDays(80);
+                        $now_dt = new Carbon(date('Y').'-'.date('m').'-'.date('d'));
+                        $event_dates = $event->event_dates()->get();
+                                    
+                        foreach($event_dates as $date) {
+                            $event_date = new Carbon($date['event_date']);
+                            if($now_dt <= $event_date && $current_dt7daysafter >= $event_date) {// 研修開催日が現在から2週間以内であれば
+                                $data_event_ticket_none[$j] = [
+                                    'event_id' => $event->id,
+                                    'event_date_id' => $date['id'],
+                                    'title' => $event->title,
+                                    'event_date' => $event_date,                        
+                                ];
+                                $event_ticket_none_data_cnt = true;
+                            }
                         }
                     }
+                    $data['event_ticket_none'] = 
+                        ($event_ticket_none_data_cnt === true) 
+                            ? HomeController::getUniqueArray($data_event_ticket_none,'event_date') : [];
                 }
-                $data['event_ticket_none'] = ($event_ticket_none_data_cnt === true) ? $data_event_ticket_none : [];
 
             }
         }
@@ -274,5 +283,16 @@ class HomeController extends Controller
         return view('home',compact('authlevel','data'));
     }
 
-
+    public static function getUniqueArray($array, $column)
+    {   
+        $tmp = []; 
+        $uniqueArray = []; 
+        foreach ($array as $value){
+            if (!in_array($value[$column], $tmp)) {
+                $tmp[] = $value[$column];
+                $uniqueArray[] = $value;
+            }   
+        }   
+        return $uniqueArray;    
+    }   
 }

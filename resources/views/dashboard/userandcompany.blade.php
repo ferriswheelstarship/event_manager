@@ -9,20 +9,20 @@
                                 <thead class="thead">
                                     <tr>
                                         <!-- <th>ID</th> -->
-                                        <th class="text-nowrap">日時</th>
                                         <th class="text-nowrap">タイトル</th>
+                                        <th class="text-nowrap">日付</th>
                                         <th class="text-nowrap">操作</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($data['infos'] as $info)
                                     <tr>
+                                        <td data-label="タイトル：">{{ $info->title }}</td>
                                         <td data-label="日付：">
                                             @php
                                             echo date('Y年m月d日', strtotime($info->article_date));
                                             @endphp
                                         </td>
-                                        <td data-label="タイトル：">{{ $info->title }}</td>
                                         <td data-lavel="操作：">
                                             <a href="{{ url('information/'.$info->id) }}" class="btn btn-info btn-sm">詳細</a>
                                         </td>
