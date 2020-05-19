@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', '受付管理')
+@section('title', '受付管理（開催間近の研修）')
 
 @section('each-head')
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-3.3.1/dt-1.10.20/r-2.2.3/sp-1.0.1/datatables.min.css"/>

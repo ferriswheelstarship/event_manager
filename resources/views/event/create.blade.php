@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', '研修一覧')
+@section('title', '研修登録')
 
 @section('each-head')
 <script src="{{ asset('js/jquery.datetimepicker.full.js') }}"></script>

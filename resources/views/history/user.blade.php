@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'ユーザ一覧')
+@section('title', '受講履歴（ユーザ一覧）')
 
 @section('each-head')
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-3.3.1/dt-1.10.20/r-2.2.3/sp-1.0.1/datatables.min.css"/>

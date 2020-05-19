@@ -1,4 +1,5 @@
 @extends('layouts.app')
+
 @section('title', 'インフォメーション一覧')
 
 @section('each-head')

@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'ユーザ情報変更')
+
 @section('each-head')
   <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css" rel="stylesheet" />
 @endsection
@@ -9,7 +11,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">ユーザ情報変更</div>
+                    <div class="card-header">ユーザ情報変更（{{ $user->name }}）</div>
 
                     @isset($message)
                     <div class="card-body">

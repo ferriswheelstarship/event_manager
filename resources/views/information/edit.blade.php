@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'インフォメーション詳細'.$information->title)
+@section('title', 'インフォメーション　記事編集')
 
 @section('each-head')
 <script src="{{ asset('js/jquery.datetimepicker.full.js') }}"></script>
@@ -20,7 +20,7 @@ $(function(){
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">インフォメーション　記事修正</div>
+                    <div class="card-header">インフォメーション　記事編集</div>
 
                     @if (Session::has('status'))
                     <div class="card-body">

@@ -64,8 +64,9 @@ Route::get('ticket_pdf/{id}','PagesController@ticket_pdf')->name('ticket_pdf');
 Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
 
   Route::get('dashboard', 'HomeController@index')->name('dashboard');
-  // インフォーメーション一覧
-  Route::get('information/{id}', 'InformationController@show')->name('information.show');
+  
+  // インフォーメーション
+  Route::resource('information', 'InformationController');
 
   // ユーザ詳細
   Route::get('account/{user_id}', 'UsersController@show')->name('account.show');
@@ -224,7 +225,7 @@ Route::group(['middleware' => ['auth', 'can:system-only']], function () {
 
 
   // インフォーメーション
-  Route::resource('information', 'InformationController');
+  //Route::resource('information', 'InformationController');
   // Route::get('information', 'InformationController@index')->name('information.index');
   // Route::get('information/{id}', 'InformationController@show')->name('information.show');
   // Route::get('information', 'InformationController@index')->name('information.index');

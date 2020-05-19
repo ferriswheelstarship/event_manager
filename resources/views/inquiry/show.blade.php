@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'お問い合わせ')
+@section('title', 'お問い合わせ 詳細')
 
 @section('content')
     <div class="container">
