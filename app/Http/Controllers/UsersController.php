@@ -600,7 +600,7 @@ class UsersController extends Controller
         if(Gate::denies('admin-only')){
             return redirect('/account/edit/'.Auth::id());
         }
-        $user = User::find($id);
+        $user = User::withTrashed()->find($id);
         $user->company_profile_id = null;
         $user->save();
         return redirect()->back()->with('status','指定ユーザの所属施設設定を解除しました。');

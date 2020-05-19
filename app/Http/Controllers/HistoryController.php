@@ -178,6 +178,7 @@ class HistoryController extends Controller
             DB::table('users')
             ->where('status',1)
             ->where('role_id',4)
+            ->where('deleted_at',null)
             ->orderBy('id', 'desc')
             ->chunk(100, function ($data) use (&$users) {
                 $users[] = $data;
@@ -194,6 +195,7 @@ class HistoryController extends Controller
             ->where('status',1)
             ->where('role_id',4)
             ->where('company_profile_id',$user_self->company_profile_id)
+            ->where('deleted_at',null)
             ->orderBy('id', 'desc')
             ->chunk(100, function ($data) use (&$users) {
                 $users[] = $data;
