@@ -237,26 +237,6 @@ class EventsController extends Controller
                                     ->orWhere('entry_status','YC');
                             })->groupBy('user_id')->get()->count();
 
-            // 研修受付ステータス
-            $dt = Carbon::now();
-            $entry_start_date = new Carbon($event['entry_start_date']);
-            $entry_end_date = new Carbon($event['entry_end_date']);
-            if($event->deleted_at) {
-                $status = "削除済";
-            } else {
-                if($entrys_cnt >= $event['capacity']){
-                    $status = "キャンセル待申込";
-                } else {
-                    if($entry_start_date > $dt){
-                        $status = "申込開始前";
-                    } elseif($entry_end_date < $dt) {
-                        $status = "申込受付終了";
-                    } else {
-                        $status = "申込受付中";
-                    } 
-                }
-            }
-
             // 申込ステータス（個人ユーザのみ）       
             if(Gate::allows('user-only')) {
                 $entry = Entry::where('event_id',$event->id)
@@ -276,6 +256,7 @@ class EventsController extends Controller
             }
             
             // 研修開催日フィルタ（修了分）
+            $dt = Carbon::now();
             $event_dates = $event->event_dates()->select('event_date')->get();
             foreach($event_dates as $i => $item) {
                 $event_date = new Carbon($item->event_date);
@@ -286,12 +267,23 @@ class EventsController extends Controller
                 }
             }
 
+            $datepassedfrag = false;
+            // 開催日経過確認（1研修）
+            if(count($event_dates) > 0) {
+                foreach($event_dates as $event_date) {
+                    if($event_date->event_date < $dt) {
+                        $applyfrag = false;
+                        $datepassedfrag = true;
+                        break;
+                    }
+                }
+            }
+
             // 開催日翌日以降のイベントデータのみ抽出
             if(in_array(true,$date_frag[$key],true)) {
                 $data[] = [
                     'id' => $event->id,
                     'title' => $event->title,
-                    'status' => $status,
                     'entry_status' => $entry_status,
                     'event_dates' => $event_dates,
                     'capacity' => $event->capacity,

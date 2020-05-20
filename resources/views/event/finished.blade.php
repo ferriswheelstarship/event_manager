@@ -36,8 +36,6 @@
                 <tr>
                     <th class="text-nowrap">開催日</th>
                     <th class="text-nowrap">研修タイトル</th>
-                    <!-- <th class="text-nowrap">申込数 / 定員</th> -->
-                    <!-- <th class="text-nowrap">申込受付状況</th> -->
                     @can('user-only')
                     <th class="text-nowrap">参加・申込状態</th>
                     @endcan
@@ -57,12 +55,6 @@
                         @endforeach
                     </td>
                     <td data-label="研修名：">{{ $event['title'] }}</td>
-                    <!-- <td data-label="申込数/定員：">
-                        <span>{{ $event['entrys_cnt'] }} / {{ $event['capacity'] }}</span>
-                    </td> -->
-                    <!-- <td data-label="申込受付状況：">
-                        <span>{{ $event['status']}}</span>
-                    </td> -->
                     @can('user-only')
                     <td data-label="申込状態：">
                         {{ $event['entry_status']}} 
