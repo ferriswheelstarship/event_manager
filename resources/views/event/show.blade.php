@@ -26,7 +26,8 @@
 
                     <div class="card-body">
                         <div class="mb-3">
-                            <a href="{{ url()->previous() }}" class="btn btn-sm btn-info">研修一覧へ戻る</a>
+                            <a href="{{ route('event.before') }}" class="btn btn-sm btn-info">開催前の研修 一覧</a>
+                            <a href="{{ route('event.finished') }}" class="btn btn-sm btn-info">修了した研修 一覧</a>
                             @can('area-higher')
                             <a href="{{ route('event.edit',['id' => $event->id]) }}" class="btn btn-sm btn-primary">変更</a>
                             @endcan
@@ -132,10 +133,10 @@
 
                         @can('user-only')
 
-                        @if($applyfrag == false)
-                                <div class="alert alert-danger">
-                                    {{ $status_mes }}
-                                </div>
+                        @if($datepassedfrag === true)
+                        <div class="alert alert-danger">
+                        当研修は開催修了しています。
+                        </div>
                         @else
 
                         @if($entrys_self)
@@ -148,8 +149,9 @@
                         data-toggle="modal" data-target="#confirm-cancel">申込みキャンセル</button>
                             @else
                         <div class="alert alert-danger">
-                        現在、当研修への申し込みは完了しております。<br>
-                        受講券の発券（ダウンロード）をお忘れのないようにし、研修当日の受付時に受講券内のQRコードのご提示をお願い致します。
+                        当研修への申し込みは完了しております。<br>
+                        受講券の発券（ダウンロード）をお忘れのないようにし、研修当日の受付時に受講券内のQRコードのご提示をお願い致します。<br>
+                        また、申込枠確保のため参加キャンセルはできません。事前の欠席が判明した場合はお電話等で事務局へ直接お申し入れください。
                         </div>
                         <a href="{{ route('ticket_pdf',['id' => Auth::id().'-'.$event->id]) }}" target="_blank" class="btn btn-info">受講券を表示</a>
                             @endif
@@ -163,11 +165,18 @@
                         繰り上げ時はメールで通知いたします。
                         </div>
                         @else
+                            @if($applyfrag == false)
+                        <div class="alert alert-danger">
+                            {{ $status_mes }}
+                        </div>
+                            @else
                         <button type="button" class="apply-confirm btn-sm btn-primary" 
                         value="{{ $event->id }}" 
                         data-toggle="modal" data-target="#confirm-apply">参加申込</button>
+                            @endif
                         @endif
 
+                        @endif
 
                         <!-- Modal(apply) -->
                         <div class="modal fade" id="confirm-apply" tabindex="-1">
@@ -227,7 +236,6 @@
                             </div>
                         </div>
 
-                        @endif
 
                         @elsecan('admin-only')
                         @if($applyfrag == false)

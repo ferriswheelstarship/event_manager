@@ -79,7 +79,7 @@ class EventsController extends Controller
                     $entry_status = "申込なし";
                 } else {
                     if($entry->ticket_status == 'Y') {
-                        $entry_status = "申込済";
+                        $entry_status = "受講券発行済";
                     } else {
                         if($entry->entry_status == 'Y') {
                             $entry_status = "受講券発行待ち ";
@@ -165,7 +165,7 @@ class EventsController extends Controller
                     $entry_status = "申込なし";
                 } else {
                     if($entry->ticket_status == 'Y') {
-                        $entry_status = "申込済";
+                        $entry_status = "受講券発行済";
                     } else {
                         if($entry->entry_status == 'Y') {
                             $entry_status = "受講券発行待ち";
@@ -517,11 +517,13 @@ class EventsController extends Controller
             $status_mes = "申込受付が終了したため申込できません。";
         }
 
+        $datepassedfrag = false;
+        // 開催日経過確認（1研修）
         if(count($event_dates) > 0) {
             foreach($event_dates as $event_date) {
                 if($event_date->event_date < $dt) {
                     $applyfrag = false;
-                    $status_mes = "当研修は開催修了しています。";
+                    $datepassedfrag = true;
                     break;
                 }
             }
@@ -541,7 +543,7 @@ class EventsController extends Controller
         return view('event.show',
                 compact(
                     'event','careerup_curriculums','event_dates','event_uploads','general_or_carrerup',
-                    'entrys_cnt','entrys_self','entrys_self_YC','entrys_self_CW','applyfrag','status_mes','capacity_status',
+                    'entrys_cnt','entrys_self','entrys_self_YC','entrys_self_CW','applyfrag','datepassedfrag','status_mes','capacity_status',
                     'datas'
                 ));
     }

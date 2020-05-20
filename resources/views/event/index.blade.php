@@ -67,7 +67,7 @@
                     @can('user-only')
                     <td data-label="申込状態：">
                         {{ $event['entry_status']}} 
-                        @if($event['entry_status'] == '申込済')
+                        @if($event['entry_status'] == '受講券発行済')
                         <br>
                         <a href="{{ route('ticket_pdf',['id' => Auth::id().'-'.$event['id']]) }}" target="_blank" class="btn btn-sm btn-info">受講券</a>
                         @endif

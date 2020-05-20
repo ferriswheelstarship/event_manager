@@ -186,7 +186,7 @@ class HomeController extends Controller
                 }
                 $data['event_ticket_none'] = 
                     ($event_ticket_none_data_cnt === true) 
-                        ? HomeController::getUniqueArray($data_event_ticket_none,'event_date') : [];
+                        ? $data_event_ticket_none : [];
 
             } elseif(Gate::allows('admin-only')) {
 
@@ -235,7 +235,7 @@ class HomeController extends Controller
                     }
                     $data['event_ticket_sended'] = 
                         ($event_ticket_sended_data_cnt === true) 
-                            ? HomeController::getUniqueArray($data_event_ticket_sended,'event_date') : [];
+                            ? $this->getUniqueArray($data_event_ticket_sended,'event_date') : [];
                 }
 
 
@@ -273,7 +273,7 @@ class HomeController extends Controller
                     }
                     $data['event_ticket_none'] = 
                         ($event_ticket_none_data_cnt === true) 
-                            ? HomeController::getUniqueArray($data_event_ticket_none,'event_date') : [];
+                            ? $this->getUniqueArray($data_event_ticket_none,'event_date') : [];
                 }
 
             }
