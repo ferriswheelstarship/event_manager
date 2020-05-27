@@ -239,7 +239,7 @@
                                         name="company_profile_id"
                                         onchange="changeEventFacility(this.value)">
                                             <option value="0">----</option>
-                                            <option value="なし" @if(old('company_profile_id') === "なし") selected @endif>兵庫県下に所属なし</option>
+                                            <option value="なし" @if(old('company_profile_id') === "なし") selected @endif>兵庫県保育協会の会員施設以外（所属なし）</option>
                                             @foreach ($facilites as $key => $val)
                                             <option value="{{ $val['company_profile_id'] }}"
                                                 @if(old('company_profile_id') == $val['company_profile_id']) selected @endif>【{{ $val['city'] }}】{{ $val['name'] }}</option>

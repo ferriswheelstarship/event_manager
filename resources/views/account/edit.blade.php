@@ -281,7 +281,7 @@
                                     class="select-search form-control{{ $errors->has('company_profile_id') ? ' is-invalid' : '' }}" name="company_profile_id"
                                     onchange="changeEventFacility(this.value)">
                                         <option value="なし" 
-                                        @if(old('company_profile_id') == "なし" || $user->company_profile_id == null) selected @endif >兵庫県下に所属なし</option>
+                                        @if(old('company_profile_id') == "なし" || $user->company_profile_id == null) selected @endif >兵庫県保育協会の会員施設以外（所属なし）</option>
                                         @foreach ($facilites as $key => $val)
                                         <option value="{{ $val['company_profile_id'] }}"
                                             @if(old('company_profile_id',$user->company_profile_id) == $val['company_profile_id']) selected @endif>【{{ $val['city'] }}】{{ $val['name'] }}</option>

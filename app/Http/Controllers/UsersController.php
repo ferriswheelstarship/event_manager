@@ -363,7 +363,8 @@ class UsersController extends Controller
             $profile = $user->profile()->first();
             //dd($profile);
             if($user->company_profile_id) {
-                $companyUser = User::find($user->company_profile_id)->name;
+                $company = User::where('role_id',3)->where('company_profile_id',$user->company_profile_id)->first();
+                $companyUser = $company->name;
             } else {
                 $companyUser = $profile->other_facility_name;
             }

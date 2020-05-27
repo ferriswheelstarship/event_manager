@@ -35,7 +35,7 @@
         @endguest
         @auth
         <ul class="navbar-nav mt-3">
-            <li class="nav-item">
+            <li class="nav-item">                
                 <a class="nav-link" href="{{ route('dashboard') }}">ダッシュボード</a>
             </li>
             <li class="nav-item dropdown">
