@@ -100,10 +100,10 @@
                                             target="_blank" class="btn btn-sm btn-success">修了証確認</a>
                                             @else
                                             @if($item['training_minute'] >= 900)
-                                            修了証未発行<br>
+                                            修了証未発行
                                             @can('area-higher')
                                             <br />
-                                            <button class="btn btn-sm btn-success certificate-confirm btn-sm" value="{{ $key }}" 
+                                            <button class="btn btn-sm btn-primary certificate-confirm btn-sm" value="{{ $key }}" 
                                             data-toggle="modal" data-target="#confirm-certificate{{ $key }}">修了証発行</button>
                                             @endcan
                                             @else

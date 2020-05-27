@@ -108,7 +108,7 @@ $(function(){
 
                                     受講時間（分）<br>
                                     <input
-                                        type="number" min="0" max="360" step="10" style=" width:80px"
+                                        type="number" min="0" max="900" step="10" style=" width:80px"
                                         class="mb-3 form-control{{ $errors->has('carrerup.training_minute.*') ? ' is-invalid' : '' }}"
                                         name="carrerup[training_minute][]" value="{{ old('carrerup.training_minute.0') }}">
                                     @if ($errors->has('carrerup.training_minute.*'))
@@ -134,7 +134,7 @@ $(function(){
                                 <label for="title" class="col-md-4 col-form-label text-md-right">受講時間（分）</label>
                                 <div class="col-md-6">
                                     <input
-                                        id="training_minute" type="number" min="10" max="360" step="10" style=" width:100px"
+                                        id="training_minute" type="number" min="10" max="900" step="10" style=" width:100px"
                                         class="mb-3 form-control{{ $errors->has('training_minute') ? ' is-invalid' : '' }}"
                                         name="training_minute" value="{{ old('training_minute') }}">
                                     @if ($errors->has('training_minute'))

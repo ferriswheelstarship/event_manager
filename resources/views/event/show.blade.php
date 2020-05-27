@@ -87,13 +87,14 @@
                                     <th>申込期間</th>
                                     <td>@php echo date('Y年m月d日H時i分', strtotime($event->entry_start_date)); @endphp
                                     ~ 
-                                    @php echo date('Y年m月d日H時i分', strtotime($event->entry_end_date)); @endphp</td>
+                                    <span class="spblock">@php echo date('Y年m月d日H時i分', strtotime($event->entry_end_date)); @endphp</span>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>表示期間</th>
                                     <td>@php echo date('Y年m月d日H時i分', strtotime($event->view_start_date)); @endphp
                                     ~ 
-                                    @php echo date('Y年m月d日H時i分', strtotime($event->view_end_date)); @endphp</td>
+                                    <span class="spblock">@php echo date('Y年m月d日H時i分', strtotime($event->view_end_date)); @endphp</span></td>
                                 </tr>
                                 <tr>
                                     <th>申込数 / 定員</th>

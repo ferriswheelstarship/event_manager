@@ -11,6 +11,13 @@
     padding:0 .5em;
 }
 
+
+@media screen and (max-width: 920px) {
+    .spblock {
+        display: block;
+    }
+}
+
 @media screen and (max-width: 640px) {
     /* 詳細ページth,tdの2カラム用 */
     .tbl-2column {
