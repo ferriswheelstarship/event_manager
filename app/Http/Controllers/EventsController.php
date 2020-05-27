@@ -137,7 +137,7 @@ class EventsController extends Controller
                             })->groupBy('user_id')->get()->count();
 
             // 研修受付ステータス
-            $dt = Carbon::now();
+            $dt = Carbon::today();
             $entry_start_date = new Carbon($event['entry_start_date']);
             $entry_end_date = new Carbon($event['entry_end_date']);
             if($event->deleted_at) {
@@ -188,7 +188,7 @@ class EventsController extends Controller
             foreach($event_dates as $i => $item) {
                 $event_date = new Carbon($item->event_date);
                 if($event_date > $dt) {//開催日前
-                    $date_frag[$key][$i] = true;                     
+                    $date_frag[$key][$i] = true;
                 } else {
                     $date_frag[$key][$i] = false;
                 }
@@ -256,7 +256,7 @@ class EventsController extends Controller
             }
             
             // 研修開催日フィルタ（修了分）
-            $dt = Carbon::now();
+            $dt = Carbon::today();
             $event_dates = $event->event_dates()->select('event_date')->get();
             foreach($event_dates as $i => $item) {
                 $event_date = new Carbon($item->event_date);
@@ -497,7 +497,7 @@ class EventsController extends Controller
         $applyfrag = true;
         $status_mes = null;
 
-        $dt = Carbon::now();
+        $dt = Carbon::today();
         $entry_start_date = new Carbon($event->entry_start_date);
         $entry_end_date = new Carbon($event->entry_end_date);
         if($entry_start_date > $dt || $entry_end_date < $dt){ // 申込期間外の場合

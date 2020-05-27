@@ -158,8 +158,8 @@ $(function(){
                                         <option value="">----</option>
                                         @foreach($parent_curriculum as $i => $value)
                                         <optgroup label="{{ $value }}">
-                                        @foreach ($child_curriculum as $val)
-                                            @if($i+1 > $j / 5 && $j / 5 >= $i)
+                                        @foreach ($child_curriculum as $j => $val)
+                                            @if($i+1 > $j/5 && $j/5 >= $i)
                                             <option value="{{ $val }}"
                                                 @if(old('carrerup.child_curriculum.0') == $val) selected @endif>{{ $val }}</option>
                                             @endif
