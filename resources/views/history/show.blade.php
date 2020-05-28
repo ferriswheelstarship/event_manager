@@ -56,7 +56,7 @@
                                         <th class="text-nowrap text-center align-middle">分野</th>
                                         <th class="text-nowrap text-center align-middle">受講済研修</th>
                                         <th class="text-nowrap text-center align-middle">受講時間合計</th>
-                                        <th class="text-nowrap text-center align-middle">ステータス</th>
+                                        <!-- <th class="text-nowrap text-center align-middle">ステータス</th> -->
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -93,7 +93,7 @@
                                         @endif
                                         </td>
                                         <td data-label="受講時間合計：" class="text-center align-middle">{{ $item['training_minute'] }}分</td>
-                                        <td class="text-center align-middle">
+                                        <!-- <td class="text-center align-middle">
                                             @if($item['carrerup_certificates'] === true)
                                             修了証発行済<br />
                                             <a href="{{ route('history.certificate_pdf',['id' => $item['certificate_id']]) }}" 
@@ -138,7 +138,7 @@
                                                     </form>
                                                 </div>
                                             </div>                                            
-                                        </td>
+                                        </td> -->
                                     </tr>
                                     @endforeach
                                 </tbody>
