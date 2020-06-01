@@ -152,13 +152,14 @@ class ReceptionController extends Controller
             
             // 申込完了者
             $entrys = Entry::where('event_id',$event_id)
-                            ->where('event_date_id',$id)
+                            ->where('event_date_id',$event_date->id)
                             ->where('entry_status','Y')
                             ->where('ticket_status','Y')
                             ->get();
+
             // 受付完了者数
             $reception_cnt = Entry::where('event_id',$event_id)
-                            ->where('event_date_id',$id)
+                            ->where('event_date_id',$event_date->id)
                             ->where('entry_status','Y')
                             ->where('ticket_status','Y')
                             ->where('attend_status','Y')
@@ -228,20 +229,20 @@ class ReceptionController extends Controller
             
             // 受付完了者
             $entrys = Entry::where('event_id',$event_id)
-                            ->where('event_date_id',$id)
+                            ->where('event_date_id',$event_date->$id)
                             ->where('entry_status','Y')
                             ->where('ticket_status','Y')
                             ->where('attend_status','Y')
                             ->get();
             // 参加予定者数
             $entrys_cnt = Entry::where('event_id',$event_id)
-                            ->where('event_date_id',$id)
+                            ->where('event_date_id',$event_date->$id)
                             ->where('entry_status','Y')
                             ->where('ticket_status','Y')
                             ->get()->count();
             // 受付完了者数
             $reception_cnt = Entry::where('event_id',$event_id)
-                            ->where('event_date_id',$id)
+                            ->where('event_date_id',$event_date->$id)
                             ->where('entry_status','Y')
                             ->where('ticket_status','Y')
                             ->where('attend_status','Y')

@@ -860,6 +860,7 @@ class EventsController extends Controller
             return redirect()->route('event.show',['id' => $request->event_id])->with('attention', '申込期間外のため申込みができません。');
         }
 
+
         // キャリアアップ研修のみ保育士かどうか、所属施設の確認
         // if($event->general_or_carrerup == 'carrerup') {
         //     $entrying_user = User::find($request->user_id);
@@ -884,6 +885,9 @@ class EventsController extends Controller
             ]);
         }
 
+        // 二重送信防止
+        $request->session()->regenerateToken();        
+
         // メール送信
         $user = User::where('id',$request->user_id)->first();
         $data = [
@@ -901,6 +905,7 @@ class EventsController extends Controller
     }
 
     public function cancel(Request $request) {
+        
         if(Gate::allows('area-higher')){ // 個人、法人ユーザ以外
             return redirect('/event');
         }
