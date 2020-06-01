@@ -178,7 +178,7 @@
                                                 value="{{ $entry['user_id'] }}" 
                                                 data-toggle="modal" data-target="#confirm-delete{{ $entry['user_id'] }}">削除</button>
                                             @else
-                                            受講券発行済のため削除不可
+                                            削除不可（受講券発行済）
                                             @endif
                                         </td>
                                     </tr>
