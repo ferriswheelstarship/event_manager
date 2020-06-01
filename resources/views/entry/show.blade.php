@@ -173,10 +173,12 @@
                                             @if($entry['user_deleted_at'])
                                                 ユーザ退会済<br />
                                             @endif
-                                            @if($entry['status'] != '受講券発行済')
+                                            @if($entry['status'] != '受講券発行済')                                            
                                             <button type="button" class="delete-confirm btn btn-sm btn-danger"
                                                 value="{{ $entry['user_id'] }}" 
-                                                data-toggle="modal" data-target="#confirm-delete{{ $entry['user_id'] }}">削除</button>                                        
+                                                data-toggle="modal" data-target="#confirm-delete{{ $entry['user_id'] }}">削除</button>
+                                            @else
+                                            受講券発行済のため削除不可
                                             @endif
                                         </td>
                                     </tr>
