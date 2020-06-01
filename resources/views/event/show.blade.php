@@ -158,7 +158,7 @@
                             @endif
                         @elseif($entrys_self_YC)
                         <div class="alert alert-danger">
-                        当研修へは申込み後キャンセルをされています。再度申込みされる場合は事務局へお電話ください。
+                        当研修へは申込み後キャンセルをされています。
                         </div>
                         @elseif($entrys_self_CW)
                         <div class="alert alert-danger">
