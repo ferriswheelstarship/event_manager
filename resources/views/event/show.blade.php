@@ -372,3 +372,7 @@
         </div>
     </div>
 @endsection
+
+@section('each-js')
+    <script src="{{ asset('js/doubletransmission.js') }}" ></script>
+@endsection

@@ -860,6 +860,16 @@ class EventsController extends Controller
             return redirect()->route('event.show',['id' => $request->event_id])->with('attention', '申込期間外のため申込みができません。');
         }
 
+        // 申込重複確認
+        $entrys_self = Entry::where('user_id',$request->user_id)
+                        ->where('event_id',$request->event_id)
+                        ->where(function($q){
+                            $q->where('entry_status','Y')
+                                ->orWhere('entry_status','CW');
+                        })->first();
+        if($entrys_self) {
+            return redirect()->route('event.show',['id' => $request->event_id])->with('attention', 'すでに該当ユーザは申込んでいます。申込状況を確認ください。');
+        }
 
         // キャリアアップ研修のみ保育士かどうか、所属施設の確認
         // if($event->general_or_carrerup == 'carrerup') {
