@@ -484,9 +484,13 @@ class EntryController extends Controller
                 if($user->company_profile_id) {
                     $company = User::where('role_id',3)->where('company_profile_id',$user->company_profile_id)->first();
                     $company_name = $company->name;
+                    $company_email = $company->email;
+                    $company_address = $company->address;
                 } else {
                     $company = $user->profile;
                     $company_name = $company->other_facility_name;
+                    $company_email = null;
+                    $company_address = $company->other_facility_address;
                 }
                 // 状態
                 if($entry['ticket_status'] == 'Y') {
@@ -496,14 +500,18 @@ class EntryController extends Controller
                 }
 
                 $lists[] = [
+                    $status,
+                    $entry['created_at'],
                     $user->name,
                     $user->ruby,
-                    $company_name,
-                    $status,
                     $user->profile->birth_year."年".$user->profile->birth_month."月".$user->profile->birth_day."日",
                     $user->profile->job,
                     $user->profile->childminder_number,
-                    $entry['created_at'],
+                    $user->zip,
+                    $user->address,
+                    $company_name,
+                    $company_address,
+                    $company_email,
                 ];
             }
         } else {
@@ -514,7 +522,7 @@ class EntryController extends Controller
         $file = Csv::createCsv($filename);
 
         // 見出し
-        $heading = ['名前','フリガナ','所属','状況','生年月日','職種','保育士番号','申込日時'];
+        $heading = ['状況','申込日時','名前','フリガナ','生年月日','職種','保育士番号','個人の郵便番号','個人の住所','所属施設名','所属施設住所','所属施設メールアドレス'];
 
         Csv::write($file,$heading); 
 
