@@ -402,9 +402,13 @@ class ReceptionController extends Controller
                 if($user->company_profile_id) {
                     $company = User::where('role_id',3)->where('company_profile_id',$user->company_profile_id)->first();
                     $company_name = $company->name;
+                    $company_email = $company->email;
+                    $company_address = $company->address;
                 } else {
                     $company = $user->profile;
                     $company_name = $company->other_facility_name;
+                    $company_email = null;
+                    $company_address = $company->other_facility_address;
                 }
                 // 状態
                 if($entry['attend_status'] == 'Y') {
@@ -414,10 +418,17 @@ class ReceptionController extends Controller
                 }
 
                 $lists[] = [
+                    $status,
                     $user->name,
                     $user->ruby,
+                    $user->profile->birth_year."年".$user->profile->birth_month."月".$user->profile->birth_day."日",
+                    $user->profile->job,
+                    $user->profile->childminder_number,
+                    $user->zip,
+                    $user->address,
                     $company_name,
-                    $status,
+                    $company_address,
+                    $company_email,
                 ];
             }
         } else {
@@ -428,7 +439,7 @@ class ReceptionController extends Controller
         $file = Csv::createCsv($filename);
 
         // 見出し
-        $heading = ['名前','フリガナ','所属','状況'];
+        $heading = ['状況','名前','フリガナ','生年月日','職種','保育士番号','個人の郵便番号','個人の住所','所属施設名','所属施設住所','所属施設メールアドレス'];
 
         Csv::write($file,$heading); 
 
