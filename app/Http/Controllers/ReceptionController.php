@@ -156,7 +156,6 @@ class ReceptionController extends Controller
                             ->where('entry_status','Y')
                             ->where('ticket_status','Y')
                             ->get();
-            dd($entrys);
 
             // 受付完了者数
             $reception_cnt = Entry::where('event_id',$event_id)
