@@ -156,6 +156,7 @@ class ReceptionController extends Controller
                             ->where('entry_status','Y')
                             ->where('ticket_status','Y')
                             ->get();
+            dd($entrys);
 
             // 受付完了者数
             $reception_cnt = Entry::where('event_id',$event_id)
@@ -219,6 +220,7 @@ class ReceptionController extends Controller
             $event = Event::find($event_id);
             $event_date = Event_date::find($event_date_id);
 
+
             if(!$event || !$event_date) { //研修、研修開催日
                 return redirect()->back();
             }
@@ -229,20 +231,21 @@ class ReceptionController extends Controller
             
             // 受付完了者
             $entrys = Entry::where('event_id',$event_id)
-                            ->where('event_date_id',$event_date->$id)
+                            ->where('event_date_id',$event_date->id)
                             ->where('entry_status','Y')
                             ->where('ticket_status','Y')
                             ->where('attend_status','Y')
                             ->get();
+
             // 参加予定者数
             $entrys_cnt = Entry::where('event_id',$event_id)
-                            ->where('event_date_id',$event_date->$id)
+                            ->where('event_date_id',$event_date->id)
                             ->where('entry_status','Y')
                             ->where('ticket_status','Y')
                             ->get()->count();
             // 受付完了者数
             $reception_cnt = Entry::where('event_id',$event_id)
-                            ->where('event_date_id',$event_date->$id)
+                            ->where('event_date_id',$event_date->id)
                             ->where('entry_status','Y')
                             ->where('ticket_status','Y')
                             ->where('attend_status','Y')
