@@ -77,7 +77,7 @@
             <li class="nav-item dropdown">
                 <a class="nav-link" href="{{ route('history.user') }}">受講履歴</a>
             </li>
-            @elsecan(('user-only')
+            @elsecan('user-only')
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('history.index') }}">受講履歴</a>
             </li>
