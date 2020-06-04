@@ -388,16 +388,16 @@ class ReceptionController extends Controller
         }
  
         // 受付完了者
-        $entrys_y = Entry::select('user_id','created_at','ticket_status','ticket_status')
+        $entrys_y = Entry::select('user_id','created_at','ticket_status','attend_status')
                         ->where('event_id',$request->event_id)
                         ->where('entry_status','Y')
                         ->where('ticket_status','Y')
-                        ->groupBy('user_id','created_at','ticket_status')
+                        ->where('attend_status','Y')
+                        ->groupBy('user_id','created_at','ticket_status','attend_status')
                         ->get();
 
         if($entrys_y->count() > 0){
             foreach($entrys_y as $entry) {
-                
                 // ユーザ名
                 $user = User::find($entry->user_id);
                 // 所属施設名

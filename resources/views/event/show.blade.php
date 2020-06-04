@@ -143,7 +143,7 @@
                         @if($entrys_self)
                             @if($entrys_self->ticket_status != 'Y')
                         <div class="alert alert-danger">
-                        現在、当研修に申込み中です。研修会の1週間前を目途に受講券の発行をしますので今しばらくお待ち下さい。
+                        現在、当研修に申込み中です。研修会の4日前を目途に受講券の発行をしますので今しばらくお待ち下さい。
                         </div>
                         <button type="button" class="apply-cancel btn-sm btn-danger" 
                         value="{{ $event->id }}" 
