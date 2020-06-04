@@ -392,7 +392,6 @@ class ReceptionController extends Controller
                         ->where('event_id',$request->event_id)
                         ->where('entry_status','Y')
                         ->where('ticket_status','Y')
-                        ->where('attend_status','Y')
                         ->groupBy('user_id','created_at','ticket_status','attend_status')
                         ->get();
 
