@@ -429,6 +429,7 @@ class ReceptionController extends Controller
                     $status,
                     $user->name,
                     $user->ruby,
+                    $user->email,
                     $user->profile->birth_year."年".$user->profile->birth_month."月".$user->profile->birth_day."日",
                     $user->profile->job,
                     $user->profile->childminder_number,
@@ -447,7 +448,7 @@ class ReceptionController extends Controller
         $file = Csv::createCsv($filename);
 
         // 見出し
-        $heading = ['状況','名前','フリガナ','生年月日','職種','保育士番号','個人の郵便番号','個人の住所','所属施設名','所属施設住所','所属施設メールアドレス'];
+        $heading = ['状況','名前','フリガナ','メールアドレス','生年月日','職種','保育士番号','個人の郵便番号','個人の住所','所属施設名','所属施設住所','所属施設メールアドレス'];
 
         Csv::write($file,$heading); 
 
