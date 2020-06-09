@@ -8,7 +8,7 @@ class Entry extends Model
 {
     protected $fillable = [
         'event_id','event_date_id','user_id','applying_user_id',
-        'serial_number','entry_status','ticket_status','attend_status',
+        'serial_number','entry_status','ticket_status','attend_status','finished_status',
     ];
 
     public function user() {

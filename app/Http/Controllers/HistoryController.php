@@ -18,6 +18,7 @@ use App\Entry;
 use App\Careerup_certificate;
 use App\Certificates;
 use Mail;
+use App\Mail\FinishedSendMail;
 use App\Mail\CertificateSendMail;
 
 class HistoryController extends Controller
@@ -32,12 +33,12 @@ class HistoryController extends Controller
         }
 
         // 参加済
-        $entrys = Entry::select('event_id','event_date_id')
+        $entrys = Entry::select('event_id','event_date_id','finished_status')
                         ->where('user_id',Auth::id())
                         ->where('entry_status','Y')
                         ->where('ticket_status','Y')
                         ->where('attend_status','Y')
-                        ->groupBy('event_id','event_date_id')->get();
+                        ->groupBy('event_id','event_date_id','finished_status')->get();
         if($entrys->count() > 0) {
             foreach($entrys as $key => $entry) {
                 
@@ -65,6 +66,7 @@ class HistoryController extends Controller
                             'event' => $event,
                             'event_dates' => $event_dates,
                             'careerup_curriculums' => $careerup_curriculums,
+                            'finished_status' => $entry->finished_status,
                         ];
                     }
 
@@ -78,6 +80,7 @@ class HistoryController extends Controller
                     $general_data[$key] = [
                         'event' => $event,
                         'event_dates' => $event_dates,
+                        'finished_status' => $entry->finished_status,
                     ];
                     $carrerup_data[$key] = null;
                 }
@@ -115,6 +118,7 @@ class HistoryController extends Controller
                             'content' => $filterd_careerup_curriculums,
                             'event' => $carrerup_data[$key]['event'],
                             'event_dates' => $carrerup_data[$key]['event_dates'],
+                            'finished_status' => $carrerup_data[$key]['finished_status'],
                         ];
                         $content_cnt = count($filterd_careerup_curriculums);
                         $rowspan = $content_cnt;
@@ -265,21 +269,21 @@ class HistoryController extends Controller
                 return redirect('/history/user/');
             }
             // 参加済
-            $entrys = Entry::select('event_id','event_date_id')
+            $entrys = Entry::select('event_id','event_date_id','finished_status')
                         ->where('user_id',$user->id)
                         ->where('entry_status','Y')
                         ->where('ticket_status','Y')
                         ->where('attend_status','Y')
-                        ->groupBy('event_id','event_date_id')->get();
+                        ->groupBy('event_id','event_date_id','finished_status')->get();
 
         } else { // 支部ユーザ以上
             // 参加済
-            $entrys = Entry::select('event_id','event_date_id')
+            $entrys = Entry::select('event_id','event_date_id','finished_status')
                         ->where('user_id',$user->id)
                         ->where('entry_status','Y')
                         ->where('ticket_status','Y')
                         ->where('attend_status','Y')
-                        ->groupBy('event_id','event_date_id')->get();
+                        ->groupBy('event_id','event_date_id','finished_status')->get();
 
         }
         //dd($entrys);
@@ -311,6 +315,7 @@ class HistoryController extends Controller
                             'event' => $event,
                             'event_dates' => $event_dates,
                             'careerup_curriculums' => $careerup_curriculums,
+                            'finished_status' => $entry->finished_status,
                         ];
                     }
 
@@ -324,6 +329,7 @@ class HistoryController extends Controller
                     $general_data[$key] = [
                         'event' => $event,
                         'event_dates' => $event_dates,
+                        'finished_status' => $entry->finished_status,
                     ];
                     $carrerup_data[$key] = null;
                 }
@@ -362,6 +368,7 @@ class HistoryController extends Controller
                             'content' => $filterd_careerup_curriculums,
                             'event' => $carrerup_data[$key]['event'],
                             'event_dates' => $carrerup_data[$key]['event_dates'],
+                            'finished_status' => $carrerup_data[$key]['finished_status'],
                         ];
                         $content_cnt = count($filterd_careerup_curriculums);
                         $rowspan = $content_cnt;
@@ -381,7 +388,7 @@ class HistoryController extends Controller
                 $rowspan = 1;
             }
             
-            //修了証データ
+            //受講証明書データ
             $carrerup_certificates = Careerup_certificate::where('parent_curriculum',$val)
                                         ->where('user_id',$user->id)
                                         ->where('certificate_status','Y')
@@ -442,6 +449,7 @@ class HistoryController extends Controller
                         ->where('entry_status','Y')
                         ->where('ticket_status','Y')
                         ->where('attend_status','Y')
+                        ->where('finished_status','Y')
                         ->first();
             if(!$entrys_self) {// 該当研修の申込ステータス確認
                 $emes = '不正なデータです。';
@@ -542,21 +550,46 @@ class HistoryController extends Controller
     }
 
 
+    public function finishedsend(Request $request) 
+    {
+        $user = User::find($request->user_id);
+        $event = Event::find($request->event_id);
+        $entrys = Entry::where('user_id',$request->user_id)
+                        ->where('event_id',$request->event_id)
+                        ->get();
+
+        foreach($entrys as $i => $entry) {
+            $entry->finished_status = 'Y';
+            $entry->save();
+        }
+
+        $data = [
+            'username' => $user->name,
+            'event_title' => $event->title,
+        ];
+        $email = new FinishedSendMail($data);
+        Mail::to($user->email)->send($email);
+
+        return redirect()
+                ->route('history.show',['id' => $request->user_id])
+                ->with('status',$user->name.'へ【'.$event->title.'】受講証明書を発行しました。');
+    }
+
     public function certificatesend(Request $request) 
     {
 
         $user = User::find($request->user_id);
         $parent_curriculum = $request->parent_curriculum;
+        $careerup_certificate = NEW Careerup_certificate;
+        $careerup_certificate->user_id = $request->user_id;
+        $careerup_certificate->parent_curriculum = $request->parent_curriculum;
+        $careerup_certificate->certificate_status = 'Y';
+
 
         $data = [
             'username' => $user->name,
             'parent_curriculum' => $parent_curriculum,
         ];
-
-        $careerup_certificate = NEW Careerup_certificate;
-        $careerup_certificate->user_id = $request->user_id;
-        $careerup_certificate->parent_curriculum = $request->parent_curriculum;
-        $careerup_certificate->certificate_status = 'Y';
         if($careerup_certificate->save()) {
             $email = new CertificateSendMail($data);
             Mail::to($user->email)->send($email);

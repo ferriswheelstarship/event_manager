@@ -168,6 +168,8 @@ Route::group(['middleware' => ['auth', 'can:area-higher']], function () {
   // 受付管理 - 受付者一覧CSV
   Route::post('reception/reception_csv', 'ReceptionController@reception_csv')->name('reception.reception_csv'); 
 
+  // 受講証明書送信
+  Route::post('history/finishedesend','HistoryController@finishedsend')->name('history.finishedsend');
   // 修了証送信
   Route::post('history/certificatesend','HistoryController@certificatesend')->name('history.certificatesend');
 

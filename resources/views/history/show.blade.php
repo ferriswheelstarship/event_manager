@@ -81,8 +81,48 @@
                                                         <td data-label="受講済研修：" class="text-center align-middle">{{ $item['eventinfo']['event']->title }} </td>
                                                         <td data-label="受講時間：" class="text-center align-middle">{{ $item['eventinfo']['content'][$i]->training_minute }}分</td>
                                                         <td data-label="受講証明書：" class="text-nowrap text-center align-middle">
+                                                            @if($item['eventinfo']['finished_status'] === 'Y')
+                                                            発行済
+                                                            <br />
                                                             <a href="{{ route('history.attendance_pdf',['id' => $user->id.'-'.$item['eventinfo']['event']->id]) }}" 
-                                                            target="_blank" class="btn btn-sm btn-info">受講証明書</a>
+                                                            target="_blank" class="btn btn-sm btn-info">受講証明書確認</a>
+                                                            @else
+                                                            未発行
+                                                            @can('area-higher')
+                                                            <br />
+                                                            <button class="btn btn-sm btn-success certificate-confirm btn-sm" value="{{ $key }}" 
+                                                            data-toggle="modal" data-target="#confirm-certificate{{ $key }}">受講証明書発行</button>
+                                                            @endcan
+                                                            @endif
+
+                                                            <div class="modal fade" id="confirm-certificate{{ $key }}" tabindex="-1">
+                                                                <div class="modal-dialog" role="document">
+                                                                    <form role="form" class="form-inline" method="POST" 
+                                                                    action="{{ route('history.finishedsend') }}">
+                                                                    {{ csrf_field() }}
+                                                                    <input type="hidden" name="user_id" value="{{ $user->id }}">
+                                                                    <input type="hidden" name="event_id" value="{{ $item['eventinfo']['event']->id }}">
+                                                                    <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="exampleModalLabel">受講証明書 発行</h5>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body text-left">
+                                                                        <strong>{{ $user->name }}</strong>へ<strong>【{{ $item['eventinfo']['event']->title  }}】</strong>の受講証明書を<br>
+                                                                        発行してよろしいですか？<br>
+                                                                        ユーザにも受講証明書が発行された旨メールが送信されます。
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+                                                                        <button type="submit" class="btn btn-success">受講証明書発行</button>
+                                                                    </div>
+                                                                    </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+
                                                         </td>
                                                     </tr>
                                                     @endforeach
@@ -156,7 +196,7 @@
                                     <tr>
                                         <th class="text-nowrap">開催日</th>
                                         <th class="text-nowrap">研修タイトル</th>
-                                        <th class="text-nowrap">操作</th>
+                                        <th class="text-nowrap">受講証明書</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -171,8 +211,49 @@
                                             @endforeach
                                         </td>
                                         <td data-label="研修名：">{{ $item['event']->title }}</td>
-                                        <td data-label="操作：">
-                                            <a href="{{ route('history.attendance_pdf',['id' => $user->id.'-'.$item['event']->id]) }}" target="_blank" class="btn btn-info">受講証明書</a>
+                                        <td data-label="受講証明書：">
+                                            @if($item['finished_status'] === 'Y')
+                                            発行済
+                                            <br />
+                                            <a href="{{ route('history.attendance_pdf',['id' => $user->id.'-'.$item['event']->id]) }}" 
+                                            target="_blank" class="btn btn-sm btn-info">受講証明書確認</a>
+                                            @else
+                                            未発行
+                                            @can('area-higher')
+                                            <br />
+                                            <button class="btn btn-sm btn-success certificate-confirm btn-sm" value="{{ $key }}" 
+                                            data-toggle="modal" data-target="#gconfirm-certificate{{ $key }}">受講証明書発行</button>
+                                            @endcan
+                                            @endif
+
+                                            <div class="modal fade" id="gconfirm-certificate{{ $key }}" tabindex="-1">
+                                                <div class="modal-dialog" role="document">
+                                                    <form role="form" class="form-inline" method="POST" 
+                                                    action="{{ route('history.finishedsend') }}">
+                                                    {{ csrf_field() }}
+                                                    <input type="hidden" name="user_id" value="{{ $user->id }}">
+                                                    <input type="hidden" name="event_id" value="{{ $item['event']->id }}">
+                                                    <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">受講証明書 発行</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body text-left">
+                                                        <strong>{{ $user->name }}</strong>へ<strong>【{{ $item['event']->title  }}】</strong>の受講証明書を<br>
+                                                        発行してよろしいですか？<br>
+                                                        ユーザにも受講証明書が発行された旨メールが送信されます。
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+                                                        <button type="submit" class="btn btn-success">受講証明書発行</button>
+                                                    </div>
+                                                    </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+
                                         </td>
                                     </tr>
                                     @endforeach
