@@ -267,13 +267,14 @@ class EntryController extends Controller
         } else {
             $entrys_y_view = [];
         }
-        //申込完了者を氏名（フリガナ）でソート
-        foreach ((array)$entrys_y_view as $key => $value) {
-            $sort[$key] = $value['user_ruby'];
+
+        if(count($entrys_y_view) > 0) {
+            //申込完了者を氏名（フリガナ）でソート
+            foreach ((array)$entrys_y_view as $key => $value) {
+                $sort[$key] = $value['user_ruby'];
+            }
+            array_multisort($sort, SORT_ASC, $entrys_y_view);
         }
-        array_multisort($sort, SORT_ASC, $entrys_y_view);
-
-
 
         // 申込後キャンセル者
         $entrys_yc = Entry::select('user_id','created_at','ticket_status')

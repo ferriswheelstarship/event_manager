@@ -243,11 +243,13 @@ class HistoryController extends Controller
         }
         }
 
-        // 参加者氏名（フリガナ順）にソート
-        foreach ((array)$datas as $key => $value) {
-            $sort[$key] = $value['ruby'];
+        if(count($data) > 0) {
+            // 参加者氏名（フリガナ順）にソート
+            foreach ((array)$datas as $key => $value) {
+                $sort[$key] = $value['ruby'];
+            }
+            array_multisort($sort, SORT_ASC, $datas);
         }
-        array_multisort($sort, SORT_ASC, $datas);
 
 
         return view('history.user',compact('datas','pref'));

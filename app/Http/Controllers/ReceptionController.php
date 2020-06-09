@@ -203,12 +203,13 @@ class ReceptionController extends Controller
                 $entrys_view = [];
             }
 
-            // 参加者氏名（フリガナ順）にソート
-            foreach ((array)$entrys_view as $key => $value) {
-                $sort[$key] = $value['user_ruby'];
+            if(count($entrys_view) > 0) {
+                // 参加者氏名（フリガナ順）にソート
+                foreach ((array)$entrys_view as $key => $value) {
+                    $sort[$key] = $value['user_ruby'];
+                }
+                array_multisort($sort, SORT_ASC, $entrys_view);
             }
-            array_multisort($sort, SORT_ASC, $entrys_view);
-
 
             return view('reception.show',
                     compact('event','event_date','general_or_carrerup','entrys_view','reception_cnt'));
