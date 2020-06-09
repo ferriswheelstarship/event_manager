@@ -243,7 +243,7 @@ class HistoryController extends Controller
         }
         }
 
-        if(count($data) > 0) {
+        if(count($datas) > 0) {
             // 参加者氏名（フリガナ順）にソート
             foreach ((array)$datas as $key => $value) {
                 $sort[$key] = $value['ruby'];
