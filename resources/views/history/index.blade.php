@@ -50,7 +50,6 @@
                                         <th class="text-nowrap text-center align-middle">分野</th>
                                         <th class="text-nowrap text-center align-middle">受講済内容・受講時間</th>
                                         <th class="text-nowrap text-center align-middle">受講時間合計</th>
-                                        <!-- <th class="text-nowrap text-center align-middle">ステータス</th> -->
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -79,7 +78,7 @@
                                                             <a href="{{ route('history.attendance_pdf',['id' => $user->id.'-'.$item['eventinfo']['event']->id]) }}" 
                                                             target="_blank" class="btn btn-sm btn-info">受講証明書</a>
                                                             @else
-                                                            未発行
+                                                            <span class="text-danger">未発行</span>                                                            
                                                             @endif
                                                         </td>
                                                     </tr>
@@ -91,20 +90,6 @@
                                         @endif
                                         </td>
                                         <td data-label="受講時間合計：" class="text-center align-middle">{{ $item['training_minute'] }}分</td>
-                                        <!-- <td class="text-center align-middle">
-                                        @if($item['carrerup_certificates'] === true)
-                                            修了証発行済<br />
-                                            <a href="{{ route('history.certificate_pdf',['id' => $item['certificate_id']]) }}" 
-                                            target="_blank" class="btn btn-sm btn-success">修了証確認</a>
-                                        @else
-                                            @if($item['training_minute'] >= 900)
-                                            修了証未発行<br />                                            
-                                            @else
-                                            受講15時間未満<br />
-                                            <button class="btn btn-sm btn-danger certificate-confirm btn-sm disabled">修了証発行不可</button>
-                                            @endif
-                                        @endif
-                                        </td> -->
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -142,7 +127,7 @@
                                             <a href="{{ route('history.attendance_pdf',['id' => $user->id.'-'.$item['event']->id]) }}" 
                                             target="_blank" class="btn btn-sm btn-info">受講証明書</a>
                                             @else
-                                            未発行
+                                            <span class="text-danger">未発行</span>
                                             @can('area-higher')
                                             <br />
                                             <button class="btn btn-sm btn-success certificate-confirm btn-sm" value="{{ $key }}" 

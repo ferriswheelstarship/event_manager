@@ -108,7 +108,6 @@ class HistoryController extends Controller
                     }
                     if($careerup_curriculums_exists === true) {
 
-                        //dd($filterd_careerup_curriculums);
                         $sum_training_minute = 0;
                         foreach($filterd_careerup_curriculums as $cc) {
                             $sum_training_minute += (int)$cc['training_minute'];
@@ -122,13 +121,15 @@ class HistoryController extends Controller
                         ];
                         $content_cnt = count($filterd_careerup_curriculums);
                         $rowspan = $content_cnt;
-
+                        break;
 
                     } else {
                         $sum_training_minute = 0;
                         $view_data = null;
                         $content_cnt = 0;
                         $rowspan = 1;
+                        continue;
+
                     }
                 }
             } else {
@@ -138,27 +139,12 @@ class HistoryController extends Controller
                 $rowspan = 1;
             }
             
-            //修了証データ
-            $carrerup_certificates = Careerup_certificate::where('parent_curriculum',$val)
-                                        ->where('user_id',$user->id)
-                                        ->where('certificate_status','Y')
-                                        ->first();
-            if(isset($carrerup_certificates)) {
-                $certificates = true;
-                $certificate_id = $carrerup_certificates->id;
-            } else {
-                $certificates = false;                
-                $certificate_id = null;
-            }
-
             $carrerup_view_data[] = [
                 'fields' => $val,
                 'training_minute' => $sum_training_minute,
                 'content_cnt' => $content_cnt,
                 'rowspan' => $rowspan, 
                 'eventinfo' => $view_data,
-                'carrerup_certificates' => $certificates,
-                'certificate_id' => $certificate_id,
             ];
 
         }
@@ -342,7 +328,6 @@ class HistoryController extends Controller
         }
         $carrerup_data = array_merge(array_filter($carrerup_data));
         $general_data = array_merge(array_filter($general_data));
-        //dd($carrerup_data,$general_data);
 
         // キャリアアップ研修view用
         $fields = config('const.PARENT_CURRICULUM');
@@ -374,14 +359,16 @@ class HistoryController extends Controller
                         ];
                         $content_cnt = count($filterd_careerup_curriculums);
                         $rowspan = $content_cnt;
-
+                        break;
 
                     } else {
                         $sum_training_minute = 0;
                         $view_data = null;
                         $content_cnt = 0;
                         $rowspan = 1;
+                        continue;
                     }
+                    
                 }
             } else {
                 $sum_training_minute = 0;
@@ -390,27 +377,12 @@ class HistoryController extends Controller
                 $rowspan = 1;
             }
             
-            //受講証明書データ
-            $carrerup_certificates = Careerup_certificate::where('parent_curriculum',$val)
-                                        ->where('user_id',$user->id)
-                                        ->where('certificate_status','Y')
-                                        ->first();
-            if(isset($carrerup_certificates)) {
-                $certificates = true;
-                $certificate_id = $carrerup_certificates->id;
-            } else {
-                $certificates = false;                
-                $certificate_id = null;
-            }
-
             $carrerup_view_data[] = [
                 'fields' => $val,
                 'training_minute' => $sum_training_minute,
                 'content_cnt' => $content_cnt,
                 'rowspan' => $rowspan, 
                 'eventinfo' => $view_data,
-                'carrerup_certificates' => $certificates,
-                'certificate_id' => $certificate_id,
             ];
 
         }

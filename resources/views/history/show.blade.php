@@ -56,7 +56,6 @@
                                         <th class="text-nowrap text-center align-middle">分野</th>
                                         <th class="text-nowrap text-center align-middle">受講済研修</th>
                                         <th class="text-nowrap text-center align-middle">受講時間合計</th>
-                                        <!-- <th class="text-nowrap text-center align-middle">ステータス</th> -->
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -87,7 +86,7 @@
                                                             <a href="{{ route('history.attendance_pdf',['id' => $user->id.'-'.$item['eventinfo']['event']->id]) }}" 
                                                             target="_blank" class="btn btn-sm btn-info">受講証明書確認</a>
                                                             @else
-                                                            未発行
+                                                            <span class="text-danger">未発行</span>
                                                             @can('area-higher')
                                                             <br />
                                                             <button class="btn btn-sm btn-success certificate-confirm btn-sm" value="{{ $key }}" 
@@ -133,52 +132,6 @@
                                         @endif
                                         </td>
                                         <td data-label="受講時間合計：" class="text-center align-middle">{{ $item['training_minute'] }}分</td>
-                                        <!-- <td class="text-center align-middle">
-                                            @if($item['carrerup_certificates'] === true)
-                                            修了証発行済<br />
-                                            <a href="{{ route('history.certificate_pdf',['id' => $item['certificate_id']]) }}" 
-                                            target="_blank" class="btn btn-sm btn-success">修了証確認</a>
-                                            @else
-                                            @if($item['training_minute'] >= 900)
-                                            修了証未発行
-                                            @can('area-higher')
-                                            <br />
-                                            <button class="btn btn-sm btn-primary certificate-confirm btn-sm" value="{{ $key }}" 
-                                            data-toggle="modal" data-target="#confirm-certificate{{ $key }}">修了証発行</button>
-                                            @endcan
-                                            @else
-                                            受講15時間未満<br />
-                                            <button class="btn btn-sm btn-danger certificate-confirm btn-sm disabled">修了証発行不可</button>
-                                            @endif
-                                            @endif
-
-                                            <div class="modal fade" id="confirm-certificate{{ $key }}" tabindex="-1">
-                                                <div class="modal-dialog" role="document">
-                                                    <form role="form" class="form-inline" method="POST" 
-                                                    action="{{ route('history.certificatesend') }}">
-                                                    {{ csrf_field() }}
-                                                    <input type="hidden" name="user_id" value="{{ $user->id }}">
-                                                    <input type="hidden" name="parent_curriculum" value="{{ $item['fields'] }}">
-                                                    <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">修了証発行確認</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body text-left">
-                                                        <strong>{{ $user->name }}</strong>へ<strong>【{{ $item['fields'] }}】</strong>の修了証を発行してよろしいですか？<br>
-                                                        ユーザにも修了証が発行された旨メールが送信されます。
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
-                                                        <button type="submit" class="btn btn-sucess">修了証発行</button>
-                                                    </div>
-                                                    </div>
-                                                    </form>
-                                                </div>
-                                            </div>                                            
-                                        </td> -->
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -218,7 +171,7 @@
                                             <a href="{{ route('history.attendance_pdf',['id' => $user->id.'-'.$item['event']->id]) }}" 
                                             target="_blank" class="btn btn-sm btn-info">受講証明書確認</a>
                                             @else
-                                            未発行
+                                            <span class="text-danger">未発行</span>
                                             @can('area-higher')
                                             <br />
                                             <button class="btn btn-sm btn-success certificate-confirm btn-sm" value="{{ $key }}" 
