@@ -167,6 +167,8 @@ Route::group(['middleware' => ['auth', 'can:area-higher']], function () {
   Route::post('reception/auto', 'ReceptionController@auto')->name('reception.auto');
   // 受付管理 - 受付者一覧CSV
   Route::post('reception/reception_csv', 'ReceptionController@reception_csv')->name('reception.reception_csv'); 
+  // 受付管理 - 受講証明書発行
+  Route::post('reception/finishedsend', 'ReceptionController@finishedsend')->name('reception.finishedsend');
 
   // 受講証明書送信
   Route::post('history/finishedesend','HistoryController@finishedsend')->name('history.finishedsend');

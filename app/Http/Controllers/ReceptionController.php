@@ -16,6 +16,7 @@ use App\Event_date;
 use App\Event_upload;
 use App\Entry;
 use Mail;
+use App\Mail\FinishedSendMail;
 use App\Http\Traits\Csv;
 
 class ReceptionController extends Controller
@@ -184,12 +185,19 @@ class ReceptionController extends Controller
                     // 状態
                     if($entry['attend_status'] == 'Y') {
                         $status = "参加受付済";
+                        if($entry['finished_status'] == 'Y') {
+                            $finished_status = "受講証明書発行済";
+                        } else {
+                            $finished_status = "受講証明書未発行";
+                        }
                     } else {
                         $status = "受付未";
+                        $finished_status = null;
                     }
 
                     $entrys_view[] = [
                         'id' => $entry['id'],
+                        'finished_status' => $finished_status,
                         'status' => $status,
                         'user_id' => $entry['user_id'],
                         'user_name' => $user->name,
@@ -387,6 +395,32 @@ class ReceptionController extends Controller
                     ->route('reception.readqr',['id' => $event_id.'-'.$request->event_date_id])
                     ->with('status',$user->name.'様を受付完了にしました。');
 
+    }
+
+
+    public function finishedsend(Request $request) {
+
+        $user = User::find($request->user_id);
+        $event = Event::find($request->event_id);
+        $entrys = Entry::where('user_id',$request->user_id)
+                        ->where('event_id',$request->event_id)
+                        ->get();
+
+        foreach($entrys as $i => $entry) {
+            $entry->finished_status = 'Y';
+            $entry->save();
+        }
+
+        $data = [
+            'username' => $user->name,
+            'event_title' => $event->title,
+        ];
+        $email = new FinishedSendMail($data);
+        Mail::to($user->email)->send($email);
+
+        return redirect()
+                    ->route('reception.show',['id' => $request->event_id.'-'.$request->event_date_id])
+                    ->with('status',$user->name.'へ【'.$event->title.'】受講証明書を発行しました。');        
     }
 
     public function reception_csv(Request $request) 

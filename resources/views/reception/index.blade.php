@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', '受付管理（開催間近の研修）')
+@section('title', '開催間近の研修（受付）')
 
 @section('each-head')
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-3.3.1/dt-1.10.20/r-2.2.3/sp-1.0.1/datatables.min.css"/>
@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">受付管理（開催間近の研修）</div>
+                    <div class="card-header">開催間近の研修（受付）</div>
                     
                     @if (Session::has('status'))
                     <div class="card-body">

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', '受付管理')
+@section('title', '受付・受講証明管理')
 
 @section('each-head')
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-3.3.1/dt-1.10.20/r-2.2.3/sp-1.0.1/datatables.min.css"/>
@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">受付管理</div>
+                    <div class="card-header">受付・受講証明管理</div>
                     
                     @if (Session::has('status'))
                     <div class="card-body">
@@ -43,7 +43,7 @@
                             <h3 class="h5 col-md-4">受付完了者 {{ $reception_cnt }}名 / 参加予定者 {{ count($entrys_view) }}名</h3>
                             <div class="col-md-8">
                                 <button type="button" class="csv-confirm btn btn-sm btn-primary"
-                                data-toggle="modal" data-target="#confirm-csv">CSVダウンロード</button>                                        
+                                data-toggle="modal" data-target="#confirm-csv">CSVダウンロード</button>
                             </div>
                         </div>
 
@@ -93,7 +93,13 @@
                                     @if (count($entrys_view) > 0)
                                     @foreach ($entrys_view as $entry)
                                     <tr>
-                                        <td data-label="状態：">{{ $entry['status'] }}</td>
+                                        <td data-label="状態：">
+                                            {{ $entry['status'] }}
+                                            @if($entry['finished_status'])
+                                            <br />
+                                            {{ $entry['finished_status'] }}
+                                            @endif
+                                        </td>
                                         <td data-label="名前：">{{ $entry['user_name'] }}（{{ $entry['user_ruby'] }}）</td>
                                         <td data-label="所属：">{{ $entry['company_name'] }}</td>
                                         <td>
@@ -101,6 +107,12 @@
                                             <button type="button" class="apply-confirm btn btn-sm btn-primary" 
                                                 value="{{ $entry['id'] }}" 
                                                 data-toggle="modal" data-target="#confirm-attend{{ $entry['id'] }}">受付完了にする</button>
+                                            @else
+                                            @if($entry['finished_status'] == "受講証明書未発行")
+                                            <button type="button" class="apply-finished btn btn-sm btn-success" 
+                                                value="{{ $entry['id'] }}" 
+                                                data-toggle="modal" data-target="#confirm-finished{{ $entry['id'] }}">受講証明書発行</button>
+                                            @endif
                                             @endif
                                         </td>
                                     </tr>
@@ -117,7 +129,7 @@
 
                         @if (count($entrys_view) > 0)
                             @foreach ($entrys_view as $entry) 
-                            <!-- Modal(ticketsend) -->
+                            <!-- Modal(attend_status) -->
                             <div class="modal fade" id="confirm-attend{{ $entry['id'] }}" tabindex="-1">
                                 <div class="modal-dialog" role="document">
                                     <form role="form" class="form-inline" method="POST" action="{{ route('reception.manual') }}">
@@ -146,6 +158,35 @@
                                 </div>
                             </div>
 
+                            <!-- Modal(finished_status) -->
+                            <div class="modal fade" id="confirm-finished{{ $entry['id'] }}" tabindex="-1">
+                                <div class="modal-dialog" role="document">
+                                    <form role="form" class="form-inline" method="POST" action="{{ route('reception.finishedsend') }}">
+                                    {{ csrf_field() }}
+
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">受講証明書発行 確認</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <strong>ユーザ：{{ $entry['user_name'] }} </strong><br><br>
+                                        <p><strong>{{ $event->title }}</strong>の受講証明書発行を発行しますか？<br><br></p>
+                                        <input type="hidden" name="user_id" value="{{ $entry['user_id'] }}">
+                                        <input type="hidden" name="event_id" value="{{ $event->id }}">
+                                        <input type="hidden" name="event_date_id" value="{{ $event_date->id }}">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+                                        <button type="submit" class="btn btn-primary">受講証明書発行</button>
+                                    </div>
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
+
                             @endforeach
                         @endif
 
@@ -155,5 +196,4 @@
         </div>
     </div>
 </div>
-@endsection                    
-
+@endsection

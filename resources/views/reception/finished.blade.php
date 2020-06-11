@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', '受付管理（終了した研修）')
+@section('title', '終了した研修（受講証明）')
 
 @section('each-head')
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-3.3.1/dt-1.10.20/r-2.2.3/sp-1.0.1/datatables.min.css"/>
@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">受付管理（終了した研修）</div>
+                    <div class="card-header">終了した研修（受講証明）</div>
                     
                     @if (Session::has('status'))
                     <div class="card-body">
@@ -53,7 +53,7 @@
                                         <td data-label="受付数/受講券発行者数：">{{ $event['reception_cnt'] }} / {{ $event['entrys_cnt'] }}</td>
                                         <td data-label="研修タイトル：">{{ $event['title'] }}</td>
                                         <td>
-                                            <a href="{{ url('reception/'.$event['event_id'].'-'.$event['event_date_id']) }}" class="btn btn-info btn-sm">受付者一覧</a>
+                                            <a href="{{ url('reception/'.$event['event_id'].'-'.$event['event_date_id']) }}" class="btn btn-info btn-sm">参加者一覧</a>
                                         </td>
                                     </tr>
                                     @endforeach
