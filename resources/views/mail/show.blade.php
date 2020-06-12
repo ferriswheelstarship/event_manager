@@ -39,7 +39,13 @@
                                     </tr>
                                     <tr>
                                         <th>送信先</th>
-                                        <td>{{ $email->default_group }}</td>
+                                        <td>
+                                            @if($email->default_group == '研修ごとの参加（予定）者')
+                                            【{{ $email->event_group }}】の参加（予定）者
+                                            @else
+                                            {{ $email->default_group }}
+                                            @endif
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>件名</th>

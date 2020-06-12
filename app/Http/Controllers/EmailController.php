@@ -10,6 +10,8 @@ use Gate;
 use Carbon\Carbon;
 use App\User;
 use App\Profile;
+use App\Event;
+use App\Entry;
 use App\Email;
 use App\Group;
 use App\Group_user;
@@ -52,7 +54,8 @@ class EmailController extends Controller
     public function create()
     {
         $group = config('const.TO');
-        return view('mail.create',compact('group'));
+        $events = Event::all();
+        return view('mail.create',compact('group','events'));
     }
 
     /**
@@ -63,22 +66,33 @@ class EmailController extends Controller
      */
     public function store(Request $request)
     {
+        $email = New Email;
+
         $rules = [
             'default_group' => 'required|string',
             'title' => 'required|string',
             'comment' => 'required|string',
         ];
+        if($request->default_group == config('const.TO.0')) {
+            $rules += [
+                'event_group' => 'required|string',
+            ];
+        }
         $request->validate($rules);
 
         $action = $request->get('action','下書き保存');        
         $input = $request->except('action');
 
-        $email = New Email;
         $email->default_group = $request->default_group;
         $email->title = $request->title;
         $email->comment = $request->comment;
         $email->group_id = null;
         $email->status = ($action == 'メール送信') ? 'Y' : 'N';
+
+        if($request->default_group == config('const.TO.0')) {
+            $event = Event::find($request->event_group);
+            $email->event_group = $event->title;
+        }
 
         if($action == 'メール送信') {
             switch($email->default_group) {
@@ -106,10 +120,21 @@ class EmailController extends Controller
                 case "法人+個人ユーザ":
                     $users = User::where('role_id',3)->orWhere('role_id',4)->get();                
                     break;
-                case "研修申込者から選択":
+                case "研修ごとの参加（予定）者":
+                    $entrys = Entry::where('event_id',$request->event_group)
+                                        ->where('entry_status','Y')
+                                        ->distinct()
+                                        ->select('user_id')
+                                        ->get();
 
+                    foreach($entrys as $entry) {
+                        $users[] = User::find($entry->user_id);
+                    }
+                    $users = collect($users);
                     break;
             }
+
+            //dd($users,$email);
 
             // Sendgrid Personalizations用に成形
             $personalizations = [];
@@ -134,7 +159,7 @@ class EmailController extends Controller
             $emails = new Sendmail($data);
             Mail::send($emails);
             
-            $mes ="メールを送信を実行しました。";
+            $mes ="メール送信を実行しました。";
 
         } else {
             $mes ="下書き保存しました。";
@@ -167,7 +192,8 @@ class EmailController extends Controller
     {
         $group = config('const.TO');
         $email = Email::find($id);
-        return view('mail.edit',compact('group','email'));
+        $events = Event::all();
+        return view('mail.edit',compact('group','email','events'));
     }
 
     /**
@@ -179,23 +205,35 @@ class EmailController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $email = Email::find($id);
+
         $rules = [
             'default_group' => 'required|string',
             'title' => 'required|string',
             'comment' => 'required|string',
         ];
+        if($request->default_group == config('const.TO.0')) {
+            $rules += [
+                'event_group' => 'not_in:0',
+            ];
+        } 
         $request->validate($rules);
 
         $action = $request->get('action','下書き保存');        
         $input = $request->except('action');
-
-        $email = Email::find($id);
 
         $email->default_group = $request->default_group;
         $email->title = $request->title;
         $email->comment = $request->comment;
         $email->group_id = null;
         $email->status = ($action == 'メール送信') ? 'Y' : 'N';
+
+        if($request->default_group == config('const.TO.0')) {
+            $event = Event::find($request->event_group);
+            $email->event_group = $event->title;
+        } else {
+            $email->event_group = null;
+        }
 
         if($action == 'メール送信') {
             switch($email->default_group) {
@@ -223,8 +261,17 @@ class EmailController extends Controller
                 case "法人+個人ユーザ":
                     $users = User::where('role_id',3)->orWhere('role_id',4)->get();                
                     break;
-                case "研修申込者から選択":
+                case "研修ごとの参加（予定）者":
+                    $entrys = Entry::where('event_id',$request->event_group)
+                                        ->where('entry_status','Y')
+                                        ->distinct()
+                                        ->select('user_id')
+                                        ->get();
 
+                    foreach($entrys as $entry) {
+                        $users[] = User::find($entry->user_id);
+                    }
+                    $users = collect($users);
                     break;
             }
 

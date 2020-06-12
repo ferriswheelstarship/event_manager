@@ -73,7 +73,13 @@
                                                 <span>{{ $item->title }}</span>
                                             </td>
                                             <td data-label="送信先：">
-                                                <span>{{ $item->default_group }}</span>
+                                                <span>
+                                                @if($item->default_group == '研修ごとの参加（予定）者')
+                                                【{{ $item->event_group }}】の参加（予定）者
+                                                @else
+                                                {{ $item->default_group }}
+                                                @endif
+                                                </span>
                                             </td>
                                             <td>
                                                 <a href="{{ route('mail.edit',['id' => $item->id]) }}" 
@@ -145,7 +151,13 @@
                                                 <span>{{ $item->title }}</span>
                                             </td>
                                             <td data-label="送信先：">
-                                                <span>{{ $item->default_group }}</span>
+                                                <span>
+                                                @if($item->default_group == '研修ごとの参加（予定）者')
+                                                【{{ $item->event_group }}】の参加（予定）者
+                                                @else
+                                                {{ $item->default_group }}
+                                                @endif
+                                                </span>
                                             </td>
                                             <td>
                                                 <a href="{{ route('mail.show',['id' => $item->id]) }}" 

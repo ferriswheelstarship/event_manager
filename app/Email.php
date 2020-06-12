@@ -8,7 +8,7 @@ class Email extends Model
 {
     protected $fillable = [
         'title','comment',
-        'default_group','group_id','status'
+        'default_group','event_group'.'group_id','status'
     ];
 
     public function group() {

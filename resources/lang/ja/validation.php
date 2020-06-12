@@ -161,6 +161,7 @@ return [
         'files.*' => 'アップロードファイル',
 
         'default_group' => '送信先',
+        'event_group' => '研修',
     ],
 
 ];

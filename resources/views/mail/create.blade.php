@@ -2,6 +2,10 @@
 
 @section('title', 'メール作成')
 
+@section('each-head')
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css" rel="stylesheet" />
+@endsection
+
 @section('content')
     <div class="container">
         <div class="row">
@@ -39,20 +43,48 @@
                                 <div class="col-md-6">
                                     <select id="default_group" 
                                         class="form-control{{ $errors->has('default_group') ? ' is-invalid' : '' }}" 
-                                        name="default_group">
+                                        name="default_group"
+                                        onchange="changeEmailGroup(this.value)">
                                         <option value="">----</option>
                                         @foreach ($group as $key => $val)
                                             <option value="{{ $val }}"
                                                 @if(old('default_group') == $val) selected @endif>{{ $val }}</option>
                                         @endforeach
                                     </select>
-                                    <div class="text-danger mx-1">※選択した権限を持つユーザ全てに送信されます。</div>
                                     @if ($errors->has('default_group'))
                                         <span class="invalid-feedback">
                                             <strong>{{ $errors->first('default_group') }}</strong>
                                         </span>
                                     @endif
-                                </div>                                
+
+                                    <div
+                                    id="event_group"
+                                    style="display: 
+                                    @if(old('default_group') != '研修ごとの参加（予定）者') 
+                                    none
+                                    @endif "
+                                    class="my-1">
+                                        <select id="event_group" 
+                                            class="select-search-resolve form-control{{ $errors->has('event_group') ? ' is-invalid' : '' }}" 
+                                            name="event_group"
+                                            style="width:100%">
+                                            <option value="">研修を選択して下さい</option>
+                                            @foreach ($events as $key => $event)
+                                                <option value="{{ $event->id }}"
+                                                    @if(old('event_group') == $event->id) selected @endif>{{ $event->title }}</option>
+                                            @endforeach
+                                        </select>
+                                        @if ($errors->has('event_group'))
+                                            <span class="invalid-feedback">
+                                                <strong>{{ $errors->first('event_group') }}</strong>
+                                            </span>
+                                        @endif
+                                    </div>
+
+
+                                    <div class="text-danger mx-1">※選択した権限を持つユーザ全てに送信されます。</div>
+
+                                </div>                 
                             </div>
 
                             <div class="form-group row">
@@ -104,3 +136,9 @@
     </div>
 @endsection
 
+@section('each-js')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/i18n/ja.js"></script>
+<script src="{{ asset('js/email-form-event.js') }}" ></script>
+<script src="{{ asset('js/select-search.js') }}" ></script>
+@endsection
