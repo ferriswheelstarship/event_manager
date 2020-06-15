@@ -381,11 +381,13 @@ class HistoryController extends Controller
             }
 
             $event_content[$i] = null;
-            foreach($view_data as $i => $items) {
-                foreach($items as $event_infos) {
-                    if($event_infos['content']) {
-                        $event_content[$i][] = $event_infos;
-                    } 
+            if($view_data != null) {
+                foreach($view_data as $i => $items) {
+                    foreach($items as $event_infos) {
+                        if($event_infos['content']) {
+                            $event_content[$i][] = $event_infos;
+                        } 
+                    }
                 }
             }
             
