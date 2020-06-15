@@ -33,12 +33,12 @@ class HistoryController extends Controller
         }
 
         // 参加済
-        $entrys = Entry::select('event_id','event_date_id','finished_status')
+        $entrys = Entry::select('event_id','finished_status')
                         ->where('user_id',Auth::id())
                         ->where('entry_status','Y')
                         ->where('ticket_status','Y')
                         ->where('attend_status','Y')
-                        ->groupBy('event_id','event_date_id','finished_status')->get();
+                        ->groupBy('event_id','finished_status')->get();
         if($entrys->count() > 0) {
             foreach($entrys as $key => $entry) {
                 
@@ -106,45 +106,61 @@ class HistoryController extends Controller
                             $careerup_curriculums_exists = true;
                         }
                     }
+                    $sum_training_minute[$i][$key] = 0;
                     if($careerup_curriculums_exists === true) {
 
-                        $sum_training_minute = 0;
+                        //dd($filterd_careerup_curriculums);
                         foreach($filterd_careerup_curriculums as $cc) {
-                            $sum_training_minute += (int)$cc['training_minute'];
+                            $sum_training_minute[$i][$key] += (int)$cc['training_minute'];
                         }
 
-                        $view_data = [
+                        $view_data[$i][$key] = [
                             'content' => $filterd_careerup_curriculums,
                             'event' => $carrerup_data[$key]['event'],
                             'event_dates' => $carrerup_data[$key]['event_dates'],
                             'finished_status' => $carrerup_data[$key]['finished_status'],
                         ];
-                        $content_cnt = count($filterd_careerup_curriculums);
-                        $rowspan = $content_cnt;
-                        break;
 
                     } else {
-                        $sum_training_minute = 0;
-                        $view_data = null;
-                        $content_cnt = 0;
-                        $rowspan = 1;
-                        continue;
+
+                        $view_data[$i][$key] = [
+                            'content' => null,
+                            'event' => null,
+                            'event_dates' => null,
+                            'finished_status' => null,
+                        ];
 
                     }
                 }
             } else {
                 $sum_training_minute = 0;
                 $view_data = null;
-                $content_cnt = 0;
-                $rowspan = 1;
+            }
+
+            $each_fields_sum_training_minute[$i] = 0;
+            if($sum_training_minute != 0) {
+                foreach($sum_training_minute as $i => $each_carrerup) {
+                    foreach($each_carrerup as $each_minutes) {
+                        $each_fields_sum_training_minute[$i] += $each_minutes;
+                    }
+                }
+            }
+
+            $event_content[$i] = null;
+            if($view_data != null) {
+                foreach($view_data as $i => $items) {
+                    foreach($items as $event_infos) {
+                        if($event_infos['content']) {
+                            $event_content[$i][] = $event_infos;
+                        } 
+                    }
+                }
             }
             
             $carrerup_view_data[] = [
                 'fields' => $val,
-                'training_minute' => $sum_training_minute,
-                'content_cnt' => $content_cnt,
-                'rowspan' => $rowspan, 
-                'eventinfo' => $view_data,
+                'training_minute' => $each_fields_sum_training_minute[$i],
+                'eventinfo' => $event_content[$i],
             ];
 
         }
@@ -366,10 +382,6 @@ class HistoryController extends Controller
                 $sum_training_minute = 0;
                 $view_data = null;
             }
-
-            if($i == 5) {
-                //dd($sum_training_minute,$view_data);
-            } 
 
             $each_fields_sum_training_minute[$i] = 0;
             if($sum_training_minute != 0) {

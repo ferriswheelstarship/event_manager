@@ -68,20 +68,22 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach($item['eventinfo']['content'] as $i => $val)                                            
+                                                    @foreach($item['eventinfo'] as $key => $vals)                                            
+                                                    @foreach($vals['content'] as $i => $val)                                            
                                                     <tr>
-                                                        <td class="text-center align-middle">{{ $item['eventinfo']['content'][$i]->child_curriculum }}</td>
-                                                        <td data-label="受講済研修：" class="text-center align-middle">{{ $item['eventinfo']['event']->title }} </td>
-                                                        <td data-label="受講時間：" class="text-center align-middle">{{ $item['eventinfo']['content'][$i]->training_minute }}分</td>
+                                                        <td class="text-center align-middle">{{ $val->child_curriculum }}</td>
+                                                        <td data-label="受講済研修：" class="text-center align-middle">{{ $vals['event']->title }} </td>
+                                                        <td data-label="受講時間：" class="text-center align-middle">{{ $val->training_minute }}分</td>
                                                         <td data-label="受講証明書：" class="text-nowrap text-center align-middle">
-                                                            @if($item['eventinfo']['finished_status'] === 'Y')
-                                                            <a href="{{ route('history.attendance_pdf',['id' => $user->id.'-'.$item['eventinfo']['event']->id]) }}" 
+                                                            @if($vals['finished_status'] === 'Y')
+                                                            <a href="{{ route('history.attendance_pdf',['id' => $user->id.'-'.$vals['event']->id]) }}" 
                                                             target="_blank" class="btn btn-sm btn-info">受講証明書</a>
                                                             @else
                                                             <span class="text-danger">未発行</span>                                                            
                                                             @endif
                                                         </td>
                                                     </tr>
+                                                    @endforeach
                                                     @endforeach
                                                 </tbody>
                                             </table>
