@@ -74,16 +74,17 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    @foreach($item['eventinfo']['content'] as $i => $val)                                            
+                                                    @foreach($item['eventinfo'] as $key => $vals)                                            
+                                                    @foreach($vals['content'] as $i => $val)                                            
                                                     <tr>
-                                                        <td class="text-center align-middle">{{ $item['eventinfo']['content'][$i]->child_curriculum }}</td>
-                                                        <td data-label="受講済研修：" class="text-center align-middle">{{ $item['eventinfo']['event']->title }} </td>
-                                                        <td data-label="受講時間：" class="text-center align-middle">{{ $item['eventinfo']['content'][$i]->training_minute }}分</td>
+                                                        <td class="text-center align-middle">{{ $val->child_curriculum }}</td>
+                                                        <td data-label="受講済研修：" class="text-center align-middle">{{ $vals['event']->title }} </td>
+                                                        <td data-label="受講時間：" class="text-center align-middle">{{ $val->training_minute }}分</td>
                                                         <td data-label="受講証明書：" class="text-nowrap text-center align-middle">
-                                                            @if($item['eventinfo']['finished_status'] === 'Y')
+                                                            @if($vals['finished_status'] === 'Y')
                                                             発行済
                                                             <br />
-                                                            <a href="{{ route('history.attendance_pdf',['id' => $user->id.'-'.$item['eventinfo']['event']->id]) }}" 
+                                                            <a href="{{ route('history.attendance_pdf',['id' => $user->id.'-'.$vals['event']->id]) }}" 
                                                             target="_blank" class="btn btn-sm btn-info">受講証明書確認</a>
                                                             @else
                                                             <span class="text-danger">未発行</span>
@@ -100,7 +101,7 @@
                                                                     action="{{ route('history.finishedsend') }}">
                                                                     {{ csrf_field() }}
                                                                     <input type="hidden" name="user_id" value="{{ $user->id }}">
-                                                                    <input type="hidden" name="event_id" value="{{ $item['eventinfo']['event']->id }}">
+                                                                    <input type="hidden" name="event_id" value="{{ $vals['event']->id }}">
                                                                     <div class="modal-content">
                                                                     <div class="modal-header">
                                                                         <h5 class="modal-title" id="exampleModalLabel">受講証明書 発行</h5>
@@ -109,7 +110,7 @@
                                                                         </button>
                                                                     </div>
                                                                     <div class="modal-body text-left">
-                                                                        <strong>{{ $user->name }}</strong>へ<strong>【{{ $item['eventinfo']['event']->title  }}】</strong>の受講証明書を<br>
+                                                                        <strong>{{ $user->name }}</strong>へ<strong>【{{ $vals['event']->title  }}】</strong>の受講証明書を<br>
                                                                         発行してよろしいですか？<br>
                                                                         ユーザにも受講証明書が発行された旨メールが送信されます。
                                                                     </div>
@@ -124,6 +125,7 @@
 
                                                         </td>
                                                     </tr>
+                                                    @endforeach
                                                     @endforeach
                                                 </tbody>
                                             </table>

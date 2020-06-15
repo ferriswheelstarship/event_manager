@@ -253,25 +253,16 @@ class HistoryController extends Controller
 
         } elseif(Gate::allows('admin-only')) { // 法人ユーザのみ
 
-            if($user->company_profile_id != $user_self->company_profile_id) {
-                return redirect('/history/user/');
-            }
-            // 参加済
-            $entrys = Entry::select('event_id','event_date_id','finished_status')
-                        ->where('user_id',$user->id)
-                        ->where('entry_status','Y')
-                        ->where('ticket_status','Y')
-                        ->where('attend_status','Y')
-                        ->groupBy('event_id','event_date_id','finished_status')->get();
+            return redirect()->route('history.index');
 
         } else { // 支部ユーザ以上
             // 参加済
-            $entrys = Entry::select('event_id','event_date_id','finished_status')
+            $entrys = Entry::select('event_id','finished_status')
                         ->where('user_id',$user->id)
                         ->where('entry_status','Y')
                         ->where('ticket_status','Y')
                         ->where('attend_status','Y')
-                        ->groupBy('event_id','event_date_id','finished_status')->get();
+                        ->groupBy('event_id','finished_status')->get();
 
         }
         //dd($entrys);
@@ -329,6 +320,8 @@ class HistoryController extends Controller
         $carrerup_data = array_merge(array_filter($carrerup_data));
         $general_data = array_merge(array_filter($general_data));
 
+        //dd($carrerup_data);
+
         // キャリアアップ研修view用
         $fields = config('const.PARENT_CURRICULUM');
         
@@ -343,49 +336,65 @@ class HistoryController extends Controller
                             $careerup_curriculums_exists = true;
                         }
                     }
+                    $sum_training_minute[$i][$key] = 0;
                     if($careerup_curriculums_exists === true) {
 
                         //dd($filterd_careerup_curriculums);
-                        $sum_training_minute = 0;
                         foreach($filterd_careerup_curriculums as $cc) {
-                            $sum_training_minute += (int)$cc['training_minute'];
+                            $sum_training_minute[$i][$key] += (int)$cc['training_minute'];
                         }
 
-                        $view_data = [
+                        $view_data[$i][$key] = [
                             'content' => $filterd_careerup_curriculums,
                             'event' => $carrerup_data[$key]['event'],
                             'event_dates' => $carrerup_data[$key]['event_dates'],
                             'finished_status' => $carrerup_data[$key]['finished_status'],
                         ];
-                        $content_cnt = count($filterd_careerup_curriculums);
-                        $rowspan = $content_cnt;
-                        break;
 
                     } else {
-                        $sum_training_minute = 0;
-                        $view_data = null;
-                        $content_cnt = 0;
-                        $rowspan = 1;
-                        continue;
+
+                        $view_data[$i][$key] = [
+                            'content' => null,
+                            'event' => null,
+                            'event_dates' => null,
+                            'finished_status' => null,
+                        ];
+
                     }
-                    
                 }
             } else {
                 $sum_training_minute = 0;
                 $view_data = null;
-                $content_cnt = 0;
-                $rowspan = 1;
+            }
+
+            if($i == 5) {
+                //dd($sum_training_minute,$view_data);
+            } 
+
+            $each_fields_sum_training_minute[$i] = 0;
+            foreach($sum_training_minute as $i => $each_carrerup) {
+                foreach($each_carrerup as $each_minutes) {
+                    $each_fields_sum_training_minute[$i] += $each_minutes;
+                }
+            }
+
+            $event_content[$i] = null;
+            foreach($view_data as $i => $items) {
+                foreach($items as $event_infos) {
+                    if($event_infos['content']) {
+                        $event_content[$i][] = $event_infos;
+                    } 
+                }
             }
             
             $carrerup_view_data[] = [
                 'fields' => $val,
-                'training_minute' => $sum_training_minute,
-                'content_cnt' => $content_cnt,
-                'rowspan' => $rowspan, 
-                'eventinfo' => $view_data,
+                'training_minute' => $each_fields_sum_training_minute[$i],
+                'eventinfo' => $event_content[$i],
             ];
 
         }
+        //dd($carrerup_view_data);
 
         return view
                 ('history.show',
