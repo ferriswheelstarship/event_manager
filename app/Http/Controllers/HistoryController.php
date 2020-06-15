@@ -372,9 +372,11 @@ class HistoryController extends Controller
             } 
 
             $each_fields_sum_training_minute[$i] = 0;
-            foreach($sum_training_minute as $i => $each_carrerup) {
-                foreach($each_carrerup as $each_minutes) {
-                    $each_fields_sum_training_minute[$i] += $each_minutes;
+            if($sum_training_minute != 0) {
+                foreach($sum_training_minute as $i => $each_carrerup) {
+                    foreach($each_carrerup as $each_minutes) {
+                        $each_fields_sum_training_minute[$i] += $each_minutes;
+                    }
                 }
             }
 
