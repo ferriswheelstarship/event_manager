@@ -73,7 +73,7 @@
             </li>
             @endcan
 
-            @can('area-higher')
+            @can('system-only')
             <li class="nav-item dropdown">
                 <a class="nav-link" href="{{ route('history.user') }}">受講履歴</a>
             </li>

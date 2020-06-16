@@ -175,7 +175,7 @@ class HistoryController extends Controller
     {
         $user_self = User::find(Auth::id());
 
-        if(Gate::allows('area-higher')){ // 支部ユーザ以上
+        if(Gate::allows('system-only')){ // 特権ユーザのみ
             // $users = User::where('status',1)
             //                 ->where('role_id',4)
             //                 ->orderBy('id', 'desc')
@@ -190,22 +190,9 @@ class HistoryController extends Controller
                 $users[] = $data;
             });
 
-        } elseif(Gate::allows('admin-only')){ // 法人ユーザのみ
-            // $users = User::where('status',1)
-            //                 ->where('role_id',4)
-            //                 ->where('company_profile_id',$user_self->company_profile_id)
-            //                 ->orderBy('id', 'desc')
-            //                 ->get();
-            $users = [];
-            DB::table('users')
-            ->where('status',1)
-            ->where('role_id',4)
-            ->where('company_profile_id',$user_self->company_profile_id)
-            ->where('deleted_at',null)
-            ->orderBy('id', 'desc')
-            ->chunk(100, function ($data) use (&$users) {
-                $users[] = $data;
-            });
+        } else{
+            return redirect()
+                ->route('dashboard');
         }
         
         foreach($users as $chunk) {
