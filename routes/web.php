@@ -115,9 +115,6 @@ Route::group(['middleware' => ['auth', 'can:admin-higher']], function () {
   // ユーザ一覧
   Route::get('account', 'UsersController@index')->name('account.index');
 
-  // 履歴管理
-  Route::get('history/user', 'HistoryController@user')->name('history.user');
-
 });
 
 // 施設権限のみ
@@ -227,6 +224,8 @@ Route::group(['middleware' => ['auth', 'can:system-only']], function () {
   Route::put('mailgroup/{id}', 'MailgroupController@update')->name('mailgroup.update'); 
   Route::delete('mailgroup/{id}', 'MailgroupController@destroy')->name('mailgroup.destroy');
 
+  // 受講履歴管理
+  Route::get('history/user', 'HistoryController@user')->name('history.user');
 
   // インフォーメーション
   //Route::resource('information', 'InformationController');

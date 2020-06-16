@@ -156,7 +156,22 @@
           <tr>
             <th>受講時間数</th>
             <td>
-              <b>{{ $data['event']->training_minute }}分</b>
+              @if($data['event']->training_minute % 60 == 0) 
+                @php
+                  $training_hours = floor($data['event']->training_minute / 60);
+                @endphp
+              @else 
+                  @if($data['event']->training_minute % 60 >= 30) 
+                    @php
+                      $training_hours = floor($data['event']->training_minute / 60).'.5';
+                    @endphp
+                  @else
+                    @php
+                      $training_hours = floor($data['event']->training_minute / 60);
+                    @endphp
+                  @endif
+              @endif
+              <b>{{ $training_hours }}時間</b>
             </td>
           </tr>
           <tr>

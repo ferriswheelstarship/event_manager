@@ -139,7 +139,7 @@
       <div style=" padding-bottom:20px;">
         <table style=" width: 100%;" class="apptbl">
           <tr>
-            <th>受講年月日</th>
+            <th>受講年月日（A）</th>
             <td>
               @if(count($data['event_dates']) > 0)
               @foreach($data['event_dates'] as $key => $val)
@@ -154,21 +154,21 @@
               </td>
           </tr>
           <tr>
-            <th>【受講分野】 科目：時間数</th>
+            <th>【受講分野】 科目：時間数（B）</th>
             <td>
               @foreach($data['careerup_data'] as $item)
-              <div>【{{ $item['parent'] }}】 {{ $item['child'] }}：{{ $item['training_minutes'] }}分</div>
+              <div>【{{ $item['parent'] }}】 {{ $item['child'] }}：{{ $item['training_minutes'] }}時間</div>
               @endforeach
             </td>
           </tr>
           <tr>
-            <th>研修名</th>
+            <th>研修名（C）</th>
             <td>
               <b>{{ $data['event']->title }}</b>
             </td>
           </tr>
           <tr>
-            <th>研修実施機関名</th>
+            <th>研修実施機関名（D）</th>
             <td>
               <b>公益社団法人 兵庫県保育協会</b>
             </td>

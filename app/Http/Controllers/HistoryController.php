@@ -447,12 +447,21 @@ class HistoryController extends Controller
             if($careerup_curriculums->count() > 0) {
                 foreach($careerup_curriculums as $careerup_curriculum) {
                     $fields[] = $careerup_curriculum->parent_curriculum;                        
-                    $training_minutes[] = $careerup_curriculum->training_minute;
+
+                    if($careerup_curriculum->training_minute % 60 == 0) {
+                        $training_hours = floor($careerup_curriculum->training_minute / 60);
+                    } else {
+                        if($careerup_curriculum->training_minute % 60 >= 30) {
+                            $training_hours = floor($careerup_curriculum->training_minute / 60).'.5';
+                        } else {
+                            $training_hours = floor($careerup_curriculum->training_minute / 60);
+                        }
+                    }
 
                     $careerup_data[] = [
                         'parent' => $careerup_curriculum->parent_curriculum,
                         'child' => $careerup_curriculum->child_curriculum,
-                        'training_minutes' => $careerup_curriculum->training_minute,
+                        'training_minutes' => $training_hours,
                     ];
                 }
             } else {
