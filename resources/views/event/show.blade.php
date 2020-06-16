@@ -27,7 +27,7 @@
                     <div class="card-body">
                         <div class="mb-3">
                             <a href="{{ route('event.before') }}" class="btn btn-sm btn-info">開催前の研修 一覧</a>
-                            <a href="{{ route('event.finished') }}" class="btn btn-sm btn-info">修了した研修 一覧</a>
+                            <a href="{{ route('event.finished') }}" class="btn btn-sm btn-info">終了した研修 一覧</a>
                             @can('area-higher')
                             <a href="{{ route('event.edit',['id' => $event->id]) }}" class="btn btn-sm btn-primary">変更</a>
                             @endcan
