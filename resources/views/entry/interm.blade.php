@@ -62,6 +62,7 @@
                                         <td data-label="開催日：">{{ $event['title'] }}</td>
                                         <td  data-label="操作：">
                                             <a href="{{ url('entry/'.$event['id']) }}" class="btn btn-info btn-sm">申込者一覧</a>
+                                            <a href="{{ url('event/'.$event['id']) }}" class="btn btn-primary btn-sm">研修詳細</a>
                                         </td>
                                     </tr>
                                     @endforeach
