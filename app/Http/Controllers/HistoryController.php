@@ -195,41 +195,45 @@ class HistoryController extends Controller
                 ->route('dashboard');
         }
         
-        foreach($users as $chunk) {
-        foreach($chunk as $user) {
-            if($user->company_profile_id) {
-                $company = User::where('role_id',3)
-                                ->where('company_profile_id',$user->company_profile_id)
-                                ->first();
-                $companyname = $company->name;
+        if(count($users) > 0) {
+            foreach($users as $chunk) {
+                foreach($chunk as $user) {
+                    if($user->company_profile_id) {
+                        $company = User::where('role_id',3)
+                                        ->where('company_profile_id',$user->company_profile_id)
+                                        ->first();
+                        $companyname = $company->name;
 
-                if(preg_match('/村/',$company->address)){
-                    list($city,$etc) = explode("村",$company->address);
-                    $city = $city."村";
-                } elseif(preg_match('/市/',$company->address)){
-                    list($city,$etc) = explode("市",$company->address);
-                    $city = $city."市";
-                } elseif(preg_match('/郡/',$company->address)){
-                    list($city,$etc) = explode("郡",$company->address);
-                    $city = $city."郡";
-                } else {
-                    $city = $company->address;
+                        if(preg_match('/村/',$company->address)){
+                            list($city,$etc) = explode("村",$company->address);
+                            $city = $city."村";
+                        } elseif(preg_match('/市/',$company->address)){
+                            list($city,$etc) = explode("市",$company->address);
+                            $city = $city."市";
+                        } elseif(preg_match('/郡/',$company->address)){
+                            list($city,$etc) = explode("郡",$company->address);
+                            $city = $city."郡";
+                        } else {
+                            $city = $company->address;
+                        }
+
+                    } else {
+                        $profile = Profile::find($user->profile_id);
+                        $companyname = $profile->other_facility_name;
+                        $city = $profile->other_facility_pref.$profile->other_facility_address;
+                    }
+
+                    $datas[] = [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'ruby' => $user->ruby,
+                        'companyname' => $companyname,
+                        'city' => $city,
+                    ];
                 }
-
-            } else {
-                $profile = Profile::find($user->profile_id);
-                $companyname = $profile->other_facility_name;
-                $city = $profile->other_facility_pref.$profile->other_facility_address;
             }
-
-            $datas[] = [
-                'id' => $user->id,
-                'name' => $user->name,
-                'ruby' => $user->ruby,
-                'companyname' => $companyname,
-                'city' => $city,
-            ];
-        }
+        } else {
+            $datas = [];
         }
 
         if(count($datas) > 0) {
