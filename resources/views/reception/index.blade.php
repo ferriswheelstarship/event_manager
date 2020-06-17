@@ -54,6 +54,7 @@
                                         <td data-label="研修タイトル：">{{ $event['title'] }}</td>
                                         <td>
                                             <a href="{{ url('reception/'.$event['event_id'].'-'.$event['event_date_id']) }}" class="btn btn-info btn-sm">受付者一覧</a>
+                                            <a href="{{ url('event/'.$event['event_id']) }}" class="btn btn-primary btn-sm">研修詳細</a>
                                         </td>
                                     </tr>
                                     @endforeach
