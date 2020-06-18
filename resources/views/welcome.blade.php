@@ -137,6 +137,39 @@ Internet Explorerの安全ではないバージョンをお使いのようです
         <div class="top-info-box">
           <header class="top-info-header">
             <div class="top-info-header-inner">
+              <h2 class="top-header-h2 top-info-header-h2">開催予定の研修</h2>
+              <div class="top-header-tolist-box"><a href="/eventinfo" class="top-header-tolist-a">研修一覧へ</a></div>
+            </div>
+          </header>
+          <ul class="top-info-ul">
+          @if (count($data) > 0)
+            @foreach($data as $event)
+            <li class="top-info-ul-li"><a href="/eventinfo/{{ $event['id'] }}" class="top-info-ul-li-a">
+            <span class="top-info-ul-li-date">
+            @foreach ($event['event_dates'] as $key => $edate)
+            @php
+            echo date('Y.m.d', strtotime($edate->event_date));
+            @endphp
+            @if(!$loop->last) , @endif
+            @endforeach
+            </span>
+            <span class="top-info-ul-li-body"><span class="top-info-ul-li-body-inner">{{ $event['title'] }}</span></span></a></li>
+            @endforeach
+          @else
+            <li style="text-align:center">現在準備中です。</li>
+          @endif
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="contents-section">
+      <div class="contents-section-inner fadeInUp">
+
+        <div class="top-info-box">
+          <header class="top-info-header">
+            <div class="top-info-header-inner">
               <h2 class="top-header-h2 top-info-header-h2">インフォメーション</h2>
               <div class="top-header-tolist-box"><a href="/info" class="top-header-tolist-a">記事一覧へ</a></div>
             </div>

@@ -11,7 +11,7 @@
 <link rel="icon" href="/img/favicon.ico" type="image/vnd.microsoft.icon" />
 <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
 <meta name="robots" content="noindex,nofollow"/>
-<title>公益社団法人 兵庫県保育協会 | お知らせ詳細</title>
+<title>公益社団法人 兵庫県保育協会 | インフォメーション詳細</title>
 <!-- <script type="text/javascript" src="//webfont.fontplus.jp/accessor/script/fontplus.js?kZSFUtx-OUM%3D&box=93sB9wS4lok%3D&aa=1&ab=2" charset="utf-8"></script> -->
 
 <link href="{{ asset('css/web/swiper.css') }}" rel="stylesheet">

@@ -15,6 +15,8 @@ use App\Entry;
 use App\Contact;
 use App\Information;
 use Mail;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class PagesController extends Controller
 {
@@ -25,8 +27,77 @@ class PagesController extends Controller
 
     public function index() 
     {
-        $infos = Information::orderBy('article_date','desc')->limit(3)->get();        
-        return view('welcome',compact('infos'));
+        $infos = Information::orderBy('article_date','desc')->limit(3)->get();
+        
+        $events = Event::where('view_start_date','<=',now())
+                                ->where('view_end_date','>',now())
+                                ->orderBy('id', 'desc')->get();
+        foreach($events as $key => $event) {
+            // 申込数
+            $entrys_cnt = Entry::select('user_id')
+                            ->where('event_id',$event['id'])
+                            ->where(function($q){
+                                $q->where('entry_status','Y')
+                                    ->orWhere('entry_status','YC');
+                            })->groupBy('user_id')->get()->count();
+
+            // 研修受付ステータス
+            $dt = Carbon::now();
+            $entry_start_date = new Carbon($event['entry_start_date']);
+            $entry_end_date = new Carbon($event['entry_end_date']);
+            if($event->deleted_at) {
+                $status = "削除済";
+            } else {
+                if($entrys_cnt >= $event['capacity']){
+                    $status = "キャンセル待申込";
+                } else {
+                    if($entry_start_date > $dt){
+                        $status = "申込開始前";
+                    } elseif($entry_end_date < $dt) {
+                        $status = "申込受付終了";
+                    } else {
+                        $status = "申込受付中";
+                    } 
+                }
+            }
+
+            // 研修開催日フィルタ（開催日前日）
+            $event_dates = $event->event_dates()->select('event_date')->get();
+
+            foreach($event_dates as $i => $item) {
+                $event_date = new Carbon($item->event_date);
+                if($event_date >= Carbon::today()) {//開催日前（当日含む）
+                    $date_frag[$key][$i] = true;
+                } else {
+                    $date_frag[$key][$i] = false;
+                }
+            }
+
+            // 開催日前のイベントデータのみ抽出
+            if(in_array(true,$date_frag[$key],true)) {
+                $data[] = [
+                    'id' => $event->id,
+                    'title' => $event->title,
+                    'status' => $status,
+                    'event_dates' => $event_dates,
+                    'capacity' => $event->capacity,
+                    'entrys_cnt' => $entrys_cnt,
+                    'deleted_at' => $event->deleted_at,
+                ];
+            }             
+        }
+        $data = isset($data) ? $data : null;
+        if(count($data) > 3) {
+            foreach($data as $i => $item) {
+                if($i > 2) {
+                    unset($data[$i]);
+                }
+            } 
+        }
+        //dd($data);
+
+
+        return view('welcome',compact('infos','data'));
     }
 
     public function greeting()
@@ -147,6 +218,92 @@ class PagesController extends Controller
         return view('info.show',compact('information'));
     }
 
+
+    public function eventinfo(Request $request)
+    {
+        $events = Event::where('view_start_date','<=',now())
+                                ->where('view_end_date','>',now())
+                                ->orderBy('id', 'desc')->get();
+        foreach($events as $key => $event) {
+            // 申込数
+            $entrys_cnt = Entry::select('user_id')
+                            ->where('event_id',$event['id'])
+                            ->where(function($q){
+                                $q->where('entry_status','Y')
+                                    ->orWhere('entry_status','YC');
+                            })->groupBy('user_id')->get()->count();
+
+            // 研修受付ステータス
+            $dt = Carbon::now();
+            $entry_start_date = new Carbon($event['entry_start_date']);
+            $entry_end_date = new Carbon($event['entry_end_date']);
+            if($event->deleted_at) {
+                $status = "削除済";
+            } else {
+                if($entrys_cnt >= $event['capacity']){
+                    $status = "キャンセル待申込";
+                } else {
+                    if($entry_start_date > $dt){
+                        $status = "申込開始前";
+                    } elseif($entry_end_date < $dt) {
+                        $status = "申込受付終了";
+                    } else {
+                        $status = "申込受付中";
+                    } 
+                }
+            }
+
+            // 研修開催日フィルタ（開催日前日）
+            $event_dates = $event->event_dates()->select('event_date')->get();
+
+            foreach($event_dates as $i => $item) {
+                $event_date = new Carbon($item->event_date);
+                if($event_date >= Carbon::today()) {//開催日前（当日含む）
+                    $date_frag[$key][$i] = true;
+                } else {
+                    $date_frag[$key][$i] = false;
+                }
+            }
+
+            // 開催日前のイベントデータのみ抽出
+            if(in_array(true,$date_frag[$key],true)) {
+                $datas[] = [
+                    'id' => $event->id,
+                    'title' => $event->title,
+                    'status' => $status,
+                    'event_dates' => $event_dates,
+                    'capacity' => $event->capacity,
+                    'entrys_cnt' => $entrys_cnt,
+                    'deleted_at' => $event->deleted_at,
+                ];
+            }             
+        }
+        $datas = isset($datas) ? collect($datas) : null;
+        $datas = new LengthAwarePaginator( //https://qiita.com/wallkickers/items/35d13a62e0d53ce05732参照
+                        $datas->forPage($request->page, 10),
+                        count($datas),
+                        10,
+                        $request->page,
+                        array('path' => $request->url())
+                    );
+        
+        return view('eventinfo.index',compact('datas'));
+    }
+    public function eventinfodetail($id)
+    {
+        $event = Event::find($id);
+        if(!$event) {
+            return redirect()->route('eventinfo');
+        }
+        $event_dates = $event->event_dates;
+        $careerup_curriculums = $event->careerup_curriculums;
+
+        $general_or_carrerup = config('const.TRAINING_VARIATION');
+
+        return view('eventinfo.show',compact('event','event_dates','careerup_curriculums','general_or_carrerup'));
+    }
+
+    
     public function contact()
     {
         return view('contact');

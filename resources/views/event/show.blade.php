@@ -66,7 +66,7 @@
                                 </tr>
                                 <tr>
                                     <th>内容詳細</th>
-                                    <td>{{ $event->comment }}</td>
+                                    <td>{!! nl2br($event->comment) !!}</td>
                                 </tr>
                                 <tr>
                                     <th>研修開催日</th>
@@ -106,7 +106,7 @@
                                 </tr>
                                 <tr>
                                     <th>注意事項</th>
-                                    <td>{{ $event->notice }}</td>
+                                    <td>{!! nl2br($event->notice) !!}</td>
                                 </tr>
                                 <tr>
                                     <th>

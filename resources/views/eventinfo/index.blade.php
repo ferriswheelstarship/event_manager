@@ -11,7 +11,7 @@
 <link rel="icon" href="/img/favicon.ico" type="image/vnd.microsoft.icon" />
 <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
 <meta name="robots" content="noindex,nofollow"/>
-<title>公益社団法人 兵庫県保育協会 | インフォメーション</title>
+<title>公益社団法人 兵庫県保育協会 | 開催予定の研修</title>
 <!-- <script type="text/javascript" src="//webfont.fontplus.jp/accessor/script/fontplus.js?kZSFUtx-OUM%3D&box=93sB9wS4lok%3D&aa=1&ab=2" charset="utf-8"></script> -->
 
 <link href="{{ asset('css/web/swiper.css') }}" rel="stylesheet">
@@ -102,22 +102,29 @@ Internet Explorerの安全ではないバージョンをお使いのようです
 
   <div id="main" class="contents">
     <div class="second-mainvis-box info-mainvis">
-      <h1 class="second-mainvis-pagetitle"><span class="info-pagetitle">インフォメーション</span></h1>
+      <h1 class="second-mainvis-pagetitle"><span class="info-pagetitle">開催予定の研修</span></h1>
     </div>
 
     <section class="contents-section">
       <div class="contents-section-inner fadeInUp">
 
-        @if (count($infos) > 0)
+        @if (count($datas) > 0)
         <ul class="info-ul">
-          @foreach($infos as $info)
-          <li class="info-ul-li"><a href="/info/{{ $info->id }}" class="info-ul-li-a">
-            <span class="info-ul-li-date">@php echo date('Y.m.d', strtotime($info['article_date'])); @endphp</span>
-            <span class="info-ul-li-body"><span class="info-ul-li-body-inner">{{ $info['title'] }}</span></span>
+          @foreach($datas as $event)
+          <li class="info-ul-li"><a href="/eventinfo/{{ $event['id'] }}" class="info-ul-li-a">
+            <span class="info-ul-li-date">
+            @foreach ($event['event_dates'] as $key => $edate)
+            @php
+            echo date('Y.m.d', strtotime($edate->event_date));
+            @endphp
+            @if(!$loop->last) , @endif
+            @endforeach
+            </span>
+            <span class="info-ul-li-body"><span class="info-ul-li-body-inner">{{ $event['title'] }}</span></span>
           </a></li>
           @endforeach
         </ul>
-        {{ $infos->links() }}
+        {{ $datas->links() }}
         @else
 
         @endif
