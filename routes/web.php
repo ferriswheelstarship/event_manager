@@ -42,6 +42,8 @@ Route::post('register/main_register', 'Auth\RegisterController@mainRegister')->n
 Route::get('greeting', 'PagesController@greeting')->name('greeting');
 Route::get('links', 'PagesController@links')->name('links');
 Route::get('privacy', 'PagesController@privacy')->name('privacy');
+Route::get('eventinfo', 'PagesController@eventinfo')->name('eventinfo');
+Route::get('eventinfo/{id}', 'PagesController@eventinfodetail')->name('eventinfodetail');
 Route::get('info', 'PagesController@info')->name('info');
 Route::get('info/{id}', 'PagesController@infodetail')->name('infodetail');
 Route::get('contact', 'PagesController@contact')->name('contact');

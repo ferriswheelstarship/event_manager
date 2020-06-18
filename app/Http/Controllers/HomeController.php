@@ -216,7 +216,7 @@ class HomeController extends Controller
 
                         // 研修開催日
                         $dt = new Carbon(date('Y').'-'.date('m').'-'.date('d'));
-                        $dt7daysafter = $dt->addDays(80);
+                        $dt7daysafter = $dt->addDays(14);
                         $nowdt = new Carbon(date('Y').'-'.date('m').'-'.date('d'));
                         $event_dates = $event->event_dates()->get();
 

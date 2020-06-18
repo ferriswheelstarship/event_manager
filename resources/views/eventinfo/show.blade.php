@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="description" content="公益社団法人 兵庫県保育協会のホームページです" />
+<meta name="description" content="公益社団法人 兵庫県保育協会の関連リンクです。" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="format-detection" content="telephone=no" />
@@ -11,7 +11,7 @@
 <link rel="icon" href="/img/favicon.ico" type="image/vnd.microsoft.icon" />
 <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
 <meta name="robots" content="noindex,nofollow"/>
-<title>公益社団法人 兵庫県保育協会 | インフォメーション</title>
+<title>公益社団法人 兵庫県保育協会 | 開催予定の研修</title>
 <!-- <script type="text/javascript" src="//webfont.fontplus.jp/accessor/script/fontplus.js?kZSFUtx-OUM%3D&box=93sB9wS4lok%3D&aa=1&ab=2" charset="utf-8"></script> -->
 
 <link href="{{ asset('css/web/swiper.css') }}" rel="stylesheet">
@@ -102,25 +102,82 @@ Internet Explorerの安全ではないバージョンをお使いのようです
 
   <div id="main" class="contents">
     <div class="second-mainvis-box info-mainvis">
-      <h1 class="second-mainvis-pagetitle"><span class="info-pagetitle">インフォメーション</span></h1>
+      <h1 class="second-mainvis-pagetitle"><span class="info-pagetitle">開催予定の研修</span></h1>
     </div>
 
     <section class="contents-section">
       <div class="contents-section-inner fadeInUp">
+        <article class="links-box">
+          <header class="links-header">
+            <h2 class="contents-header-h2 tall" style="margin-bottom:0">{{ $event->title }}</h2>
+          </header>
 
-        @if (count($infos) > 0)
-        <ul class="info-ul">
-          @foreach($infos as $info)
-          <li class="info-ul-li"><a href="/info/{{ $info->id }}" class="info-ul-li-a">
-            <span class="info-ul-li-date">@php echo date('Y.m.d', strtotime($info['article_date'])); @endphp</span>
-            <span class="info-ul-li-body"><span class="info-ul-li-body-inner">{{ $info['title'] }}</span></span>
-          </a></li>
-          @endforeach
-        </ul>
-        {{ $infos->links() }}
-        @else
+          <dl class="privacy-dl">
+            <dt class="privacy-dt">【研修開催日】</dt>
+            <dd class="privacy-dd">
+              <div class="privacy-dd-child">
+              @if(count($event->event_dates) > 0)
+              @foreach($event_dates as $key => $val)
+              @php
+              echo date('Y年m月d日', strtotime($val->event_date));
+              @endphp
+              @if(!$loop->last)
+              <br />
+              @endif
+              @endforeach
+              @endif
+              </div>
+            </dd>
+            <dt class="privacy-dt">【研修種別】</dt>
+            <dd class="privacy-dd">
+              <div class="privacy-dd-child">
+              {{ $general_or_carrerup[$event->general_or_carrerup] }}<br>
+              @if($event->general_or_carrerup == 'carrerup')
+              @if(count($careerup_curriculums) > 0)
+                  @foreach($careerup_curriculums as $key => $val)
+                  親カテゴリ：{{ $val->parent_curriculum }} <br>
+                  子カテゴリ：{{ $val->child_curriculum }} <br>
+                  受講時間（分）：{{ $val->training_minute }}
+                  @if(!$loop->last)
+                  <hr>
+                  @endif
+                  @endforeach
+              @endif
+              @else
+              受講時間：{{ $event->training_minute }}分
+              @endif
+              </div>
+            </dd>
+            <dt class="privacy-dt">【開催場所】</dt>
+            <dd class="privacy-dd">
+              <div class="privacy-dd-child">
+              {{ $event->place }}
+              </div>
+            </dd>
+            <dt class="privacy-dt">【研修内容】</dt>
+            <dd class="privacy-dd">
+              <div class="privacy-dd-child">
+              {!! nl2br($event->comment) !!}
+              </div>
+            </dd>
+            <dt class="privacy-dt">【注意事項】</dt>
+            <dd class="privacy-dd">
+              <div class="privacy-dd-child">
+              {!! nl2br($event->notice) !!}
+              </div>
+            </dd>
+          </dl>
 
-        @endif
+          <div>
+
+          </div>
+          
+          <div class="talc">
+            <a href="/login" class="form-submit-btn mini">ログインして研修申込</a>
+            <a href="/eventinfo" class="form-submit-btn mini">研修一覧へ</a>
+          </div>
+
+        </article>
 
       </div>
     </section>

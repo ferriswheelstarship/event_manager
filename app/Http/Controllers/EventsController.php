@@ -125,7 +125,6 @@ class EventsController extends Controller
                                 ->where('view_end_date','>',now())
                                 ->orderBy('id', 'desc')->get();
         }
-
         foreach($events as $key => $event) {
 
             // 申込数
@@ -187,7 +186,7 @@ class EventsController extends Controller
 
             foreach($event_dates as $i => $item) {
                 $event_date = new Carbon($item->event_date);
-                if($event_date > $dt) {//開催日前
+                if($event_date >= Carbon::today()) {//開催日前
                     $date_frag[$key][$i] = true;
                 } else {
                     $date_frag[$key][$i] = false;
@@ -209,7 +208,6 @@ class EventsController extends Controller
             } 
         }
         $data = isset($data) ? $data : null;
-
         return view('event.before',compact('events','data'));
     }
 
