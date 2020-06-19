@@ -71,7 +71,7 @@ Internet Explorerの安全ではないバージョンをお使いのようです
             <a href="{{ route('greeting') }}" class="nav-ul-1-li-a"><span class="nav-ul-1-li-a-span nav-ul-1-li-a-greeting">ごあいさつ</span></a>
           </li>
           <li class="nav-ul-1-li">
-            <a href="javascript:alert('現在準備中です');" class="nav-ul-1-li-a"><span class="nav-ul-1-li-a-span nav-ul-1-li-a-manual">操作マニュアル</span></a>
+            <a href="/user_manual.pdf" target="_blank" class="nav-ul-1-li-a"><span class="nav-ul-1-li-a-span nav-ul-1-li-a-manual">操作マニュアル</span></a>
           </li>
           <li class="nav-ul-1-li">
             <a href="{{ route('register') }}" class="nav-ul-1-li-a"><span class="nav-ul-1-li-a-span nav-ul-1-li-a-registration">ユーザ新規登録</span></a>
@@ -165,8 +165,12 @@ Internet Explorerの安全ではないバージョンをお使いのようです
     </section>
 
     <section class="contents-section">
-      <div class="contents-section-inner fadeInUp">
+      <div class="contents-section-inner fadeInUp" style="border-top:1px solid #098">
+      </div>
+    </section>
 
+    <section class="contents-section">
+      <div class="contents-section-inner fadeInUp">
         <div class="top-info-box">
           <header class="top-info-header">
             <div class="top-info-header-inner">
@@ -200,7 +204,7 @@ Internet Explorerの安全ではないバージョンをお使いのようです
             </a>
           </li>
           <li class="top-btns-ul-li">
-            <a href="javascript:alert('現在準備中です');" class="top-btns-ul-li-a top-btns-ul-li-a-02">
+            <a href="/user_manual.pdf" target="_blank" class="top-btns-ul-li-a top-btns-ul-li-a-02">
               <img src="img/icon-book.png" class="top-btns-img" alt="操作マニュアル" />
               <span class="top-btns-txt-outer">
                 <span class="top-btns-txt">操作マニュアル</span>
