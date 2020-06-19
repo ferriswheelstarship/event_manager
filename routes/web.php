@@ -94,6 +94,10 @@ Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
   // 受講履歴
   Route::get('history', 'HistoryController@index')->name('history.index');
   Route::get('history/user/{user_id}', 'HistoryController@show')->name('history.show');
+
+  // 受講履歴管理
+  Route::get('history/user', 'HistoryController@user')->name('history.user');
+
   // 受講証明書
   Route::get('attendance_pdf/{id}','HistoryController@attendance_pdf')->name('history.attendance_pdf');
   // 修了証
@@ -225,9 +229,6 @@ Route::group(['middleware' => ['auth', 'can:system-only']], function () {
   Route::get('mailgroup/{id}/edit', 'MailgroupController@edit')->name('mailgroup.edit');
   Route::put('mailgroup/{id}', 'MailgroupController@update')->name('mailgroup.update'); 
   Route::delete('mailgroup/{id}', 'MailgroupController@destroy')->name('mailgroup.destroy');
-
-  // 受講履歴管理
-  Route::get('history/user', 'HistoryController@user')->name('history.user');
 
   // インフォーメーション
   //Route::resource('information', 'InformationController');
