@@ -36,6 +36,7 @@ class TicketSendMail extends Mailable
                         [
                             'username' => $this->data['username'],
                             'eventtitle' => $this->data['eventtitle'],
+                            'eventnotice' => $this->data['eventnotice'],
                             'eventdates' => $this->data['eventdates'],
                             'ticketid' => $this->data['ticketid'],
                         ]

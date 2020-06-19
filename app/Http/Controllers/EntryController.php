@@ -381,6 +381,7 @@ class EntryController extends Controller
         $data = [
             'username' => $user->name,
             'eventtitle' => $event->title,
+            'eventnotice' => $event->notice,
             'eventdates' => $event_dates,
             'ticketid' => $user->id.'-'.$event->id,
         ];
