@@ -165,8 +165,12 @@ Internet Explorerの安全ではないバージョンをお使いのようです
     </section>
 
     <section class="contents-section">
-      <div class="contents-section-inner fadeInUp">
+      <div class="contents-section-inner fadeInUp" style="border-top:1px solid #098">
+      </div>
+    </section>
 
+    <section class="contents-section">
+      <div class="contents-section-inner fadeInUp">
         <div class="top-info-box">
           <header class="top-info-header">
             <div class="top-info-header-inner">
