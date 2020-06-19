@@ -189,7 +189,22 @@ class HistoryController extends Controller
             ->chunk(100, function ($data) use (&$users) {
                 $users[] = $data;
             });
-
+        } elseif(Gate::allows('admin-only')) { // 法人ユーザのみ
+            // $users = User::where('status',1)
+            //                 ->where('role_id',4)
+            //                 ->where('company_profile_id',$user_self->company_profile_id)
+            //                 ->orderBy('id', 'desc')
+            //                 ->get();
+            $users = [];
+            DB::table('users')
+            ->where('status',1)
+            ->where('role_id',4)
+            ->where('company_profile_id',$user_self->company_profile_id)
+            ->where('deleted_at',null)
+            ->orderBy('id', 'desc')
+            ->chunk(100, function ($data) use (&$users) {
+                $users[] = $data;
+            });
         } else{
             return redirect()
                 ->route('dashboard');
@@ -254,15 +269,21 @@ class HistoryController extends Controller
         $user = User::find($id);
         $user_self = User::find(Auth::id());
 
-        if(Gate::allows('user-only')) { //個人ユーザのみ
+        if(Gate::allows('user-only')) { //個人ユーザ
 
             return redirect()->route('history.index');
+        
+        } elseif(Gate::allows('admin-only')) { // 法人ユーザ
+            // 参加済
+            $entrys = Entry::select('event_id','finished_status')
+                        ->where('user_id',$user->id)
+                        ->where('applying_user_id',$user_self->id)
+                        ->where('entry_status','Y')
+                        ->where('ticket_status','Y')
+                        ->where('attend_status','Y')
+                        ->groupBy('event_id','finished_status')->get();
 
-        } elseif(Gate::allows('admin-only')) { // 法人ユーザのみ
-
-            return redirect()->route('history.index');
-
-        } else { // 支部ユーザ以上
+        } elseif(Gate::allows('system-only')) { // 特権ユーザ
             // 参加済
             $entrys = Entry::select('event_id','finished_status')
                         ->where('user_id',$user->id)
@@ -271,6 +292,8 @@ class HistoryController extends Controller
                         ->where('attend_status','Y')
                         ->groupBy('event_id','finished_status')->get();
 
+        } else {
+            return redirect()->route('dashboard');
         }
         //dd($entrys);
 
