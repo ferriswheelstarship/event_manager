@@ -218,18 +218,20 @@ class HomeController extends Controller
                         $dt = new Carbon(date('Y').'-'.date('m').'-'.date('d'));
                         $dt7daysafter = $dt->addDays(14);
                         $nowdt = new Carbon(date('Y').'-'.date('m').'-'.date('d'));
-                        $event_dates = $event->event_dates()->get();
+                        $event_dates = ($event) ? $event->event_dates()->get() : null;
 
-                        foreach($event_dates as $date) {
-                            $event_date = new Carbon($date['event_date']);
-                            if($nowdt <= $event_date && $dt7daysafter >= $event_date) {// 研修開催日が現在から2週間以内であれば
-                                $data_event_ticket_sended[$j] = [
-                                    'event_id' => $event->id,
-                                    'event_date_id' => $date['id'],
-                                    'title' => $event->title,
-                                    'event_date' => $event_date,                        
-                                ];
-                                $event_ticket_sended_data_cnt = true;
+                        if($event_dates) {
+                            foreach($event_dates as $date) {
+                                $event_date = new Carbon($date['event_date']);
+                                if($nowdt <= $event_date && $dt7daysafter >= $event_date) {// 研修開催日が現在から2週間以内であれば
+                                    $data_event_ticket_sended[$j] = [
+                                        'event_id' => $event->id,
+                                        'event_date_id' => $date['id'],
+                                        'title' => $event->title,
+                                        'event_date' => $event_date,                        
+                                    ];
+                                    $event_ticket_sended_data_cnt = true;
+                                }
                             }
                         }
                     }
@@ -256,21 +258,24 @@ class HomeController extends Controller
                         $current_dt = new Carbon(date('Y').'-'.date('m').'-'.date('d'));
                         $current_dt7daysafter = $current_dt->addDays(80);
                         $now_dt = new Carbon(date('Y').'-'.date('m').'-'.date('d'));
-                        $event_dates = $event->event_dates()->get();
-                                    
-                        foreach($event_dates as $date) {
-                            $event_date = new Carbon($date['event_date']);
-                            if($now_dt <= $event_date && $current_dt7daysafter >= $event_date) {// 研修開催日が現在から2週間以内であれば
-                                $data_event_ticket_none[$j] = [
-                                    'event_id' => $event->id,
-                                    'event_date_id' => $date['id'],
-                                    'title' => $event->title,
-                                    'event_date' => $event_date,                        
-                                ];
-                                $event_ticket_none_data_cnt = true;
+                        $event_dates = ($event) ? $event->event_dates()->get() : null;
+                        
+                        if($event_dates) {
+                            foreach($event_dates as $date) {
+                                $event_date = new Carbon($date['event_date']);
+                                if($now_dt <= $event_date && $current_dt7daysafter >= $event_date) {// 研修開催日が現在から2週間以内であれば
+                                    $data_event_ticket_none[$j] = [
+                                        'event_id' => $event->id,
+                                        'event_date_id' => $date['id'],
+                                        'title' => $event->title,
+                                        'event_date' => $event_date,                        
+                                    ];
+                                    $event_ticket_none_data_cnt = true;
+                                }
                             }
                         }
                     }
+
                     $data['event_ticket_none'] = 
                         ($event_ticket_none_data_cnt === true) 
                             ? $this->getUniqueArray($data_event_ticket_none,'event_date') : [];
@@ -278,7 +283,6 @@ class HomeController extends Controller
 
             }
         }
-
 
         return view('home',compact('authlevel','data'));
     }
