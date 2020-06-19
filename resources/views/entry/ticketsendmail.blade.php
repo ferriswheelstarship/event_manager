@@ -17,6 +17,10 @@ echo date('Y年m月d日', strtotime($val['event_date']));
 @endforeach
 
 受講者名：{{ $username }} 様
+
+注意事項：
+{{ $eventnotice }}
+
 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 
 受講券は↓よりご確認ください。

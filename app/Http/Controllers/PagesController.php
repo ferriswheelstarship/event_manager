@@ -175,7 +175,8 @@ class PagesController extends Controller
                                 ->where('role_id',3)
                                 ->where('company_profile_id',$user->company_profile_id)
                                 ->first();
-                $company_name = ($company) ? $company->name : null;
+
+                $company_name = ($company) ? $company->name : $user->profile->other_facility_name.'（'.$user->profile->other_facility_pref.'）';
                 
             }
 
