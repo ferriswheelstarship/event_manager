@@ -403,7 +403,7 @@ class EventsController extends Controller
             }
         }
 
-        return redirect()->route('event.index')->with('status','研修の登録が完了しました。');
+        return redirect()->route('event.before')->with('status','研修の登録が完了しました。');
     }
 
     /**
@@ -776,7 +776,7 @@ class EventsController extends Controller
         //softdelete
         $event = Event::find($id);
         $event->delete();
-        return redirect()->route('event.index')->with('attention',"研修を削除しました。");
+        return redirect()->back()->with('attention',"研修を削除しました。");
     }
 
     public function restore($id) {
@@ -785,7 +785,7 @@ class EventsController extends Controller
         }
         $event = Event::onlyTrashed()->find($id);
         $event->restore();
-        return redirect()->route('event.index')->with('status','研修を復元しました。');
+        return redirect()->back()->with('status','研修を復元しました。');
     }
 
     public function forceDelete($id) {
