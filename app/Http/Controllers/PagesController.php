@@ -86,7 +86,7 @@ class PagesController extends Controller
                 ];
             }             
         }
-        $data = isset($data) ? $data : null;
+        $data = isset($data) ? $data : [];
         if(count($data) > 3) {
             foreach($data as $i => $item) {
                 if($i > 2) {
