@@ -355,7 +355,7 @@ class PagesController extends Controller
         
             // 管理者宛
             Mail::send(new \App\Mail\Contact([
-                'to' => 'ito@mj-inc.jp',
+                'to' => 'hokyo@fancy.ocn.ne.jp',
                 'subject' => '研修サイトからお問い合わせ',
                 'cname' => $request->cname,
                 'name' => $request->name,
