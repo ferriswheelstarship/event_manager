@@ -114,6 +114,21 @@ Internet Explorerの安全ではないバージョンをお使いのようです
                         {{ csrf_field() }}
 
                         <div class="contact-form-body form-group">
+
+                            <article class="contact-box">
+                              <header class="contact-box-header">
+                                <h2 class="contact-box-header-h2">ユーザ登録の前に...</h2>
+                              </header>
+                              <div class="contact-box-body">
+                                まず仮登録（メールアドレス認証）を行います。<br />
+                                仮登録時に届くメールの送信元アドレスは以下のメールアドレスです。<br /><br />
+                                <b>noreply@hyogo-hoiku-kyokai.jp</b><br /><br />
+                                携帯電話会社のメールアドレスを利用している場合は返信メールを受信できるよう<br />
+                                <b>hyogo-hoiku-kyokai.jp</b> のドメイン指定受信設定を行った上で、メールアドレスを入力、送信ください。<br>
+                                メールが届いたら、本文内の本登録用リンクから本登録をお済ませ下さい。
+                              </div>
+                            </article>
+
                             <table class="tbl-normal">
                                 <tr>
                                     <th class="th-w25prc required">メールアドレス</th>
