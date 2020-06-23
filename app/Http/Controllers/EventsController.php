@@ -192,6 +192,20 @@ class EventsController extends Controller
                     $date_frag[$key][$i] = false;
                 }
             }
+            
+            // 主催者（作成ユーザ)
+            if($event->user_id) {
+                $role_name = $event->user->role->display_name;
+                if($role_name == 'admin') {
+                    $organizer = '兵庫県保育協会';
+                } elseif($role_name == 'area') {
+                    $organizer = $event->user->name.'支部';
+                } else {
+                    $organizer = null;
+                }
+            } else {
+                $organizer = null;
+            }
 
             // 開催日前のイベントデータのみ抽出
             if(in_array(true,$date_frag[$key],true)) {
@@ -202,12 +216,14 @@ class EventsController extends Controller
                     'entry_status' => $entry_status,
                     'event_dates' => $event_dates,
                     'capacity' => $event->capacity,
+                    'organizer' => $organizer,
                     'entrys_cnt' => $entrys_cnt,
                     'deleted_at' => $event->deleted_at,
                 ];
             } 
         }
         $data = isset($data) ? $data : null;
+        //dd($data);
         return view('event.before',compact('events','data'));
     }
 
@@ -252,6 +268,20 @@ class EventsController extends Controller
             } else {
                 $entry_status = null;
             }
+
+            // 主催者（作成ユーザ)
+            if($event->user_id) {
+                $role_name = $event->user->role->display_name;
+                if($role_name == 'admin') {
+                    $organizer = '兵庫県保育協会';
+                } elseif($role_name == 'area') {
+                    $organizer = $event->user->name.'支部';
+                } else {
+                    $organizer = null;
+                }
+            } else {
+                $organizer = null;
+            }
             
             // 研修開催日フィルタ（修了分）
             $dt = Carbon::now();
@@ -285,6 +315,7 @@ class EventsController extends Controller
                     'entry_status' => $entry_status,
                     'event_dates' => $event_dates,
                     'capacity' => $event->capacity,
+                    'organizer' => $organizer,
                     'entrys_cnt' => $entrys_cnt,
                     'deleted_at' => $event->deleted_at,
                 ];
@@ -530,11 +561,26 @@ class EventsController extends Controller
             $capacity_status = null;
         }
         
+
+        // 主催者（作成ユーザ)
+        if($event->user_id) {
+            $role_name = $event->user->role->display_name;
+            if($role_name == 'admin') {
+                $organizer = '兵庫県保育協会';
+            } elseif($role_name == 'area') {
+                $organizer = $event->user->name.'支部';
+            } else {
+                $organizer = null;
+            }
+        } else {
+            $organizer = null;
+        }
+
         return view('event.show',
                 compact(
                     'event','careerup_curriculums','event_dates','event_uploads','general_or_carrerup',
                     'entrys_cnt','entrys_self','entrys_self_YC','entrys_self_CW','applyfrag','datepassedfrag','status_mes','capacity_status',
-                    'datas'
+                    'datas','organizer'
                 ));
     }
 

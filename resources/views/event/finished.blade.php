@@ -35,6 +35,7 @@
             <thead class="thead">
                 <tr>
                     <th class="text-nowrap">開催日</th>
+                    <th class="text-nowrap">主催</th>
                     <th class="text-nowrap">研修タイトル</th>
                     @can('user-only')
                     <th class="text-nowrap">参加・申込状態</th>
@@ -54,6 +55,7 @@
                         @if(!$loop->last) <br> @endif
                         @endforeach
                     </td>
+                    <td data-label="主催：">{{ $event['organizer'] }}</td>
                     <td data-label="研修名：">{{ $event['title'] }}</td>
                     @can('user-only')
                     <td data-label="申込状態：">

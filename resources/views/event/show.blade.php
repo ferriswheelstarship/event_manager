@@ -61,6 +61,10 @@
                                 </tr>
                                 @endif
                                 <tr>
+                                    <th>主催</th>
+                                    <td>{{ $organizer }}</td>
+                                </tr>
+                                <tr>
                                     <th>タイトル</th>
                                     <td>{{ $event->title }}</td>
                                 </tr>
