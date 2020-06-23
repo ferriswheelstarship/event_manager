@@ -2,7 +2,6 @@
 <html lang="ja">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="description" content="公益社団法人 兵庫県保育協会のホームページです" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="format-detection" content="telephone=no" />
@@ -10,7 +9,12 @@
 <link rel="shortcut icon" href="/img/favicon.ico" type="image/vnd.microsoft.icon" />
 <link rel="icon" href="/img/favicon.ico" type="image/vnd.microsoft.icon" />
 <link rel="shortcut icon" href="/img/favicon.ico" type="image/x-icon" />
+@php 
+  $hostname = $_SERVER['HTTP_HOST'];
+@endphp
+@if($hostname != 'hyogo-hoiku-kyokai.jp')
 <meta name="robots" content="noindex,nofollow"/>
+@endif
 <title>公益社団法人 兵庫県保育協会 | インフォメーション</title>
 <!-- <script type="text/javascript" src="//webfont.fontplus.jp/accessor/script/fontplus.js?kZSFUtx-OUM%3D&box=93sB9wS4lok%3D&aa=1&ab=2" charset="utf-8"></script> -->
 
