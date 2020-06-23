@@ -56,6 +56,20 @@ class ReceptionController extends Controller
             $nowdt = new Carbon(date('Y').'-'.date('m').'-'.date('d'));
             $event_dates = $event->event_dates()->get();
 
+            // 主催者（作成ユーザ)
+            if($event->user_id) {
+                $role_name = $event->user->role->display_name;
+                if($role_name == 'admin') {
+                    $organizer = '兵庫県保育協会';
+                } elseif($role_name == 'area') {
+                    $organizer = $event->user->name.'支部';
+                } else {
+                    $organizer = null;
+                }
+            } else {
+                $organizer = null;
+            }
+
             foreach($event_dates as $date) {
                 $event_date = new Carbon($date['event_date']);
 
@@ -63,6 +77,7 @@ class ReceptionController extends Controller
                     $data[] = [
                         'event_id' => $event->id,
                         'event_date_id' => $date['id'],
+                        'organizer' => $organizer,
                         'title' => $event->title,
                         'entry_end_date' => $event->entry_end_date,
                         'event_date' => $event_date,                        
@@ -111,6 +126,20 @@ class ReceptionController extends Controller
             $dt = new Carbon(date('Y').'-'.date('m').'-'.date('d'));
             $event_dates = $event->event_dates()->get();
 
+            // 主催者（作成ユーザ)
+            if($event->user_id) {
+                $role_name = $event->user->role->display_name;
+                if($role_name == 'admin') {
+                    $organizer = '兵庫県保育協会';
+                } elseif($role_name == 'area') {
+                    $organizer = $event->user->name.'支部';
+                } else {
+                    $organizer = null;
+                }
+            } else {
+                $organizer = null;
+            }
+
             foreach($event_dates as $date) {
                 $event_date = new Carbon($date['event_date']);                
 
@@ -118,6 +147,7 @@ class ReceptionController extends Controller
                     $data[] = [
                         'event_id' => $event->id,
                         'event_date_id' => $date['id'],
+                        'organizer' => $organizer,
                         'title' => $event->title,
                         'entry_end_date' => $event->entry_end_date,
                         'event_date' => $event_date,                        

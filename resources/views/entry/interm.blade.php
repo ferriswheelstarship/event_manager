@@ -38,6 +38,7 @@
                                         <th class="text-nowrap">開催日</th>
                                         <th class="text-nowrap">状態</th>
                                         <th class="text-nowrap">申込数 / 定員</th>
+                                        <th class="text-nowrap">主催</th>
                                         <th class="text-nowrap">研修タイトル</th>
                                         <th class="text-nowrap">操作</th>
                                     </tr>
@@ -59,7 +60,8 @@
                                         <td data-label="申込数/定員：">
                                             <span>{{ $event['entrys_cnt'] }} / {{ $event['capacity'] }}</span>
                                         </td>
-                                        <td data-label="開催日：">{{ $event['title'] }}</td>
+                                        <td data-label="主催：">{{ $event['organizer'] }}</td>
+                                        <td data-label="研修タイトル：">{{ $event['title'] }}</td>
                                         <td  data-label="操作：">
                                             <a href="{{ url('entry/'.$event['id']) }}" class="btn btn-info btn-sm">申込者一覧</a>
                                             <a href="{{ url('event/'.$event['id']) }}" class="btn btn-primary btn-sm">研修詳細</a>

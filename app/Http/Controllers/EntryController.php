@@ -127,13 +127,28 @@ class EntryController extends Controller
                     } 
                 }
             }
-                            
+
+            // 主催者（作成ユーザ)
+            if($event->user_id) {
+                $role_name = $event->user->role->display_name;
+                if($role_name == 'admin') {
+                    $organizer = '兵庫県保育協会';
+                } elseif($role_name == 'area') {
+                    $organizer = $event->user->name.'支部';
+                } else {
+                    $organizer = null;
+                }
+            } else {
+                $organizer = null;
+            }
+
             $data[] = [
                 'id' => $event->id,
                 'title' => $event->title,
                 'status' => $status,
                 'event_dates' => $event->event_dates()->select('event_date')->get(),
                 'capacity' => $event->capacity,
+                'organizer' => $organizer,
                 'entrys_cnt' => $entrys_cnt,
                 'deleted_at' => $event->deleted_at,
             ];
@@ -186,13 +201,28 @@ class EntryController extends Controller
                     } 
                 }
             }
-                            
+
+            // 主催者（作成ユーザ)
+            if($event->user_id) {
+                $role_name = $event->user->role->display_name;
+                if($role_name == 'admin') {
+                    $organizer = '兵庫県保育協会';
+                } elseif($role_name == 'area') {
+                    $organizer = $event->user->name.'支部';
+                } else {
+                    $organizer = null;
+                }
+            } else {
+                $organizer = null;
+            }
+
             $data[] = [
                 'id' => $event->id,
                 'title' => $event->title,
                 'status' => $status,
                 'event_dates' => $event->event_dates()->select('event_date')->get(),
                 'capacity' => $event->capacity,
+                'organizer' => $organizer,
                 'entrys_cnt' => $entrys_cnt,
                 'deleted_at' => $event->deleted_at,
             ];

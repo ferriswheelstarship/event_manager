@@ -36,6 +36,7 @@
                 <tr>
                     <!-- <th>ID</th> -->
                     <th class="text-nowrap">開催日</th>
+                    <th class="text-nowrap">主催</th>
                     <th class="text-nowrap">研修タイトル</th>
                     <th class="text-nowrap">申込数 / 定員</th>
                     <th class="text-nowrap">申込受付状況</th>
@@ -57,6 +58,7 @@
                         @if(!$loop->last) <br> @endif
                         @endforeach
                     </td>
+                    <td data-label="主催：">{{ $event['organizer'] }}</td>
                     <td data-label="研修名：">{{ $event['title'] }}</td>
                     <td data-label="申込数/定員：">
                         <span>{{ $event['entrys_cnt'] }} / {{ $event['capacity'] }}</span>
