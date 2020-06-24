@@ -279,14 +279,17 @@ class PagesController extends Controller
                 ];
             }             
         }
-        $datas = isset($datas) ? collect($datas) : null;
-        $datas = new LengthAwarePaginator( //https://qiita.com/wallkickers/items/35d13a62e0d53ce05732参照
-                        $datas->forPage($request->page, 10),
-                        count($datas),
-                        10,
-                        $request->page,
-                        array('path' => $request->url())
-                    );
+        $datas = isset($datas) ? $datas : [];
+        if(count($datas) > 0) {
+            $datas = collect($datas);
+            $datas = new LengthAwarePaginator( //https://qiita.com/wallkickers/items/35d13a62e0d53ce05732参照
+                            $datas->forPage($request->page, 10),
+                            count($datas),
+                            10,
+                            $request->page,
+                            array('path' => $request->url())
+                        );
+        }
         
         return view('eventinfo.index',compact('datas'));
     }
