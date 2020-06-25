@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use PDF;
 use DB;
 use Validator;
 use Auth;
@@ -456,7 +457,7 @@ class ReceptionController extends Controller
     public function reception_csv(Request $request) 
     {
         if(Gate::denies('area-higher')) {
-            return redirect()->route('event.index');
+            return redirect()->route('event.before');
         }
  
         // 受付完了者
@@ -531,4 +532,105 @@ class ReceptionController extends Controller
                 ->header('Content-Disposition', 'attachment; filename='.$filename);
 
     }
+
+    public function all_attendance_pdf(Request $request) 
+    {
+        if(Gate::denies('area-higher')) {
+            return redirect()->route('event.before');
+        }
+
+        if(!$request->event_id || !is_numeric($request->event_id)) {
+            $emes = '不正なデータです。';
+        } else {
+
+            $event = Event::find($request->event_id);
+
+            if(!$event) { //ユーザ、研修
+                $emes = '不正なデータです。';
+            }
+
+            // 研修開催日
+            $event_dates = $event->event_dates;
+            // 未開催の開催日が残っている場合
+            //dd('研修は終了していません。');
+
+            $entrys = Entry::where('event_id',$event->id)
+                        ->where('entry_status','Y')
+                        ->where('ticket_status','Y')
+                        ->distinct('user_id')
+                        ->get();
+            if($entrys->count() === 0) {// 該当研修の申込ステータス確認
+                $emes = '不正なデータです。';
+            }
+
+            // 研修種別
+            $careerup_curriculums = $event->careerup_curriculums;
+
+            if($careerup_curriculums->count() > 0) {
+                foreach($careerup_curriculums as $careerup_curriculum) {
+                    $fields[] = $careerup_curriculum->parent_curriculum;                        
+
+                    if($careerup_curriculum->training_minute % 60 == 0) {
+                        $training_hours = floor($careerup_curriculum->training_minute / 60);
+                    } else {
+                        if($careerup_curriculum->training_minute % 60 >= 30) {
+                            $training_hours = floor($careerup_curriculum->training_minute / 60).'.5';
+                        } else {
+                            $training_hours = floor($careerup_curriculum->training_minute / 60);
+                        }
+                    }
+
+                    $careerup_data[] = [
+                        'parent' => $careerup_curriculum->parent_curriculum,
+                        'child' => $careerup_curriculum->child_curriculum,
+                        'training_minutes' => $training_hours,
+                    ];
+                }
+            } else {
+                $careerup_data = null;
+            }
+
+            foreach($entrys as $entry) {
+                $user = User::find($entry->user_id);
+
+                // 所属施設
+                if($user->company_profile_id) {
+                    $company = User::where('status',1)
+                                    ->where('role_id',3)
+                                    ->where('company_profile_id',$user->company_profile_id)
+                                    ->first();
+                    $company_name = ($company) ? $company->name : null;
+                } else {
+                    $profile = $user->profile;
+                    $company_name = $profile->other_facility_name;
+                }
+
+                $datas[] = [
+                    'user' => $user,
+                    'profile' => $user->profile,
+                    'event' => $event,
+                    'event_dates' => $event_dates,
+                    'company_name' => $company_name,
+                    'careerup_data' => $careerup_data,
+                ];                     
+            }
+        }
+
+        if(isset($emes)) {
+            return redirect()->back();
+        } else {
+            if(count($datas) > 0) {
+                $datas = collect($datas);
+                $datas->chunk(20);
+                $datas->toArray();
+                $pdf = PDF::loadView('reception.all_attendance_pdf', compact('datas'));
+                //return $pdf->stream('attendance.pdf');
+                return $pdf->download('attendance.pdf');
+            } else {
+                return redirect()->back();
+            }
+        }
+
+    }
+
 }
