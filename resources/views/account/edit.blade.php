@@ -324,7 +324,7 @@
                                     class="select-search form-control{{ $errors->has('other_facility_pref') ? ' is-invalid' : '' }}" 
                                     name="other_facility_pref">
                                         <option value="0">------------</option>
-                                        @foreach ($pref as $key => $val)
+                                        @foreach ($pref_all as $key => $val)
                                         <option value="{{ $val }}"
                                             @if(old('other_facility_pref',$profile->other_facility_pref) == $val) selected @endif>{{ $val }}</option>
                                         @endforeach
