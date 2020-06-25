@@ -170,6 +170,9 @@ Route::group(['middleware' => ['auth', 'can:area-higher']], function () {
   Route::post('reception/auto', 'ReceptionController@auto')->name('reception.auto');
   // 受付管理 - 受付者一覧CSV
   Route::post('reception/reception_csv', 'ReceptionController@reception_csv')->name('reception.reception_csv'); 
+  // 受付管理 - 受講証明書事前一括ダウンロード（印刷用）
+  Route::post('reception/all_attendance_pdf', 'ReceptionController@all_attendance_pdf')->name('reception.all_attendance_pdf'); 
+
   // 受付管理 - 受講証明書発行
   Route::post('reception/finishedsend', 'ReceptionController@finishedsend')->name('reception.finishedsend');
 

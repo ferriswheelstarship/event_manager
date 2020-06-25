@@ -139,7 +139,7 @@
       <div style=" padding-bottom:20px;">
         <table style=" width: 100%;" class="apptbl">
           <tr>
-            <th>受講年月日</th>
+            <th>受講年月日（A）</th>
             <td>
               @if(count($data['event_dates']) > 0)
               @foreach($data['event_dates'] as $key => $val)
@@ -154,7 +154,7 @@
               </td>
           </tr>
           <tr>
-            <th>受講時間数</th>
+            <th>受講時間数（B）</th>
             <td>
               @if($data['event']->training_minute % 60 == 0) 
                 @php
@@ -174,14 +174,15 @@
               <b>{{ $training_hours }}時間</b>
             </td>
           </tr>
+
           <tr>
-            <th>研修名</th>
+            <th>研修名（C）</th>
             <td>
               <b>{{ $data['event']->title }}</b>
             </td>
           </tr>
           <tr>
-            <th>研修実施機関名</th>
+            <th>研修実施機関名（D）</th>
             <td>
               <b>公益社団法人 兵庫県保育協会</b>
             </td>

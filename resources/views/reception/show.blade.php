@@ -45,7 +45,8 @@
                                 <button type="button" class="csv-confirm btn btn-sm btn-primary"
                                 data-toggle="modal" data-target="#confirm-csv">CSVダウンロード</button>
                                 
-                                <!-- <a class="btn btn-sm btn-success" href="">受講証明書一括ダウンロード</a> -->
+                                <button type="button" class="btn btn-sm btn-success"
+                                data-toggle="modal" data-target="#confirm-attendance-pdf">受講証明書一括ダウンロード</button>
                             </div>
                         </div>
 
@@ -69,6 +70,32 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
                                     <button type="submit" class="btn btn-primary">CSVダウンロード</button>
+                                </div>
+                                </div>
+                                </form>
+                            </div>
+                        </div>                    
+
+                        <div class="modal fade" id="confirm-attendance-pdf" tabindex="-1">
+                            <div class="modal-dialog" role="document">
+                                <form role="form" class="form-inline" method="POST" action="{{ route('reception.all_attendance_pdf') }}">
+                                {{ csrf_field() }}
+
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">受講証明書一括ダウンロード</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    参加ユーザ全てのの受講証明書をダウンロードしますか？<br /><br />
+                                    <span class="text-danger">※参加ユーザが多い場合ダウンロードに時間がかかる事がありますので、ダウンロード完了まで、他の操作をされないようお願いします。</span>
+                                    <input type="hidden" name="event_id" value="{{ $event->id }}">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+                                    <button type="submit" class="btn btn-success">一括ダウンロード</button>
                                 </div>
                                 </div>
                                 </form>
