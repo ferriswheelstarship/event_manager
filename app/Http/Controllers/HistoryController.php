@@ -529,8 +529,8 @@ class HistoryController extends Controller
                 $pdf = PDF::loadView('history.attendance_general_pdf', compact('data'));
             }
         }
-        return $pdf->download('attendance.pdf');
-        //return $pdf->stream('attendance.pdf');
+        //return $pdf->download('attendance.pdf');
+        return $pdf->stream('attendance.pdf');
 
     }
 
