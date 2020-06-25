@@ -44,6 +44,8 @@
                             <div class="col-md-8">
                                 <button type="button" class="csv-confirm btn btn-sm btn-primary"
                                 data-toggle="modal" data-target="#confirm-csv">CSVダウンロード</button>
+                                
+                                <!-- <a class="btn btn-sm btn-success" href="">受講証明書一括ダウンロード</a> -->
                             </div>
                         </div>
 
