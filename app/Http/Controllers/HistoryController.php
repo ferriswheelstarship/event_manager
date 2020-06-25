@@ -302,45 +302,47 @@ class HistoryController extends Controller
                 
                 // 参加済研修 
                 $event = Event::find($entry->event_id);
-                                
-                if($event->general_or_carrerup == 'carrerup') {
+                if($event) {
+                    if($event->general_or_carrerup == 'carrerup') {
 
-                    $notattend_entry_cnt = Entry::where('user_id',$user->id)
-                                        ->where('event_id',$event->id)
-                                        ->where('attend_status','N')
-                                        ->get()
-                                        ->count();
+                        $notattend_entry_cnt = Entry::where('user_id',$user->id)
+                                            ->where('event_id',$event->id)
+                                            ->where('attend_status','N')
+                                            ->get()
+                                            ->count();
 
-                    if($notattend_entry_cnt > 0) {
-                        $carrerup_data[$key] = null;
-                    } else {
-                        // 参加済キャリアアップ研修の分野          
-                        $careerup_curriculums = $event->careerup_curriculums()->get();
-                        
-                        // 参加済キャリアアップ研修の研修開催日
+                        if($notattend_entry_cnt > 0) {
+                            $carrerup_data[$key] = null;
+                        } else {
+                            // 参加済キャリアアップ研修の分野          
+                            $careerup_curriculums = $event->careerup_curriculums()->get();
+                            
+                            // 参加済キャリアアップ研修の研修開催日
+                            $event_dates = $event->event_dates()->get();
+
+                            $carrerup_data[$key] = [
+                                'event' => $event,
+                                'event_dates' => $event_dates,
+                                'careerup_curriculums' => $careerup_curriculums,
+                                'finished_status' => $entry->finished_status,
+                            ];
+                        }
+
+                        $general_data[$key] = null;
+
+                    } 
+                    if($event->general_or_carrerup == 'general') {
+                        // 参加済一般研修の研修開催日
                         $event_dates = $event->event_dates()->get();
 
-                        $carrerup_data[$key] = [
+                        $general_data[$key] = [
                             'event' => $event,
                             'event_dates' => $event_dates,
-                            'careerup_curriculums' => $careerup_curriculums,
                             'finished_status' => $entry->finished_status,
                         ];
+                        $carrerup_data[$key] = null;
                     }
 
-                    $general_data[$key] = null;
-
-                } 
-                if($event->general_or_carrerup == 'general') {
-                    // 参加済一般研修の研修開催日
-                    $event_dates = $event->event_dates()->get();
-
-                    $general_data[$key] = [
-                        'event' => $event,
-                        'event_dates' => $event_dates,
-                        'finished_status' => $entry->finished_status,
-                    ];
-                    $carrerup_data[$key] = null;
                 }
             }
         } else {
@@ -527,7 +529,8 @@ class HistoryController extends Controller
                 $pdf = PDF::loadView('history.attendance_general_pdf', compact('data'));
             }
         }
-        return $pdf->stream('attendance.pdf');
+        return $pdf->download('attendance.pdf');
+        //return $pdf->stream('attendance.pdf');
 
     }
 
