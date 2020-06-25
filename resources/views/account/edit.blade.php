@@ -302,7 +302,7 @@
                                     none
                                 @endif ">
                             <div class="form-group row">
-                                <label for="other_facility_name" class="col-md-4 col-form-label text-md-right">所属施設名(他府県下)</label>
+                                <label for="other_facility_name" class="col-md-4 col-form-label text-md-right">所属施設名</label>
                                 <div class="col-md-6">
                                     <input
                                         id="other_facility_name" type="text"
@@ -317,7 +317,7 @@
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="other_facility_name" class="col-md-4 col-form-label text-md-right">所属施設所在地(他府県下)</label>
+                                <label for="other_facility_name" class="col-md-4 col-form-label text-md-right">所属施設所在地</label>
                                 <div class="col-md-3">
                                     <select 
                                     id="other_facility_pref" 
