@@ -158,7 +158,7 @@ class RegisterController extends Controller
             $user->status = config('const.USER_STATUS.MAIL_AUTHED');
             //$user->verify_at = Carbon::now();
             if($user->save()) {
-                return view('auth.main.register', compact('email_token','facilites','pref','job','childminder_status'));
+                return view('auth.main.register', compact('email_token','facilites','pref','pref_all','job','childminder_status'));
             } else{
                 return view('auth.main.register')->with('message', 'メール認証に失敗しました。再度、メールからリンクをクリックしてください。');
             }
