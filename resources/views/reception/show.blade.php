@@ -90,7 +90,7 @@
                                 </div>
                                 <div class="modal-body">
                                     参加ユーザ全てのの受講証明書をダウンロードしますか？<br /><br />
-                                    <span class="text-danger">※参加ユーザが多い場合ダウンロードに時間がかかる事がありますので、ダウンロード完了まで、他の操作をされないようお願いします。</span>
+                                    <span class="text-danger">※参加ユーザが多い場合ダウンロードに時間がかかる事がありますので、ダウンロード完了まで他の操作をされないようお願いします。</span>
                                     <input type="hidden" name="event_id" value="{{ $event->id }}">
                                 </div>
                                 <div class="modal-footer">
