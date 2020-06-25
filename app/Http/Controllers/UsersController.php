@@ -220,13 +220,14 @@ class UsersController extends Controller
         $category = config('const.CATEGORY');
         // 都道府県
         $pref = config('const.PREF');
+        $pref_all = config('const.PREF_ALL');
         // 職種
         $job = config('const.JOB');
         // 保育士番号所持状況
         $childminder_status = config('const.CHILDMINDER_STATUS');
 
         return view('account.registNext',
-            compact('postdata','company','area_name','branch_name','company_variation','category','pref','job','childminder_status')
+            compact('postdata','company','area_name','branch_name','company_variation','category','pref','pref_all','job','childminder_status')
         );
 
     }
@@ -431,6 +432,7 @@ class UsersController extends Controller
         $category = config('const.CATEGORY');
         // 都道府県
         $pref = config('const.PREF');
+        $pref_all = config('const.PREF_ALL');
         // 職種
         $job = config('const.JOB');
         // 保育士番号所持状況
@@ -449,7 +451,7 @@ class UsersController extends Controller
 
 
         return view('account.edit', 
-            compact('user','profile','facilites','area_name','branch_name','company_variation','category','job','pref','childminder_status')
+            compact('user','profile','facilites','area_name','branch_name','company_variation','category','job','pref','pref_all','childminder_status')
         );
 
 
