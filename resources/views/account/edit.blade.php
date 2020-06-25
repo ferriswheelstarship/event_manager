@@ -417,7 +417,7 @@
                                             name="childminder_number_pref">
                                                 <option value="0">都道府県を選択</option>
                                                 <option value="兵庫県" @if(old('childminder_number_pref',$profile->childminder_number_pref) == "兵庫県") selected @endif>兵庫県</option>
-                                                @foreach ($pref as $item)
+                                                @foreach ($pref_all as $item)
                                                     <option value="{{ $item }}"
                                                             @if(old('childminder_number_pref',$profile->childminder_number_pref) == $item) selected @endif>{{ $item }}</option>
                                                 @endforeach
