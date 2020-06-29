@@ -491,6 +491,7 @@ class EventsController extends Controller
                             ->orderBy('ruby', 'asc')
                             ->get();
 
+            $datas = null;
             foreach($users as $user) {
                 $entry = Entry::where('event_id',$id)
                                 ->where('user_id',$user->id)
