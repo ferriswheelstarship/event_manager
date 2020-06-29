@@ -262,7 +262,7 @@
                                     <tbody>
                                 @foreach($datas as $key => $item)
                                         <tr>
-                                            <td>{{ $item['name'] }}</td>
+                                            <td>{{ $item['name'] }}（{{ $item['ruby'] }}）</td>
                                             <td>{{ $item['entry_status'] }}</td>
                                             <td>
                                             @if($applyfrag == false)
@@ -317,7 +317,7 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <strong>ユーザ：{{ $item['name'] }} </strong><br>
+                                            <strong>ユーザ：{{ $item['name'] }}（{{ $item['ruby'] }}）</strong><br>
                                             <strong>{{ $event->title }}</strong>へ参加申込みしますか？
                                             @if($item['entry_status'] == 'キャンセル待ち申込')
                                             <br>
@@ -349,7 +349,7 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <strong>ユーザ：{{ $item['name'] }} </strong><br>
+                                            <strong>ユーザ：{{ $item['name'] }}（{{ $item['ruby'] }}）</strong><br>
                                             <strong>{{ $event->title }}</strong>の参加をキャンセルしますか？
                                             <input type="hidden" name="user_id" value="{{ $item['id'] }}">
                                             <input type="hidden" name="event_id" value="{{ $event->id }}">
