@@ -115,10 +115,7 @@
     @endif
     >
       <div class="header">
-        <!-- <p class="tar header_first"><br />
-        公益社団法人 兵庫県保育協会<br>
-        事務局</p> -->
-
+        <p class="tar header_first">{{ $data['user']->name }}</p>
         <h1 class="header_heading tac" >
           @if(isset($data['careerup_data']))
           保育士等キャリアアップ研修一部受講証明書          

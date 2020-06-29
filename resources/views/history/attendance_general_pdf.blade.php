@@ -11,7 +11,7 @@
         }
         body {
             font-family: ipag !important;
-            padding: 10px 15px;
+            padding: 0px 15px;
             font-size: 14px;
             line-height: 1.5;
         }
@@ -105,9 +105,7 @@
   </head>
   <body>
     <div class="header">
-      <!-- <p class="tar header_first"><br />
-      公益社団法人 兵庫県保育協会<br>
-      事務局</p> -->
+      <p class="tar header_first">{{ $data['user']->name }}</p>
 
       <h1 class="header_heading tac" >「{{ $data['event']->title }}」 受講証明書</h1>
     </div>
