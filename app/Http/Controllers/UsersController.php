@@ -46,7 +46,7 @@ class UsersController extends Controller
             ->where('role_id',4)
             ->where('company_profile_id',$user_self->company_profile_id)
             ->where('status',1)
-            ->orderBy('id','desc')
+            ->orderBy('ruby','asc')
             ->chunk(100, function ($data) use (&$users) {
                 $users[] = $data;
             });
