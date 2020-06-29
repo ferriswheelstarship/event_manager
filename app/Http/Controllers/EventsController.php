@@ -840,7 +840,7 @@ class EventsController extends Controller
         }
         $event = Event::onlyTrashed()->find($id);
         $event->forceDelete();
-        return redirect()->route('event.index')->with('attention','研修をを完全に削除しました。削除した研修は復元できません。');
+        return redirect()->route('event.index')->with('attention','研修を完全に削除しました。削除した研修は復元できません。');
     }
 
     public function fileDelete($id) {
