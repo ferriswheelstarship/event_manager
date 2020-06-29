@@ -32,7 +32,7 @@ class EventsController extends Controller
         if(Gate::allows('system-only')) { //特権ユーザのみ
             $events = Event::withTrashed()->orderBy('id', 'desc')->get();
         } elseif(Gate::allows('area-only')) { //支部ユーザのみ
-            $events = Event::withTrashed()->where('user_id',$user_self)->orderBy('id', 'desc')->get();
+            $events = Event::withTrashed()->where('user_id',$user_self->id)->orderBy('id', 'desc')->get();
         } else {
             $events = Event::where('view_start_date','<=',now())
                                 ->where('view_end_date','>',now())
@@ -115,16 +115,18 @@ class EventsController extends Controller
     public function before()
     {
         $user_self = User::find(Auth::id());
+        
 
         if(Gate::allows('system-only')) { //特権ユーザのみ
             $events = Event::withTrashed()->orderBy('id', 'desc')->get();
         } elseif(Gate::allows('area-only')) { //支部ユーザのみ
-            $events = Event::withTrashed()->where('user_id',$user_self)->orderBy('id', 'desc')->get();
+            $events = Event::withTrashed()->where('user_id',$user_self->id)->orderBy('id', 'desc')->get();
         } else {
             $events = Event::where('view_start_date','<=',now())
                                 ->where('view_end_date','>',now())
                                 ->orderBy('id', 'desc')->get();
         }
+
         foreach($events as $key => $event) {
 
             // 申込数
@@ -234,7 +236,7 @@ class EventsController extends Controller
         if(Gate::allows('system-only')) { //特権ユーザのみ
             $events = Event::withTrashed()->orderBy('id', 'desc')->get();
         } elseif(Gate::allows('area-only')) { //支部ユーザのみ
-            $events = Event::withTrashed()->where('user_id',$user_self)->orderBy('id', 'desc')->get();
+            $events = Event::withTrashed()->where('user_id',$user_self->id)->orderBy('id', 'desc')->get();
         } else {
             $events = Event::where('view_start_date','<=',now())
                                 ->where('view_end_date','>',now())

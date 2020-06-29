@@ -28,7 +28,7 @@ class EntryController extends Controller
         if(Gate::allows('system-only')) { //特権ユーザのみ
             $events = Event::withTrashed()->orderBy('id', 'desc')->get();
         } elseif(Gate::allows('area-only')) { //支部ユーザのみ
-            $events = Event::withTrashed()->where('user_id',$user_self)->orderBy('id', 'desc')->get();
+            $events = Event::withTrashed()->where('user_id',$user_self->id)->orderBy('id', 'desc')->get();
         } else {
             $events = Event::where('view_start_date','<=',now())
                                 ->where('view_end_date','>',now())
@@ -90,7 +90,7 @@ class EntryController extends Controller
                                 ->where('entry_end_date','>',now())
                                 ->orderBy('id', 'desc')->get();
         } elseif(Gate::allows('area-only')) { //支部ユーザのみ
-            $events = Event::where('user_id',$user_self)
+            $events = Event::where('user_id',$user_self->id)
                                 ->where('entry_start_date','<=',now())
                                 ->where('entry_end_date','>',now())
                                 ->orderBy('id', 'desc')->get();
@@ -165,7 +165,7 @@ class EntryController extends Controller
             $events = Event::where('entry_end_date','<',now())
                                 ->orderBy('id', 'desc')->get();
         } elseif(Gate::allows('area-only')) { //支部ユーザのみ
-            $events = Event::where('user_id',$user_self)
+            $events = Event::where('user_id',$user_self->id)
                                 ->where('entry_end_date','<',now())
                                 ->orderBy('id', 'desc')->get();
         } 

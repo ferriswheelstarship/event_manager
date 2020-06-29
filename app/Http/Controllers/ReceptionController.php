@@ -29,7 +29,7 @@ class ReceptionController extends Controller
         if(Gate::allows('system-only')) { //特権ユーザのみ
             $events = Event::orderBy('id', 'desc')->get();
         } elseif(Gate::allows('area-only')) { //支部ユーザのみ
-            $events = Event::where('user_id',$user_self)->orderBy('id', 'desc')->get();
+            $events = Event::where('user_id',$user_self->id)->orderBy('id', 'desc')->get();
         }
 
         $data_cnt = false;
@@ -101,7 +101,7 @@ class ReceptionController extends Controller
         if(Gate::allows('system-only')) { //特権ユーザのみ
             $events = Event::withTrashed()->orderBy('id', 'desc')->get();
         } elseif(Gate::allows('area-only')) { //支部ユーザのみ
-            $events = Event::withTrashed()->where('user_id',$user_self)->orderBy('id', 'desc')->get();
+            $events = Event::withTrashed()->where('user_id',$user_self->id)->orderBy('id', 'desc')->get();
         }
 
         $data_cnt = false;
