@@ -488,7 +488,7 @@ class EventsController extends Controller
             $users = User::where('status',1)
                             ->where('role_id',4)
                             ->where('company_profile_id',$user_self->company_profile_id)
-                            ->orderBy('id', 'desc')
+                            ->orderBy('ruby', 'asc')
                             ->get();
 
             foreach($users as $user) {
@@ -516,6 +516,7 @@ class EventsController extends Controller
                 $datas[] = [
                     'id' => $user->id,
                     'name' => $user->name,
+                    'ruby' => $user->ruby,
                     'entry_status' => $entry_status,
                 ];
             }
