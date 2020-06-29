@@ -492,34 +492,36 @@ class EventsController extends Controller
                             ->get();
 
             $datas = null;
-            foreach($users as $user) {
-                $entry = Entry::where('event_id',$id)
-                                ->where('user_id',$user->id)
-                                ->first();
-                if(!$entry) {
-                    $entry_status = "申込なし";
-                } else {
-                    if($entry->ticket_status == 'Y') {
-                        $entry_status = "受講券発行済";
+            if($users->count() > 0) {
+                foreach($users as $user) {
+                    $entry = Entry::where('event_id',$id)
+                                    ->where('user_id',$user->id)
+                                    ->first();
+                    if(!$entry) {
+                        $entry_status = "申込なし";
                     } else {
-                        if($entry->entry_status == 'Y') {
-                            $entry_status = "受講券発行待ち";
-                        } elseif($entry->entry_status == 'YC') {
-                            $entry_status = "申込後キャンセル";
-                        } elseif($entry->entry_status == 'CW') {
-                            $entry_status = "キャンセル待ち申込";
+                        if($entry->ticket_status == 'Y') {
+                            $entry_status = "受講券発行済";
                         } else {
-                            $entry_status = "申込なし";
+                            if($entry->entry_status == 'Y') {
+                                $entry_status = "受講券発行待ち";
+                            } elseif($entry->entry_status == 'YC') {
+                                $entry_status = "申込後キャンセル";
+                            } elseif($entry->entry_status == 'CW') {
+                                $entry_status = "キャンセル待ち申込";
+                            } else {
+                                $entry_status = "申込なし";
+                            }
                         }
                     }
-                }
 
-                $datas[] = [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'ruby' => $user->ruby,
-                    'entry_status' => $entry_status,
-                ];
+                    $datas[] = [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'ruby' => $user->ruby,
+                        'entry_status' => $entry_status,
+                    ];
+                }
             }
         
         } else {
