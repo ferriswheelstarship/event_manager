@@ -491,8 +491,8 @@ class EventsController extends Controller
                             ->orderBy('ruby', 'asc')
                             ->get();
 
-            $datas = null;
-            if($users->count() > 0) {
+            $datas = [];
+            if(count($users) > 0) {
                 foreach($users as $user) {
                     $entry = Entry::where('event_id',$id)
                                     ->where('user_id',$user->id)
@@ -525,7 +525,7 @@ class EventsController extends Controller
             }
         
         } else {
-            $datas = null;
+            $datas = [];
         }
 
         // 申込可否フラグ

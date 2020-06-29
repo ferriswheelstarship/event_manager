@@ -260,6 +260,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                @if(count($datas) > 0)
                                 @foreach($datas as $key => $item)
                                         <tr>
                                             <td>{{ $item['name'] }}（{{ $item['ruby'] }}）</td>
@@ -298,6 +299,11 @@
                                             </td>
                                         </tr>
                                 @endforeach
+                                @else
+                                        <tr>
+                                            <td colspan="3" class="text-center">所属ユーザの登録はありません</td>            
+                                        </tr>
+                                @endif
                                     <tbody>
                                 </table>
                             </div>
