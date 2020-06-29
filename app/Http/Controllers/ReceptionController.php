@@ -551,8 +551,6 @@ class ReceptionController extends Controller
 
             // 研修開催日
             $event_dates = $event->event_dates;
-            // 未開催の開催日が残っている場合
-            //dd('研修は終了していません。');
 
             $entrys = Entry::where('event_id',$event->id)
                         ->where('entry_status','Y')
@@ -590,6 +588,7 @@ class ReceptionController extends Controller
                 $careerup_data = null;
             }
 
+            $datas = [];
             foreach($entrys as $entry) {
                 $user = User::find($entry->user_id);
 
@@ -606,6 +605,7 @@ class ReceptionController extends Controller
                 }
 
                 $datas[] = [
+                    'ruby' => $user->ruby,
                     'user' => $user,
                     'profile' => $user->profile,
                     'event' => $event,
@@ -613,6 +613,10 @@ class ReceptionController extends Controller
                     'company_name' => $company_name,
                     'careerup_data' => $careerup_data,
                 ];                     
+            }
+            if(count($datas) > 0 ) {
+                $collection = collect($datas);
+                $datas = $collection->sortBy('ruby')->all();
             }
         }
 
