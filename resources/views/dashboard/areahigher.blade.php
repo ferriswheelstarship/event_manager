@@ -142,10 +142,16 @@
 
                                             <!-- Modal -->
                                             <div class="modal fade" id="history-confirm{{ $updated_history['history_group_id'] }}" tabindex="-1">
-                                                <div class="modal-dialog" role="document">
+                                                <div class="modal-dialog" role="document" style="max-width:700px">
                                                     <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">更新履歴詳細（{{ $updated_history->user->name }}）</h5>
+                                                        <h5 class="modal-title" id="exampleModalLabel">【更新履歴詳細】 <br><br>
+                                                        ユーザ：{{ $updated_history->user->name }}<br>
+                                                        更新日時：
+                                                        @php
+                                                        echo date('Y年m月d日 H時i分s秒', strtotime($updated_history['created_at']));
+                                                        @endphp                                                        
+                                                        </h5>
                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                         </button>
