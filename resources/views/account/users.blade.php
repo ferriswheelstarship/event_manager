@@ -20,7 +20,12 @@
                 @endphp
                 <tr>
                     <!-- <td>{{ $user->id }}</td> -->
-                    <td data-label="名前：">{{ $user->name }}（{{ $user->ruby }}）</td>
+                    <td data-label="名前：">{{ $user->name }}
+                    @if($user->role_id != 2)
+                    <br />
+                    （{{ $user->ruby }}）
+                    @endif
+                    </td>
                     <td data-label="メールアドレス：">{{ $user->email }}</td>
                     <td data-label="権限：">
                     @if($user->role_id)
