@@ -110,3 +110,90 @@
                 </div>
             </div>
         </div>
+        @can('system-only')
+        <div class="row mb-3">
+            <div class="col-md-12 mx-auto">
+                <div class="card">
+                    <div class="card-header border-top">更新履歴（法人ユーザ情報）</div>
+                    <div class="card-body">
+                        @if (isset($data['updated_history']) && count($data['updated_history']) > 0)
+                        <div class="table-responsive">
+                            <table class="table table-striped tbl-withheading data-table">
+                                <thead class="thead">
+                                    <tr>
+                                        <th class="text-nowrap">更新日時</th>
+                                        <th class="text-nowrap">更新したユーザ</th>
+                                        <th class="text-nowrap">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($data['updated_history'] as $updated_history)
+                                    <tr>
+                                        <td data-label="更新日時：">
+                                            @php
+                                            echo date('Y年m月d日 H時i分s秒', strtotime($updated_history['created_at']));
+                                            @endphp                                            
+                                        </td>
+                                        <td data-label="更新したユーザ：">{{ $updated_history->user->name }}</td>
+                                        <td data-label="操作：">
+                                            <button type="button" class="history-confirm btn-sm btn-info" 
+                                            value="{{ $updated_history['history_group_id'] }}" 
+                                            data-toggle="modal" data-target="#history-confirm{{ $updated_history['history_group_id'] }}">詳細</button>
+
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="history-confirm{{ $updated_history['history_group_id'] }}" tabindex="-1">
+                                                <div class="modal-dialog" role="document" style="max-width:700px">
+                                                    <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">【更新履歴詳細】 <br><br>
+                                                        ユーザ：{{ $updated_history->user->name }}<br>
+                                                        更新日時：
+                                                        @php
+                                                        echo date('Y年m月d日 H時i分s秒', strtotime($updated_history['created_at']));
+                                                        @endphp                                                        
+                                                        </h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        @if(isset($updated_history['mixed_history']) && count($updated_history['mixed_history']) > 0)
+                                                        <table class="table table-striped tbl-withheading data-table">
+                                                            <thead class="thead">
+                                                                <tr>
+                                                                    <th class="text-nowrap">変更した項目</th>
+                                                                    <th class="text-nowrap">変更前の内容</th>
+                                                                    <th class="text-nowrap">変更後の内容</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach($updated_history['mixed_history'] as $history)
+                                                                <tr>
+                                                                    <td>{{ $updated_item_arr[$history['item_name']] }}</td>
+                                                                    <td>{{ $history['before']}}</td>
+                                                                    <td>{{ $history['after']}}</td>
+                                                                </tr>
+                                                                @endforeach
+                                                            </tbody>
+                                                        </table>
+                                                        @endif
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        @endif                        
+                    </div>
+                </div>
+            </div>            
+        </div>
+        @endif
+

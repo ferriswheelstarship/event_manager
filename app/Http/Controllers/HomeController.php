@@ -14,6 +14,7 @@ use App\Profile;
 use App\Information;
 use App\Event_date;
 use App\Entry;
+use App\Updated_history;
 
 class HomeController extends Controller
 {
@@ -37,6 +38,7 @@ class HomeController extends Controller
     {
         $user = User::find(Auth::id());
         $authlevel = Role::find($user->role_id)->level;
+        $updated_item_arr = config('const.UPDATED_ITEM');
         
         $data = [];
         if(Gate::allows('area-higher')) { //支部、特権ユーザ用
@@ -108,6 +110,22 @@ class HomeController extends Controller
             }
             $data['event'] = ($event_data_cnt === true) ? $event_data : [];
             //dd($data['event']);
+
+            //法人ユーザ更新情報
+            $data['updated_history'] = Updated_history::distinct()
+                                            ->select('history_group_id','user_id','created_at')
+                                            ->latest('created_at')
+                                            ->limit(20)
+                                            ->get();
+
+            if(count($data['updated_history']) > 0 ) {
+                foreach($data['updated_history'] as $key => $item) {
+                    $data['updated_history'][$key]['mixed_history'] = Updated_history::where('history_group_id',$item['history_group_id'])->get();
+                }
+            }
+            //dd($data['updated_history']);
+
+
         } else {
             
             $infos = Information::orderBy('article_date','desc')
@@ -293,7 +311,7 @@ class HomeController extends Controller
             }
         }
 
-        return view('home',compact('authlevel','data'));
+        return view('home',compact('authlevel','data','updated_item_arr'));
     }
 
     public static function getUniqueArray($array, $column)
