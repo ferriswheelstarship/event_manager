@@ -12,6 +12,7 @@ use App\User;
 use App\Role;
 use App\Profile;
 use App\Company_profile;
+use App\Updated_history;
 use App\Http\Traits\Csv;
 
 
@@ -560,39 +561,123 @@ class UsersController extends Controller
             } else {
                 $profile->childminder_status = null;
             }
-
             $profile->save();
 
             $user->name = $request->firstname.'　'.$request->lastname;
             $user->ruby = $request->firstruby.'　'.$request->lastruby;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->zip = $request->zip;
+            $user->address = $request->address;
+            $user->email_verify_token = base64_encode($request->email);
+            $user->save();
+
+        } if($user->role_id == 3) {
+            
+            $profile = $user->company_profile()->first();
+
+            //更新履歴用
+            $maxUpdatedHistoryId = Updated_history::max('history_group_id');
+
+            //更新履歴用差分取得（profile）
+            $profile_diffs = [];
+            if($user->id === Auth::id()) {// 法人ユーザ自身の変更のみ
+                $after_profile = $request->except('_token','email','name','ruby','phone','zip','address');
+
+                foreach($after_profile as $key => $item) {
+                    if($profile->$key != $item) {
+                        $profile_diffs[] = [
+                            'user_id' => Auth::id(),
+                            'history_group_id' => ($maxUpdatedHistoryId+1),
+                            'item_name' => $key,
+                            'before' => $profile->$key,
+                            'after' => $item,
+                        ];
+                    }
+                }
+            }
+
+            $public_or_private = ($request->company_variation === '市町村') ? '公' : '私';
+            $profile->area_name = $request->area_name;
+            $profile->company_variation = $request->company_variation;
+            $profile->public_or_private = $public_or_private;
+            $profile->category = $request->category;
+            $profile->fax = $request->fax;                
+            $profile->kyokai_number = isset($request->kyokai_number) ? $request->kyokai_number : null;
+            $profile->save();
+
+
+            //更新履歴用差分取得（user）
+            $user_diffs = [];
+            if($user->id === Auth::id()) {// 法人ユーザ自身の変更のみ差分取得
+                $after_user = $request->except('_token','area_name','branch_name','company_variation','category','fax','kyokai_number');
+                //dd($after_user);
+
+                foreach($after_user as $key => $item) {
+                    if($user->$key != $item) {
+                        $user_diffs[] = [
+                            'user_id' => Auth::id(),
+                            'history_group_id' => ($maxUpdatedHistoryId+1),
+                            'item_name' => $key,
+                            'before' => $user->$key,
+                            'after' => $item,
+                        ];
+                    }
+                }
+            }            
+
+            $user->name = $request->name;
+            $user->ruby = $request->ruby;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->zip = $request->zip;
+            $user->address = $request->address;
+            $user->email_verify_token = base64_encode($request->email);
+            $user->save();
+            
+            // 更新履歴保存（法人ユーザ自身分のみ）
+            if($user->id === Auth::id() &&
+                (count($profile_diffs) > 0 || count($user_diffs) > 0)
+            ) {
+                //dd($profile_diffs,$user_diffs);
+                $updated_history = New Updated_history;
+
+                if(count($profile_diffs) > 0) {
+                    foreach($profile_diffs as $item) {
+                        $updated_history->create([
+                            'user_id' => $item['user_id'],
+                            'history_group_id' => $item['history_group_id'],
+                            'item_name' => $item['item_name'],
+                            'before' => $item['before'],
+                            'after' => $item['after'],
+                        ]);
+                    }
+                }
+                if(count($user_diffs) > 0) {
+                    foreach($user_diffs as $item) {
+                        $updated_history->create([
+                            'user_id' => $item['user_id'],
+                            'history_group_id' => $item['history_group_id'],
+                            'item_name' => $item['item_name'],
+                            'before' => $item['before'],
+                            'after' => $item['after'],
+                        ]);
+                    }
+                }
+            }
 
         } else {
 
             $user->name = $request->name;
             $user->ruby = $request->ruby;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->zip = $request->zip;
+            $user->address = $request->address;
+            $user->email_verify_token = base64_encode($request->email);
+            $user->save();
 
-            if($user->role_id == 3) {
-                
-                $public_or_private = ($request->company_variation === '市町村') ? '公' : '私';
-
-                $profile = $user->company_profile()->first();
-                $profile->area_name = $request->area_name;
-                $profile->company_variation = $request->company_variation;
-                $profile->public_or_private = $public_or_private;
-                $profile->category = $request->category;
-                $profile->fax = $request->fax;                
-                $profile->kyokai_number = isset($request->kyokai_number) ? $request->kyokai_number : null;
-
-                $profile->save();
-            }
         }
-
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->zip = $request->zip;
-        $user->address = $request->address;
-        $user->email_verify_token = base64_encode($request->email);
-        $user->save();
 
         //session()->flash('status', 'ユーザ情報の変更が完了しました。'); 
         return redirect('/account/edit/'.$id)->with('status','ユーザ情報の変更が完了しました。');

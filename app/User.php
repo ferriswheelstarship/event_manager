@@ -57,6 +57,9 @@ class User extends Authenticatable
     public function group_users(){
         return $this->hasMany('App\Group_user');
     }
+    public function updated_historys(){
+        return $this->hasMany('App\Updated_history');
+    }
 
     /**
      * パスワードリセット通知の送信をオーバーライド
