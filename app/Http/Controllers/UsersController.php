@@ -129,6 +129,7 @@ class UsersController extends Controller
             DB::table('users')
             ->where('role_id',4)
             ->where('status',1)
+            ->whereNotNull('name')
             ->orderBy('id','desc')
             ->chunk(100, function ($data) use (&$users) {
                 $users[] = $data;
