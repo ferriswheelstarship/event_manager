@@ -200,6 +200,7 @@ class HistoryController extends Controller
             ->where('status',1)
             ->where('role_id',4)
             ->where('company_profile_id',$user_self->company_profile_id)
+            ->whereNotNull('name')
             ->where('deleted_at',null)
             ->orderBy('id', 'desc')
             ->chunk(100, function ($data) use (&$users) {

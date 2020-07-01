@@ -469,7 +469,7 @@ class UsersController extends Controller
         }
 
         $user = User::find($id);
-
+        
         $rules = [
             'phone' => 'required|string',
             'phone' => 'required|string',
@@ -668,8 +668,7 @@ class UsersController extends Controller
                 }
             }
 
-        } else {
-
+        } elseif($user->role_id < 3) {
             $user->name = $request->name;
             $user->ruby = $request->ruby;
             $user->email = $request->email;
