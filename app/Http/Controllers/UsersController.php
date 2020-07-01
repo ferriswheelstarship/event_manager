@@ -46,6 +46,7 @@ class UsersController extends Controller
             DB::table('users')
             ->where('role_id',4)
             ->where('company_profile_id',$user_self->company_profile_id)
+            ->whereNotNull('name')
             ->where('status',1)
             ->orderBy('ruby','asc')
             ->chunk(100, function ($data) use (&$users) {
