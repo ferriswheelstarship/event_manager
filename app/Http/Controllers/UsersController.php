@@ -669,6 +669,7 @@ class UsersController extends Controller
             }
 
         } elseif($user->role_id < 3) {
+            
             $user->name = $request->name;
             $user->ruby = $request->ruby;
             $user->email = $request->email;

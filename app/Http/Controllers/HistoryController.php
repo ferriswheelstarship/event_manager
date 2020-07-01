@@ -184,6 +184,7 @@ class HistoryController extends Controller
             DB::table('users')
             ->where('status',1)
             ->where('role_id',4)
+            ->whereNotNull('name')
             ->where('deleted_at',null)
             ->orderBy('id', 'desc')
             ->chunk(100, function ($data) use (&$users) {

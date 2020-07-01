@@ -55,11 +55,13 @@ class HomeController extends Controller
 
             $data['general_users_cnt'] = User::where('status',1)
                             ->where('role_id',4)
+                            ->whereNotNull('name')
                             ->get()
                             ->count();
 
             $data['general_users_later'] = User::where('status',1)
                             ->where('role_id',4)
+                            ->whereNotNull('name')
                             ->orderBy('created_at', 'desc')
                             ->limit(3)
                             ->get();
