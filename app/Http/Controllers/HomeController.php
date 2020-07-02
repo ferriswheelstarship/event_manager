@@ -113,16 +113,22 @@ class HomeController extends Controller
             $data['event'] = ($event_data_cnt === true) ? $event_data : [];
             //dd($data['event']);
 
-            //法人ユーザ更新情報
+            
+            //法人ユーザ更新情報（直近一週間分）
+            $to = Carbon::now();
+            $from = Carbon::now()->subDay(7);
+
             $data['updated_history'] = Updated_history::distinct()
                                             ->select('history_group_id','user_id','created_at')
+                                            ->whereBetween('created_at', [$from, $to])
                                             ->latest('created_at')
-                                            ->limit(20)
                                             ->get();
 
             if(count($data['updated_history']) > 0 ) {
                 foreach($data['updated_history'] as $key => $item) {
-                    $data['updated_history'][$key]['mixed_history'] = Updated_history::where('history_group_id',$item['history_group_id'])->get();
+                    $data['updated_history'][$key]['mixed_history'] = 
+                        Updated_history::where('history_group_id',$item['history_group_id'])
+                                            ->get();
                 }
             }
             //dd($data['updated_history']);
