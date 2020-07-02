@@ -380,7 +380,11 @@ class EntryController extends Controller
                     'created' => $entry_cw['created_at'],
                     'status' => $status,
                 ];
+
             }
+            $collection = collect($entrys_cw_view);
+            $entrys_cw_view = $collection->sortBy('created')->all();
+
         } else {
             $entrys_cw_view = [];
         }
