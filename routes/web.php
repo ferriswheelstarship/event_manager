@@ -149,6 +149,8 @@ Route::group(['middleware' => ['auth', 'can:area-higher']], function () {
   Route::get('entry/{id}', 'EntryController@show')->name('entry.show');
   // 受講券送信
   Route::post('entry/ticketsend', 'EntryController@ticketsend')->name('entry.ticketsend'); 
+  Route::post('entry/allticketsend', 'EntryController@allticketsend')->name('entry.allticketsend'); 
+
   // 受講キャンセル
   Route::post('entry/cancel', 'EntryController@cancel')->name('entry.cancel'); 
   // 受講データ削除

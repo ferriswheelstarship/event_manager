@@ -16,6 +16,7 @@ use App\Event_date;
 use App\Entry;
 use Mail;
 use App\Mail\TicketSendMail;
+use App\Mail\AllTicketSendMail;
 use App\Mail\UpgradingNoticeMail;
 use App\Http\Traits\Csv;
 
@@ -427,6 +428,67 @@ class EntryController extends Controller
                 ->route('entry.show',['id' => $request->event_id])
                 ->with('status',$user->name.'へ受講券発行案内のメールを送信しました。');
     }
+
+    public function allticketsend(Request $request)
+    {
+        $event = Event::find($request->event_id);
+        $event_dates = $event->event_dates()->get();
+        $entrys = Entry::where('event_id',$request->event_id)
+                        ->where('entry_status','Y')
+                        ->where('ticket_status','N')
+                        ->get();
+
+        if(count($entrys) == 0) {
+            return redirect()
+                    ->route('entry.show',['id' => $request->event_id])
+                    ->with('attention', '受講券未発行のユーザはいません。');
+        }
+
+        foreach($entrys as $entry){
+            $entry->ticket_status = "Y";
+            $entry->save();
+
+            $users[] = User::find($entry->user_id);
+        }
+        $users = collect($users);
+
+        // Sendgrid Personalizations用に成形
+        $personalizations = [];
+        $regstr = "/(\W|^)[\w.\-]{0,25}@(example)\.(com|net)(\W|$)/";            
+        foreach($users as $i => $user) {
+            if(!preg_match($regstr,$user->email)) {//ダミーアドレスを除外（ @example.com | @example.net )
+                $personalizations[$i]['to'] = [
+                    'email' => $user->email
+                ];
+                $personalizations[$i]['substitutions'] = [
+                    '-username-' => $user->name,
+                    '-ticketid-' => $user->id.'-'.$event->id
+                ];
+            }
+        }
+        $personalizations = array_merge($personalizations);    
+
+        if(count($personalizations) == 0) {
+            return redirect()
+                    ->route('entry.show',['id' => $request->event_id])
+                    ->with('attention', '指定した送信先に有効なメールアドレスがないため送信できません。');
+        }
+
+        $data = [
+            'eventtitle' => $event->title,
+            'eventnotice' => $event->notice,
+            'eventdates' => $event_dates,
+            'ticketid' => $user->id.'-'.$event->id,
+            'personalizations' => $personalizations,// Sendgrid Personalizations用
+        ];
+        $emails = new AllTicketSendMail($data);
+        Mail::send($emails);
+
+        return redirect()
+                ->route('entry.show',['id' => $request->event_id])
+                ->with('status','受講券未発行のユーザへ受講券発行案内のメールを送信しました。');
+    }
+
 
     public function cancel(Request $request) {
 

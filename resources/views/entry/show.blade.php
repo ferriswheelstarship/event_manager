@@ -53,6 +53,9 @@
                         <div class="row p-3">
                             <h3 class="h5 col-md-4">申込者 {{ count($entrys_y_view) }}名/ 定員 {{ $event->capacity }}名</h3>
                             <div class="col-md-8">
+                                <button type="button" class="allticketsend-confirm btn btn-sm btn-primary"
+                                data-toggle="modal" data-target="#confirm-allticketsend">受講券一斉発行</button>
+
                                 <button type="button" class="csv-confirm btn btn-sm btn-primary"
                                 data-toggle="modal" data-target="#confirm-csv">CSVダウンロード</button>                                        
 
@@ -61,6 +64,32 @@
                         </div>
 
                         @can('area-higher')
+                        <div class="modal fade" id="confirm-allticketsend" tabindex="-1">
+                            <div class="modal-dialog" role="document">
+                                <form role="form" class="form-inline" method="POST" action="{{ route('entry.allticketsend') }}">
+                                {{ csrf_field() }}
+
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">CSVダウンロード</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    受講券未発行のユーザ全てに一斉に受講券を発券しますがよろしいですか？<br />
+                                    (メール通知も届きます)
+                                    <input type="hidden" name="event_id" value="{{ $event->id }}">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+                                    <button type="submit" class="btn btn-primary">受講券一斉発行</button>
+                                </div>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                        
                         <div class="modal fade" id="confirm-csv" tabindex="-1">
                             <div class="modal-dialog" role="document">
                                 <form role="form" class="form-inline" method="POST" action="{{ route('entry.entry_csv') }}">
