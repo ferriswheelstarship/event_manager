@@ -31,16 +31,14 @@ class AllTicketSendMail extends Mailable
     public function build()
     {
         return $this
-            ->text('entry.allticketsendmail')
+            ->view('entry.allticketsendmail')
             ->to(['ito@mj-inc.jp'])
             ->subject(($this->data['eventtitle'].'　受講券のご案内'))
-            ->with(
-                [
-                    'eventtitle' => $this->data['eventtitle'],
-                    'eventnotice' => $this->data['eventnotice'],
-                    'eventdates' => $this->data['eventdates'],
-                ]
-            )
+            ->with([
+                'eventtitle' => $this->data['eventtitle'],
+                'eventnotice' => $this->data['eventnotice'],
+                'eventdates' => $this->data['eventdates'],
+            ])
             ->sendgrid([
                 'personalizations' => $this->data['personalizations']                
             ]);
