@@ -230,14 +230,14 @@ class HomeController extends Controller
                     // 開催間近の研修（受講券発行済）
                     $data_event_ticket_sended = [];
                     
-                    foreach($belonging_users_ids as $i => $belonging_users_id) {
+                    foreach($belonging_users_ids as $belonging_users_id) {
                         $entry_ticket_sended = Entry::select('event_id','user_id')
                                                 ->where('user_id',$belonging_users_id)
                                                 ->where('entry_status','Y')
                                                 ->where('ticket_status','Y')
                                                 ->groupBy('event_id', 'user_id')->get();
 
-                        foreach($entry_ticket_sended as $j => $entry) {
+                        foreach($entry_ticket_sended as $i => $entry) {
 
                             $event = Event::find($entry['event_id']);
 
@@ -248,7 +248,7 @@ class HomeController extends Controller
                             $event_dates = ($event) ? $event->event_dates()->get() : null;
 
                             if($event_dates) {
-                                foreach($event_dates as $date) {
+                                foreach($event_dates as $j => $date) {
                                     $event_date = new Carbon($date['event_date']);
                                     if($nowdt <= $event_date && $dt7daysafter >= $event_date) {// 研修開催日が現在から2週間以内であれば
                                         $data_event_ticket_sended[$i][$j] = [
@@ -262,21 +262,20 @@ class HomeController extends Controller
                             } 
                         }
                     }
-
                     $data['event_ticket_sended'] = 
                         (count($data_event_ticket_sended) > 0) 
                             ? $this->getUniqueArray($data_event_ticket_sended,'event_date') : [];
 
                     // 開催間近の研修（受講券未発行）
                     $data_event_ticket_none = [];
-                    foreach($belonging_users_ids as $i => $belonging_users_id) {
+                    foreach($belonging_users_ids as $belonging_users_id) {
                         $entry_ticket_none = Entry::select('event_id','user_id')
                                                 ->where('user_id',$belonging_users_id)
                                                 ->where('entry_status','Y')
                                                 ->where('ticket_status','N')
                                                 ->groupBy('event_id', 'user_id')->get();
                                                 
-                        foreach($entry_ticket_none as $j => $entry) {
+                        foreach($entry_ticket_none as $i => $entry) {
                             
                             $event = Event::find($entry['event_id']);
 
@@ -287,7 +286,7 @@ class HomeController extends Controller
                             $event_dates = ($event) ? $event->event_dates()->get() : null;
                             
                             if($event_dates) {
-                                foreach($event_dates as $date) {
+                                foreach($event_dates as $j => $date) {
                                     $event_date = new Carbon($date['event_date']);
                                     if($now_dt <= $event_date && $current_dt7daysafter >= $event_date) {// 研修開催日が現在から2週間以内であれば
                                         $data_event_ticket_none[$i][$j] = [
@@ -311,6 +310,8 @@ class HomeController extends Controller
                 }
 
             }
+            //dd($data_event_ticket_sended,$data['event_ticket_sended']);
+            //dd($data_event_ticket_none,$data['event_ticket_none']);
         }
 
         return view('home',compact('authlevel','data','updated_item_arr'));
@@ -318,12 +319,14 @@ class HomeController extends Controller
 
     public static function getUniqueArray($array, $column)
     {   
+        $tmp = []; 
         $uniqueArray = []; 
         foreach ($array as $i => $item){
             foreach($item as $value) {
+                $tmp[] = $value[$column];
                 $uniqueArray[$i] = $value;
             }
         }   
-        return $uniqueArray;    
+        return $uniqueArray;
     }   
 }
