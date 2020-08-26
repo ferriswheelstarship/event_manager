@@ -303,7 +303,7 @@ class HomeController extends Controller
                     $data['event_ticket_none'] = 
                         (count($data_event_ticket_none) > 0) 
                             ? $this->getUniqueArray($data_event_ticket_none,'event_id') : [];
-                    dd($data_event_ticket_none,$data['event_ticket_none']);
+                    //dd($data_event_ticket_none,$data['event_ticket_none']);
 
                 } else {
                     $data['event_ticket_sended'] = [];
