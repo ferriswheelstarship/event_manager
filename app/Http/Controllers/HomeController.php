@@ -185,8 +185,8 @@ class HomeController extends Controller
                                         ->where('ticket_status','N')
                                         ->groupBy('event_id', 'user_id')->get();
 
-                $event_ticket_none_data_cnt = false;
-                foreach($entry_ticket_none as $entry) {
+                $data_event_ticket_none = [];
+                foreach($entry_ticket_none as $i => $entry) {
                     
                     $event = Event::find($entry['event_id']);
 
@@ -196,7 +196,7 @@ class HomeController extends Controller
                     $now_dt = new Carbon(date('Y').'-'.date('m').'-'.date('d'));
                     $event_dates = $event->event_dates()->get();
                                 
-                    foreach($event_dates as $date) {
+                    foreach($event_dates as $j => $date) {
                         $event_date = new Carbon($date['event_date']);
                         if($now_dt <= $event_date && $current_dt7daysafter >= $event_date) {// 研修開催日が現在から2週間以内であれば
                             $data_event_ticket_none[] = [
@@ -205,12 +205,11 @@ class HomeController extends Controller
                                 'title' => $event->title,
                                 'event_date' => $event_date,                        
                             ];
-                            $event_ticket_none_data_cnt = true;
                         }
                     }
                 }
                 $data['event_ticket_none'] = 
-                    ($event_ticket_none_data_cnt === true) 
+                    (count($data_event_ticket_none) > 0) 
                         ? $data_event_ticket_none : [];
 
             } elseif(Gate::allows('admin-only')) {
