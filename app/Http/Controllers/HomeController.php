@@ -264,7 +264,7 @@ class HomeController extends Controller
                     }
                     $data['event_ticket_sended'] = 
                         (count($data_event_ticket_sended) > 0) 
-                            ? $this->getUniqueArray($data_event_ticket_sended,'event_id') : [];
+                            ? $this->getUniqueArrayMulti($data_event_ticket_sended,'event_id') : [];
 
                     // 開催間近の研修（受講券未発行）
                     $data_event_ticket_none = [];
