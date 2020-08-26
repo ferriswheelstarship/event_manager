@@ -263,7 +263,8 @@ class HomeController extends Controller
                             } 
                         }
                     }
-
+                    dd($data_event_ticket_sended);
+                    
                     $data['event_ticket_sended'] = 
                         (count($data_event_ticket_sended) > 0) 
                             ? $this->getUniqueArray($data_event_ticket_sended,'event_date') : [];
