@@ -175,7 +175,7 @@ class HomeController extends Controller
                 }
                 $data['event_ticket_sended'] = 
                     (count($data_event_ticket_sended) > 0) 
-                        ? HomeController::getUniqueArray($data_event_ticket_sended,'event_date') : [];
+                        ? $this->getUniqueArray($data_event_ticket_sended,'event_date') : [];
 
 
                 // 開催間近の研修（受講券未発行）
@@ -199,7 +199,7 @@ class HomeController extends Controller
                     foreach($event_dates as $j => $date) {
                         $event_date = new Carbon($date['event_date']);
                         if($now_dt <= $event_date && $current_dt7daysafter >= $event_date) {// 研修開催日が現在から2週間以内であれば
-                            $data_event_ticket_none[] = [
+                            $data_event_ticket_none[$i][$j] = [
                                 'event_id' => $event->id,
                                 'event_date_id' => $date['id'],
                                 'title' => $event->title,
@@ -210,7 +210,7 @@ class HomeController extends Controller
                 }
                 $data['event_ticket_none'] = 
                     (count($data_event_ticket_none) > 0) 
-                        ? $data_event_ticket_none : [];
+                        ? $this->getUniqueArray($data_event_ticket_none,'event_date') : [];
 
             } elseif(Gate::allows('admin-only')) {
 
