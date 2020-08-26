@@ -230,7 +230,7 @@ class HomeController extends Controller
                     // 開催間近の研修（受講券発行済）
                     $data_event_ticket_sended = [];
                     
-                    foreach($belonging_users_ids as $belonging_users_id) {
+                    foreach($belonging_users_ids as $key => $belonging_users_id) {
                         $entry_ticket_sended = Entry::select('event_id','user_id')
                                                 ->where('user_id',$belonging_users_id)
                                                 ->where('entry_status','Y')
@@ -251,7 +251,7 @@ class HomeController extends Controller
                                 foreach($event_dates as $j => $date) {
                                     $event_date = new Carbon($date['event_date']);
                                     if($nowdt <= $event_date && $dt7daysafter >= $event_date) {// 研修開催日が現在から2週間以内であれば
-                                        $data_event_ticket_sended[$i][$j] = [
+                                        $data_event_ticket_sended[$key][$i][$j] = [
                                             'event_id' => $event->id,
                                             'event_date_id' => $date['id'],
                                             'title' => $event->title,
@@ -268,7 +268,7 @@ class HomeController extends Controller
 
                     // 開催間近の研修（受講券未発行）
                     $data_event_ticket_none = [];
-                    foreach($belonging_users_ids as $belonging_users_id) {
+                    foreach($belonging_users_ids as $key => $belonging_users_id) {
                         $entry_ticket_none = Entry::select('event_id','user_id')
                                                 ->where('user_id',$belonging_users_id)
                                                 ->where('entry_status','Y')
@@ -289,7 +289,7 @@ class HomeController extends Controller
                                 foreach($event_dates as $j => $date) {
                                     $event_date = new Carbon($date['event_date']);
                                     if($now_dt <= $event_date && $current_dt7daysafter >= $event_date) {// 研修開催日が現在から2週間以内であれば
-                                        $data_event_ticket_none[$i][$j] = [
+                                        $data_event_ticket_none[$key][$i][$j] = [
                                             'event_id' => $event->id,
                                             'event_date_id' => $date['id'],
                                             'title' => $event->title,
@@ -302,8 +302,7 @@ class HomeController extends Controller
                     }
                     $data['event_ticket_none'] = 
                         (count($data_event_ticket_none) > 0) 
-                            ? $this->getUniqueArray($data_event_ticket_none,'event_id') : [];
-                    //dd($data_event_ticket_none,$data['event_ticket_none']);
+                            ? $this->getUniqueArrayMulti($data_event_ticket_none,'event_id') : [];
 
                 } else {
                     $data['event_ticket_sended'] = [];
@@ -311,8 +310,6 @@ class HomeController extends Controller
                 }
 
             }
-            //dd($data_event_ticket_sended,$data['event_ticket_sended']);
-            //dd($data_event_ticket_none,$data['event_ticket_none']);
         }
 
         return view('home',compact('authlevel','data','updated_item_arr'));
@@ -322,14 +319,35 @@ class HomeController extends Controller
     {   
         $tmp = []; 
         $uniqueArray = []; 
-        foreach ($array as $i => $item){
-            foreach($item as $value) {
+        foreach ($array as $key => $items){
+            foreach($items as $value) {
                 if (!in_array($value[$column], $tmp)) {
                     $tmp[] = $value[$column];
-                    $uniqueArray[$i] = $value;
+                    $uniqueArray[] = $value;
                 }
             }
-        }   
-        return $uniqueArray;
+        }
+        $collect = collect($uniqueArray);
+        $sorted_collect = $collect->sortBy('event_date');
+        return $sorted_collect;
+    }   
+
+    public static function getUniqueArrayMulti($array, $column)
+    {   
+        $tmp = []; 
+        $uniqueArray = []; 
+        foreach ($array as $key => $items){
+            foreach ($items as $i => $item){
+                foreach($item as $value) {
+                    if (!in_array($value[$column], $tmp)) {
+                        $tmp[] = $value[$column];
+                        $uniqueArray[] = $value;
+                    }
+                }
+            }
+        }
+        $collect = collect($uniqueArray);
+        $sorted_collect = $collect->sortBy('event_date');
+        return $sorted_collect;
     }   
 }
