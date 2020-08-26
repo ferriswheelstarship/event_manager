@@ -150,8 +150,8 @@ class HomeController extends Controller
                                         ->where('ticket_status','Y')
                                         ->groupBy('event_id', 'user_id')->get();
 
-                $event_ticket_sended_data_cnt = false;
-                foreach($entry_ticket_sended as $entry) {
+                $data_event_ticket_sended = [];
+                foreach($entry_ticket_sended as $i => $entry) {
 
                     $event = Event::find($entry['event_id']);
 
@@ -161,21 +161,20 @@ class HomeController extends Controller
                     $nowdt = new Carbon(date('Y').'-'.date('m').'-'.date('d'));
                     $event_dates = $event->event_dates()->get();
 
-                    foreach($event_dates as $i => $date) {
+                    foreach($event_dates as $j => $date) {
                         $event_date = new Carbon($date['event_date']);
                         if($nowdt <= $event_date && $dt7daysafter >= $event_date) {// 研修開催日が現在から2週間以内であれば
-                            $data_event_ticket_sended[] = [
+                            $data_event_ticket_sended[$i][$j] = [
                                 'event_id' => $event->id,
                                 'event_date_id' => $date['id'],
                                 'title' => $event->title,
                                 'event_date' => $event_date,                        
                             ];
-                            $event_ticket_sended_data_cnt = true;
                         }
                     }
                 }
                 $data['event_ticket_sended'] = 
-                    ($event_ticket_sended_data_cnt === true) 
+                    (count($data_event_ticket_sended) > 0) 
                         ? HomeController::getUniqueArray($data_event_ticket_sended,'event_date') : [];
 
 
