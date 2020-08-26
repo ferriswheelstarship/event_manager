@@ -174,7 +174,7 @@ class HomeController extends Controller
                 }
                 $data['event_ticket_sended'] = 
                     (count($data_event_ticket_sended) > 0) 
-                        ? $this->getUniqueArray($data_event_ticket_sended,'event_date') : [];
+                        ? $this->getUniqueArray($data_event_ticket_sended,'event_id') : [];
 
 
                 // 開催間近の研修（受講券未発行）
@@ -209,7 +209,7 @@ class HomeController extends Controller
                 }
                 $data['event_ticket_none'] = 
                     (count($data_event_ticket_none) > 0) 
-                        ? $this->getUniqueArray($data_event_ticket_none,'event_date') : [];
+                        ? $this->getUniqueArray($data_event_ticket_none,'event_id') : [];
 
             } elseif(Gate::allows('admin-only')) {
 
@@ -264,7 +264,7 @@ class HomeController extends Controller
                     }
                     $data['event_ticket_sended'] = 
                         (count($data_event_ticket_sended) > 0) 
-                            ? $this->getUniqueArray($data_event_ticket_sended,'event_date') : [];
+                            ? $this->getUniqueArray($data_event_ticket_sended,'event_id') : [];
 
                     // 開催間近の研修（受講券未発行）
                     $data_event_ticket_none = [];
@@ -302,7 +302,8 @@ class HomeController extends Controller
                     }
                     $data['event_ticket_none'] = 
                         (count($data_event_ticket_none) > 0) 
-                            ? $this->getUniqueArray($data_event_ticket_none,'event_date') : [];
+                            ? $this->getUniqueArray($data_event_ticket_none,'event_id') : [];
+                    //dd($data_event_ticket_none,$data['event_ticket_none']);
 
                 } else {
                     $data['event_ticket_sended'] = [];
@@ -323,8 +324,10 @@ class HomeController extends Controller
         $uniqueArray = []; 
         foreach ($array as $i => $item){
             foreach($item as $value) {
-                $tmp[] = $value[$column];
-                $uniqueArray[$i] = $value;
+                if (!in_array($value[$column], $tmp)) {
+                    $tmp[] = $value[$column];
+                    $uniqueArray[$i] = $value;
+                }
             }
         }   
         return $uniqueArray;
