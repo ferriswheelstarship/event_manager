@@ -131,7 +131,6 @@ class HomeController extends Controller
                                             ->get();
                 }
             }
-            //dd($data['updated_history']);
 
 
         } else {
@@ -319,14 +318,10 @@ class HomeController extends Controller
 
     public static function getUniqueArray($array, $column)
     {   
-        $tmp = []; 
         $uniqueArray = []; 
-        foreach ($array as $item){
+        foreach ($array as $i => $item){
             foreach($item as $value) {
-                if (!in_array($value[$column], $tmp)) {
-                    $tmp[] = $value[$column];
-                    $uniqueArray[] = $value;
-                }
+                $uniqueArray[$i] = $value;
             }
         }   
         return $uniqueArray;    
