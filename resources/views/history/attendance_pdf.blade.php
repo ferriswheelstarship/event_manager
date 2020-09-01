@@ -101,6 +101,10 @@
             font-size: 22px;
             font-weight: bold;
         }
+        .seal_img {
+          position:relative;
+          width:60px;
+        }
     </style>
   </head>
   <body>
@@ -193,10 +197,12 @@
       @endforeach
       </p>
       <p style=" text-align:right; ">〒651-0062　神戸市中央区坂口通2-1-1（078-242-4623）</p>
-      <p style=" text-align:right; font-size:1.2em; margin-right:3em">
+      <p style=" text-align:right; font-size:1.2em; margin-right:2.8em">
       　　　　　　　　公益社団法人　兵庫県保育協会<br>
       　　　　　　　　　　　　　　会長　小林　公正</p>
-
+      <div style=" text-align:right; margin-top:-5em">
+      {!! $data['seal_img'] !!}
+      </div>
     </div>
 
   </body>
