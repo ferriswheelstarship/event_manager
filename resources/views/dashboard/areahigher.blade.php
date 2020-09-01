@@ -12,7 +12,9 @@
                                         <th class="text-nowrap">開催日</th>
                                         <th class="text-nowrap">受付数 / 受講券発行者数</th>
                                         <th class="text-nowrap">研修タイトル</th>
+                                        @can('system-only')
                                         <th class="text-nowrap">操作</th>
+                                        @endcan
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -25,9 +27,11 @@
                                         </td>
                                         <td data-label="受付数/受講券発行者数：">{{ $event['reception_cnt'] }} / {{ $event['entrys_cnt'] }}</td>
                                         <td data-label="研修タイトル：">{{ $event['title'] }}</td>
+                                        @can('system-only')
                                         <td>
                                             <a href="{{ url('reception/'.$event['event_id'].'-'.$event['event_date_id']) }}" class="btn btn-info btn-sm">受付管理</a>
                                         </td>
+                                        @endcan
                                     </tr>
                                     @endforeach
                                 </tbody>
