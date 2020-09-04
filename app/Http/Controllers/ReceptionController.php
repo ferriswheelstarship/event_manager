@@ -588,6 +588,13 @@ class ReceptionController extends Controller
                 $careerup_data = null;
             }
 
+
+            // 印鑑画像
+            $host = $request->getHttpHost(); 
+            $img_src = ('http://'.$host.'/img/seal.png');
+            $seal_img = '<img class="seal_img" src="'.$img_src.'">';
+
+
             $datas = [];
             foreach($entrys as $entry) {
                 $user = User::find($entry->user_id);
@@ -612,6 +619,7 @@ class ReceptionController extends Controller
                     'event_dates' => $event_dates,
                     'company_name' => $company_name,
                     'careerup_data' => $careerup_data,
+                    'seal_img' => $seal_img,
                 ];                     
             }
             if(count($datas) > 0 ) {
