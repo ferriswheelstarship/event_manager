@@ -18,6 +18,7 @@ use App\Event_upload;
 use App\Entry;
 use Mail;
 use App\Mail\FinishedSendMail;
+use App\Mail\AllFinishedSendMail;
 use App\Http\Traits\Csv;
 
 class ReceptionController extends Controller
@@ -235,23 +236,22 @@ class ReceptionController extends Controller
                         'user_ruby' => $user->ruby,
                         'company_name' => $company_name,
                         'created' => $entry['created_at'],
-                    ];                
+                    ];                    
                 }
 
             } else {
                 $entrys_view = [];
             }
 
+            $for_finishedsend = [];
             if(count($entrys_view) > 0) {
-                // 参加者氏名（フリガナ順）にソート
-                foreach ((array)$entrys_view as $key => $value) {
-                    $sort[$key] = $value['user_ruby'];
-                }
-                array_multisort($sort, SORT_ASC, $entrys_view);
+                $collection = collect($entrys_view);
+                $entrys_view = $collection->SortBy('user_ruby');
+                $for_finishedsend = $collection->where('finished_status','受講証明書未発行');
             }
 
             return view('reception.show',
-                    compact('event','event_date','general_or_carrerup','entrys_view','reception_cnt'));
+                    compact('event','event_date','general_or_carrerup','entrys_view','reception_cnt','for_finishedsend'));
                             
         }
     }
@@ -452,6 +452,96 @@ class ReceptionController extends Controller
         return redirect()
                     ->route('reception.show',['id' => $request->event_id.'-'.$request->event_date_id])
                     ->with('status',$user->name.'へ【'.$event->title.'】受講証明書を発行しました。');        
+    }
+
+    public function finishedsendmulti(Request $request) {
+
+        $except_users = User::find($request->except_users);
+        $event = Event::find($request->event_id);
+        $event_date = Event_date::find($request->event_date_id);
+
+        //dd($except_users);
+        if($except_users) {
+
+            // 除外ユーザ
+            foreach($except_users as $item) {
+                $except_users_id[] = $item->id;
+            }
+
+            // 受講証明書発行する参加者
+            $notfinished_user_entrys = Entry::where('event_id',$event->id)
+                            ->where('event_date_id',$event_date->id)
+                            ->where('entry_status','Y')
+                            ->where('ticket_status','Y')
+                            ->where('attend_status','Y')
+                            ->where('finished_status','N')                            
+                            ->whereNotIn('user_id',$except_users_id)                            
+                            ->get();
+
+        } else {
+
+            // 受講証明書発行する参加者
+            $notfinished_user_entrys = Entry::where('event_id',$event->id)
+                            ->where('event_date_id',$event_date->id)
+                            ->where('entry_status','Y')
+                            ->where('ticket_status','Y')
+                            ->where('attend_status','Y')
+                            ->where('finished_status','N')                            
+                            ->get();
+        }
+
+
+        if($notfinished_user_entrys->count() > 0) {
+            
+            foreach($notfinished_user_entrys as $i => $entry) {
+
+                // 受講証明書発行済フラグ付与
+                $entry->finished_status = 'Y';
+                $entry->save();
+
+                // メール案内先ユーザ
+                $users[] = User::find($entry->user_id);
+                
+            }
+            $users = collect($users);
+
+            // Sendgrid Personalizations用に成形
+            $personalizations = [];
+            $regstr = "/(\W|^)[\w.\-]{0,25}@(example)\.(com|net)(\W|$)/";            
+            foreach($users as $i => $user) {
+                if(!preg_match($regstr,$user->email)) {//ダミーアドレスを除外（ @example.com | @example.net )
+                    $personalizations[$i]['to'] = [
+                        'email' => $user->email
+                    ];
+                    $personalizations[$i]['substitutions'] = [
+                        '-username-' => $user->name
+                    ];
+                }
+            }
+            $personalizations = array_merge($personalizations);    
+            if(count($personalizations) == 0) {
+                return redirect()
+                        ->route('reception.show',['id' => $request->event_id.'-'.$request->event_date_id])
+                        ->with('attention', '指定した送信先に有効なメールアドレスがないため送信できません。なお受講証明書は発行済となっております。');
+            }
+
+            $data = [
+                'eventtitle' => $event->title,
+                'personalizations' => $personalizations,// Sendgrid Personalizations用
+            ];
+            $emails = new AllFinishedSendMail($data);
+            Mail::send($emails);
+
+            return redirect()
+                    ->route('reception.show',['id' => $request->event_id.'-'.$request->event_date_id])
+                    ->with('status','受講券未発行のユーザへ受講券発行案内のメールを送信しました。');            
+
+        } else {
+            return redirect()
+                ->route('reception.show',['id' => $request->event_id.'-'.$request->event_date_id])
+                ->with('attention','受講証明書を発行するユーザがいません。');            
+        }
+
     }
 
     public function reception_csv(Request $request) 

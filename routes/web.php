@@ -177,6 +177,8 @@ Route::group(['middleware' => ['auth', 'can:area-higher']], function () {
 
   // 受付管理 - 受講証明書発行
   Route::post('reception/finishedsend', 'ReceptionController@finishedsend')->name('reception.finishedsend');
+  // 受付管理 - 受講証明書発行（一括）
+  Route::post('reception/finishedsendmulti', 'ReceptionController@finishedsendmulti')->name('reception.finishedsendmulti');
 
   // 受講証明書送信
   Route::post('history/finishedesend','HistoryController@finishedsend')->name('history.finishedsend');

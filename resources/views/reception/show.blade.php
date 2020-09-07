@@ -4,6 +4,7 @@
 @section('each-head')
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-3.3.1/dt-1.10.20/r-2.2.3/sp-1.0.1/datatables.min.css"/>
   <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.3.1/dt-1.10.20/r-2.2.3/sp-1.0.1/datatables.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/css/select2.min.css" rel="stylesheet" />
 @endsection
 
 @section('content')
@@ -47,6 +48,9 @@
                                 
                                 <button type="button" class="btn btn-sm btn-success"
                                 data-toggle="modal" data-target="#confirm-attendance-pdf">受講証明書一括ダウンロード</button>
+
+                                <button type="button" class="btn btn-sm btn-danger"
+                                data-toggle="modal" data-target="#confirm-attendance">受講証明書一括発行</button>
                             </div>
                         </div>
 
@@ -100,7 +104,50 @@
                                 </div>
                                 </form>
                             </div>
-                        </div>                    
+                        </div>
+
+                        <div class="modal fade" id="confirm-attendance" tabindex="-1" style="min-width:600px">
+                            <div class="modal-dialog" role="document">
+                                <form role="form" class="form-inline" method="POST" action="{{ route('reception.finishedsendmulti') }}">
+                                {{ csrf_field() }}
+
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">受講証明書一括発行</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    @if(count($for_finishedsend) > 0)
+                                    受講証明書未発行ユーザの受講証明書を一括で発行します。<br /><br />
+                                    一括発行から除外するユーザを↓の入力欄から検索して選択（複数選択可）し、「受講証明書一括発行」を押して下さい。<br />                                    
+                                    <br />
+                                    <select class="select-search-multiple" name="except_users[]" multiple="multiple">
+                                        @foreach($for_finishedsend as $key => $item)
+                                        <option value="{{ $item['user_id'] }}">{{ $item['user_name'] }}（{{ $item['user_ruby'] }}）【{{ $item['company_name'] }}】</option>
+                                        @endforeach
+                                    </select>
+                                    <br />
+                                    <br />
+                                    <span class="text-danger">※すでに受講証明書発行済のユーザは選択肢から除外されています。</span><br />
+                                    <span class="text-danger">※「受講証明書発行」を押す前に除外ユーザに間違いがないか確認下さい。</span>
+                                    <input type="hidden" name="event_id" value="{{ $event->id }}">
+                                    <input type="hidden" name="event_date_id" value="{{ $event_date->id }}">
+                                    @else
+                                    受講証明書未発行のユーザはいません。
+                                    @endif
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+                                    @if(count($for_finishedsend) > 0)
+                                    <button type="submit" class="btn btn-danger">受講証明書一括発行</button>
+                                    @endif
+                                </div>
+                                </div>
+                                </form>
+                            </div>
+                        </div>                        
                         @endcan
 
                         <div class="px-3 py-5">
@@ -225,4 +272,10 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('each-js')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.5/js/i18n/ja.js"></script>
+<script src="{{ asset('js/select-search.js') }}" ></script>
 @endsection

@@ -7,5 +7,9 @@ $(function() {
     width: 'resolve' //select要素にインラインで指定可能にする
   });
 
+  $('.select-search-multiple').select2({
+    width: '100%'
+  });
+
 })
 
