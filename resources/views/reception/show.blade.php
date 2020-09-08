@@ -46,11 +46,13 @@
                                 <button type="button" class="csv-confirm btn btn-sm btn-primary"
                                 data-toggle="modal" data-target="#confirm-csv">CSVダウンロード</button>
                                 
+                                @can('system-only')
                                 <button type="button" class="btn btn-sm btn-success"
                                 data-toggle="modal" data-target="#confirm-attendance-pdf">受講証明書一括ダウンロード</button>
 
                                 <button type="button" class="btn btn-sm btn-danger"
                                 data-toggle="modal" data-target="#confirm-attendance">受講証明書一括発行</button>
+                                @endcan
                             </div>
                         </div>
 
