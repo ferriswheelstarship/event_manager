@@ -203,6 +203,8 @@
       <div style=" text-align:right; margin-top:-5em">
       {!! $data['seal_img'] !!}
       </div>
+      <div style=" text-align:right; font-size:10px">※この受講証明書は黒色の電子公印を使用しています。</div>
+      
     </div>
 
   </body>

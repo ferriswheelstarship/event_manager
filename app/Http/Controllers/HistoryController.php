@@ -513,7 +513,7 @@ class HistoryController extends Controller
 
             // 印鑑画像
             $host = $request->getHttpHost(); 
-            $img_src = ('http://'.$host.'/img/seal.png');
+            $img_src = ('http://'.$host.'/img/seal_blk.png');
             $seal_img = '<img class="seal_img" src="'.$img_src.'">';
 
             $data = [
