@@ -109,6 +109,8 @@
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{ route('account.general_user') }}">個人ユーザ</a>
                     <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{{ route('account.notauthrized_user') }}">未認証ユーザ</a>
+                    <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{{ route('account.regist') }}">ユーザ登録</a>
                 </div>
             </li>

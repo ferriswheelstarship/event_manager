@@ -143,6 +143,32 @@ class UsersController extends Controller
         return view('account.index',compact('users','role_array','account_status'));
     }
 
+    public function notauthrized_user()
+    {
+        $user_self = User::find(Auth::id());
+
+        if(Gate::allows('system-only')){ // 特権ユーザのみ
+            // $users = User::withTrashed()
+            //                 ->where('role_id',4)
+            //                 ->where('status',1)
+            //                 ->orderBy('id', 'desc')
+            //                 ->get();
+            $users = [];
+            DB::table('users')
+            ->where('status',0)
+            ->whereNull('name')
+            ->orderBy('id','desc')
+            ->chunk(100, function ($data) use (&$users) {
+                $users[] = $data;
+            });
+        } else {
+            return redirect('/account/edit/'.Auth::id());
+        }
+        $account_status = null;
+        $role_array = config('const.AUTH_STATUS_JP');
+        return view('account.index',compact('users','role_array','account_status'));
+    }
+
     public function regist() 
     {
 
@@ -743,6 +769,9 @@ class UsersController extends Controller
             return redirect('/account/edit/'.Auth::id());
         }
         $user = User::onlyTrashed()->find($id);
+        if(!$user) {
+            $user = User::find($id);
+        }
         $user->forceDelete();
         return redirect()->back()->with('status','指定ユーザのアカウントを削除しました。削除したユーザは復元できません。');
     }

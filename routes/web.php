@@ -196,6 +196,8 @@ Route::group(['middleware' => ['auth', 'can:system-only']], function () {
   Route::get('account/company/user', 'UsersController@company_user')->name('account.company_user');
   // ユーザ一覧（個人）
   Route::get('account/general/user', 'UsersController@general_user')->name('account.general_user');
+  // ユーザ一覧（個人）
+  Route::get('account/general/notauthrized', 'UsersController@notauthrized_user')->name('account.notauthrized_user');
 
   // ユーザ登録
   Route::get('account/regist/new', 'UsersController@regist')->name('account.regist');

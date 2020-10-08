@@ -4,10 +4,16 @@
             <thead class="thead">
                 <tr>
                     <!-- <th>ID</th> -->
+                    @if(\Route::current() -> getName() != 'account.notauthrized_user')
                     <th class="text-nowrap">名前</th>
+                    @endif
+
                     <th class="text-nowrap">メールアドレス</th>
+
+                    @if(\Route::current() -> getName() != 'account.notauthrized_user')
                     <th class="text-nowrap">権限</th>
                     <th class="text-nowrap">アカウント</th>
+                    @endif
                     <th class="text-nowrap">操作</th>
                 </tr>
             </thead>
@@ -19,6 +25,7 @@
                     $account_status_val = is_null($user->deleted_at) ? 1 : 2;
                 @endphp
                 <tr>
+                    @if(\Route::current() -> getName() != 'account.notauthrized_user')
                     <!-- <td>{{ $user->id }}</td> -->
                     <td data-label="名前：">{{ $user->name }}
                     @if($user->role_id != 2)
@@ -26,12 +33,21 @@
                     （{{ $user->ruby }}）
                     @endif
                     </td>
+                    @endif
+
                     <td data-label="メールアドレス：">{{ $user->email }}</td>
+
+                    @if(\Route::current() -> getName() != 'account.notauthrized_user')
                     <td data-label="権限：">
                     @if($user->role_id)
                     {{ $role_array[$user->role_id] }}
                     @endif</td>
+                    @endif
+
+                    @if(\Route::current() -> getName() != 'account.notauthrized_user')
                     <td data-label="アカウント：">{{ $account_status[$account_status_val]}}</td>
+                    @endif
+                    
                     <td>
                     @can('system-only')
                         @if( $user->deleted_at )
@@ -94,6 +110,8 @@
                         </div>
 
                         @else
+                            @if(\Route::current() -> getName() != 'account.notauthrized_user')
+
                         <a href="{{ url('account/'.$user->id) }}" class="btn btn-info btn-sm">詳細</a>
                         <a href="{{ url('account/edit/'.$user->id) }}" class="btn btn-primary btn-sm">変更</a>
                         <button type="button" class="delete-confirm btn-sm btn-danger" value="{{ $user->id }}" data-toggle="modal" data-target="#confirm-delete{{ $user->id }}">退会</button>
@@ -126,6 +144,33 @@
                                 </form>
                             </div>
                         </div>
+                            @else
+                        <button type="button" class="forcedelete-confirm btn-sm btn-danger" value="{{ $user->id }}" data-toggle="modal" data-target="#confirm-forcedelete{{ $user->id }}">削除</button>
+                        <div class="modal fade" id="confirm-forcedelete{{ $user->id }}" tabindex="-1">
+                            <div class="modal-dialog" role="document">
+                                <form role="form" class="form-inline" method="POST" action="{{ route('account.forceDelete', $user->id) }}">
+                                {{ csrf_field() }}
+                                <input name="_method" type="hidden" value="DELETE">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">削除確認</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <strong>{{ $user->email }}</strong>を本当に削除してよろしいですか？<br>
+                                    削除した場合復元できませんのでご注意下さい。
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+                                    <button type="submit" class="btn btn-danger">削除</button>
+                                </div>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                            @endif
                         @endif
 
                     @elsecan('admin-only')
