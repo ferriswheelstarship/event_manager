@@ -31,7 +31,7 @@ class Kernel extends ConsoleKernel
                 ->whereNull('name')
                 ->whereNull('role_id')
                 ->delete();
-        })->everyFiveMinutes();
+        })->everyThirtyMinutes();
     }
 
     /**
