@@ -27,11 +27,12 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call(function () {
             DB::table('users')
+                ->whereRaw('created_at < NOW() + INTERVAL - 30 MINUTE')
                 ->where('status',0)
                 ->whereNull('name')
                 ->whereNull('role_id')
                 ->delete();
-        })->everyThirtyMinutes();
+        })->everyMinute();
     }
 
     /**

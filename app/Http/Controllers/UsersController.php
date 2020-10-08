@@ -148,12 +148,8 @@ class UsersController extends Controller
         $user_self = User::find(Auth::id());
 
         if(Gate::allows('system-only')){ // 特権ユーザのみ
-            // $users = User::withTrashed()
-            //                 ->where('role_id',4)
-            //                 ->where('status',1)
-            //                 ->orderBy('id', 'desc')
-            //                 ->get();
             $users = [];
+
             DB::table('users')
             ->where('status',0)
             ->whereNull('name')
