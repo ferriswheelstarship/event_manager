@@ -20,6 +20,7 @@
         }
         th,td {
             padding: 0;
+            word-wrap:break-word;
         }
         .tar {
             text-align: right;
@@ -43,8 +44,10 @@
         .header_second {
         }
         .header_heading {
-            font-size: 28px;
-            padding: 30px 0;
+            font-size: 24px;
+            padding: 10px 0;
+            max-width:100%;
+            word-wrap:break-word;
         }
         .header_comment {
             width: 95%;
@@ -116,7 +119,7 @@
       </div>
     </div>
     <div class="content">
-      <h2 class="tac">@if($data['careerup_curriculums'] && $data['careerup_curriculums'] == 'carrerup')【キャリアアップ研修】@endif {{ $data['event']->title }}</h2>
+      <h2 class="tac" style="word-wrap:break-word; font-size:18px">@if($data['careerup_curriculums'] && $data['careerup_curriculums'] == 'carrerup')【キャリアアップ研修】@endif {{ $data['event']->title }}</h2>
       <div style=" padding-bottom:15px;">
       <table style=" width: 100%;">
         <tr>
@@ -143,10 +146,10 @@
         <table style=" width: 100%;">
           <tr>
             <td style=" width: 80%;">
-              <table class="apptbl" style=" width: 100%;">
+              <table class="apptbl" style="table-layout: fixed; width: 450px;">
                 <tr>
                   <th>開催日</th>
-                  <td>
+                  <td style="width:350px">
                     @if(count($data['event_dates']) > 0)
                     @foreach($data['event_dates'] as $key => $val)
                     @php
@@ -165,14 +168,14 @@
                 </tr>
                 <tr>
                   <th>場所</th>
-                  <td>
+                  <td style="width:350px">
                     <b>{{ $data['event']->place }}</b>
                   </td>
                 </tr>
                 <tr>
                   <th>注意事項</th>
-                  <td>
-                    <b>{!! nl2br($data['event']->notice) !!}</b>
+                  <td style="width:350px;word-wrap:break-word;">
+                    {!! nl2br($data['event']->notice) !!}
                   </td>
                 </tr>
               </table>
