@@ -143,10 +143,10 @@
         <table style=" width: 100%;">
           <tr>
             <td style=" width: 80%;">
-              <table class="apptbl" style=" width: 100%;">
+              <table class="apptbl" style="table-layout: fixed; width: 450px;">
                 <tr>
                   <th>開催日</th>
-                  <td>
+                  <td style="width:350px">
                     @if(count($data['event_dates']) > 0)
                     @foreach($data['event_dates'] as $key => $val)
                     @php
@@ -165,14 +165,14 @@
                 </tr>
                 <tr>
                   <th>場所</th>
-                  <td>
+                  <td style="width:350px">
                     <b>{{ $data['event']->place }}</b>
                   </td>
                 </tr>
                 <tr>
                   <th>注意事項</th>
-                  <td>
-                    <b>{!! nl2br($data['event']->notice) !!}</b>
+                  <td style="width:350px;word-wrap:break-word;">
+                    {!! nl2br($data['event']->notice) !!}
                   </td>
                 </tr>
               </table>
