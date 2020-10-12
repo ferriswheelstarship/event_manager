@@ -139,7 +139,7 @@ Internet Explorerの安全ではないバージョンをお使いのようです
                                   <li style="list-style:disc inside; ">ドメイン指定受信設定等を正しく行っているか</li>
                                 </ul>
 
-                                ※登録が上手く進まない方は<a href="/help">ヘルプ</a>をご参照ください。
+                                ※登録が上手く進まない方は<a href="/help" style="color:#00f">ヘルプ</a>をご参照ください。
                                 </div>
                               </div>
                             </article>

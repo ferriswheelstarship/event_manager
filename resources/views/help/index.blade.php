@@ -122,21 +122,22 @@ Internet Explorerの安全ではないバージョンをお使いのようです
             <div style=" padding:1em">
             <ul style="list-style:disc outside; margin:1em">
                 <li style="list-style:disc outside; margin-left:1em ">仮登録時に入力したメールアドレスに誤りはないかをご確認ください。</li>
-                <li style="list-style:disc outside; margin-left:1em "><a href="/help/domain" style="color:#00f">ドメイン指定受信設定を正しく行えているかをご確認ください。</a></li>
+                <li style="list-style:disc outside; margin-left:1em "><a href="/help/domain" style="color:#00f">ドメイン指定受信設定</a>を正しく行えているかをご確認ください。</li>
             </ul>
             </div>
 
             <h3 style="font-size:1.1em; color: #40c3d9; border-left: 10px solid #40c3d9; padding: 0 10px">仮登録時の返信メールは届いたが、本文内のURLにアクセスできない</h3>
             <div style=" padding:1em">
             <ul style="list-style:disc outside; margin:1em">
-                <li style="list-style:disc outside; margin-left:1em">本文内のURLが途切れている可能性があります。<a href="/help/form" style="color:#00f">お問い合わせフォーム</a>より認証URLの送信をご依頼ください。</li>
+                <li style="list-style:disc outside; margin-left:1em">ご利用のメール環境により本文内のURLが途切れている事が考えられます。<a href="{{ route('contact') }}" style="color:#00f">お問い合わせ</a>より本登録用のURLの送信をご依頼ください。<br />
+                お急ぎの場合は<a href="{{ route('contact') }}" style="color:#00f">お問い合わせ</a>より代行登録をご依頼ください。</li>
             </ul>
             </div>
 
-            <h3 style="font-size:1.1em; color: #40c3d9; border-left: 10px solid #40c3d9; padding: 0 10px">ヘルプを読んで対応しても、ユーザ登録が完了しない</h3>
+            <h3 style="font-size:1.1em; color: #40c3d9; border-left: 10px solid #40c3d9; padding: 0 10px">ヘルプを見て対応しても、ユーザ登録が完了しない</h3>
             <div style=" padding:1em">
             <ul style="list-style:disc outside; margin:1em">
-                <li style="list-style:disc outside; margin-left:1em"><a href="/help/form" style="color:#00f">お問い合わせ</a>より代行登録をご依頼ください。</li>
+                <li style="list-style:disc outside; margin-left:1em">お急ぎの場合は<a href="{{ route('contact') }}" style="color:#00f">お問い合わせ</a>より代行登録をご依頼ください。</li>
             </ul>
             </div>
 
@@ -155,7 +156,7 @@ Internet Explorerの安全ではないバージョンをお使いのようです
             <h3 style="font-size:1.1em; color: #40c3d9; border-left: 10px solid #40c3d9; padding: 0 10px">研修申込時等システムからのメール通知が届かない</h3>
             <div style=" padding:1em">
             <ul style="list-style:disc inside; margin:1em">
-                <li style="list-style:disc outside; margin-left:1em "><a href="help/domain" style="color:#00f">ドメイン指定受信設定を正しく行えているかをご確認ください。</a><br />
+                <li style="list-style:disc outside; margin-left:1em "><a href="help/domain" style="color:#00f">ドメイン指定受信設定</a>を正しく行えているかをご確認ください。<br />
                 メールアドレスを変更された場合は、ドメイン指定受信設定が正しくできていない事が原因と思われます。</li>
                 <li style="list-style:disc outside; margin-left:1em ">ログイン後、ユーザ情報の設定内にある「テストメール送信」を行って下さい。<br />
                 メール受信が確認できれば今後のメール通知は届きます。</li>
