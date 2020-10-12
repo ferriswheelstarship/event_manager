@@ -20,6 +20,7 @@
         }
         th,td {
             padding: 0;
+            word-wrap:break-word;
         }
         .tar {
             text-align: right;
@@ -43,8 +44,10 @@
         .header_second {
         }
         .header_heading {
-            font-size: 28px;
-            padding: 30px 0;
+            font-size: 24px;
+            padding: 10px 0;
+            max-width:100%;
+            word-wrap:break-word;
         }
         .header_comment {
             width: 95%;
@@ -116,7 +119,7 @@
       </div>
     </div>
     <div class="content">
-      <h2 class="tac">@if($data['careerup_curriculums'] && $data['careerup_curriculums'] == 'carrerup')【キャリアアップ研修】@endif {{ $data['event']->title }}</h2>
+      <h2 class="tac" style="word-wrap:break-word; font-size:18px">@if($data['careerup_curriculums'] && $data['careerup_curriculums'] == 'carrerup')【キャリアアップ研修】@endif {{ $data['event']->title }}</h2>
       <div style=" padding-bottom:15px;">
       <table style=" width: 100%;">
         <tr>
