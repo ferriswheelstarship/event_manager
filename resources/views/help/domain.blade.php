@@ -15,11 +15,12 @@
 @if($hostname != 'hyogo-hoiku-kyokai.jp')
 <meta name="robots" content="noindex,nofollow"/>
 @endif
-<title>公益社団法人 兵庫県保育協会 | ユーザ新規登録</title>
+<title>公益社団法人 兵庫県保育協会 | ヘルプ（ドメイン指定受信）</title>
 <!-- <script type="text/javascript" src="//webfont.fontplus.jp/accessor/script/fontplus.js?kZSFUtx-OUM%3D&box=93sB9wS4lok%3D&aa=1&ab=2" charset="utf-8"></script> -->
 
 <link href="{{ asset('css/web/swiper.css') }}" rel="stylesheet">
 <link href="{{ asset('css/web/style.css') }}" rel="stylesheet">
+<link href="{{ asset('css/web/add.css') }}" rel="stylesheet">
 <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"> -->
 
 </head>
@@ -106,65 +107,62 @@ Internet Explorerの安全ではないバージョンをお使いのようです
 
     <div id="main" class="contents">
     <div class="second-mainvis-box greeting-mainvis">
-      <h1 class="second-mainvis-pagetitle"><span class="greeting-pagetitle">ユーザ新規登録</span></h1>
+      <h1 class="second-mainvis-pagetitle"><span class="greeting-pagetitle">ヘルプ</span></h1>
     </div>
 
+
     <section class="contents-section">
-        <div class="contents-section-inner fadeInUp">
-            <div class="contact-form-box">
-                <div class="contact-form-body">
+      <div class="contents-section-inner fadeInUp">
+        <article class="links-box">
+          <header class="links-header">
+            <h2 class="links-header-h2">ドメイン指定受信設定</h2>
+          </header>
+          <div class="links-body">
+            <dl id="acMenu">
+              <dt>Docomo</dt>
+              <dd>
+                より詳細な設定については<a href="https://www.nttdocomo.co.jp/info/spam_mail/" target="_blank">こちら</a>をご参照ください。<br /><br />
 
-                    <form class="form-horizontal" method="POST" action="{{ route('register') }}">
-                        {{ csrf_field() }}
+                <b style="color: crimson">スマートフォン (spモード) 設定手順</b>
+                <ul>
+                  <li style="list-style:number outside; margin-left:1em">「dメニュー」→「My docomo(お客様サポート)」→「設定」→「メール設定」</li>
+                  <li style="list-style:number outside; margin-left:1em">【受信リスト設定】を押下</li>
+                  <li style="list-style:number outside; margin-left:1em">【受信リスト設定】を押下</li>
+                  <li style="list-style:number outside; margin-left:1em">設定を利用するを押下</li>
+                  <li style="list-style:number outside; margin-left:1em">「受信するメールアドレス」の【さらに追加する】を押下</li>
+                  <li style="list-style:number outside; margin-left:1em">入力欄に「hyogo-hoiku-kyokai.jp」と入力し【確認する】を押下</li>
+                  <li style="list-style:number outside; margin-left:1em">設定内容をご確認のうえ、【設定を確定する】を押下</li>
+                  <li style="list-style:number outside; margin-left:1em">設定完了</li>
+                </ul>
+                <br />
+                <b style="color: crimson">3Gケータイ (iモード) 設定手順</b>
+                <ul>
+                  <li style="list-style:number outside; margin-left:1em">iMenu → メール設定 → 詳細設定/解除</li>
+                  <li style="list-style:number outside; margin-left:1em">iモードパスワードを入力して「決定」ボタン</li>
+                  <li style="list-style:number outside; margin-left:1em">指定受信/拒否設定の「設定を利用する」にチェックを入れ「次へ」ボタン</li>
+                  <li style="list-style:number outside; margin-left:1em">「受信メール設定」ボタン</li>
+                  <li style="list-style:number outside; margin-left:1em">入力欄に「hyogo-hoiku-kyokai.jp」と入力し「登録」ボタン</li>
+                  <li style="list-style:number outside; margin-left:1em">設定完了</li>
+                </ul>
+                <br />
+                <br />
+                <b>※ ドメイン指定受信設定を行なってもメールが届かない方へ</b><br />
 
-                        <div class="contact-form-body form-group">
+              </dd>
+              <dt>au</dt>
+              <dd>いいい</dd>
+              <dt>ソフトバンク</dt>
+              <dd>ううう</dd>
+              <dt>ソフトバンク</dt>
+              <dd>ううう</dd>
+              <dt>ソフトバンク</dt>
+              <dd>ううう</dd>
+            </dl>
+          </div>
+        </article>
 
-                            <article class="contact-box">
-                              <header class="contact-box-header">
-                                <h2 class="contact-box-header-h2">ユーザ登録の前に...</h2>
-                              </header>
-                              <div class="contact-box-body">
-                                <div style=" margin-bottom:1em">
-                                まず仮登録（メールアドレス認証）を行います。<br />
-                                仮登録時に届くメールの送信元アドレスは以下のメールアドレスです。<br /><br />
-                                <b>noreply@hyogo-hoiku-kyokai.jp</b><br /><br />
-                                携帯電話会社のメールアドレスを利用している場合は返信メールを受信できるよう<br />
-                                <b>hyogo-hoiku-kyokai.jp</b> のドメイン指定受信設定を行った上で、メールアドレスを入力、送信ください。<br>
-                                メールが届いたら、本文内の本登録用リンクから本登録をお済ませ下さい。
-                                </div>
-                                <div>
-                                返信メールが届かない方は以下をご確認ください。<br /><br />
-                                <ul style="list-style:disc inside; margin-bottom:1em">
-                                  <li style="list-style:disc inside; ">入力したメールアドレスに誤りはないか</li>
-                                  <li style="list-style:disc inside; ">ドメイン指定受信設定等を正しく行っているか</li>
-                                </ul>
+      </div>
 
-                                ※登録が上手く進まない方は<a href="/help">ヘルプ</a>をご参照ください。
-                                </div>
-                              </div>
-                            </article>
-
-                            <table class="tbl-normal">
-                                <tr>
-                                    <th class="th-w25prc required">メールアドレス</th>
-                                    <td>
-                                        <input id="email" type="email" class="form-textbox form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required>
-                                        @if ($errors->has('email'))
-                                            <span class="invalid-feedback">
-                                                <strong>{{ $errors->first('email') }}</strong>
-                                            </span>
-                                        @endif
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="form-submit-btn-box">
-                            <button type="submit" class="form-submit-btn">送信する</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
     </section>
 
   </div><!-- main -->
@@ -198,5 +196,13 @@ $(function(){
   indexInitialSetting();
 });
 </script>
+<script>
+$(function(){
+  $("#acMenu dt").on("click", function() {
+    $(this).next().slideToggle();
+  });
+});
+</script>
+
 </body>
 </html>

@@ -15,7 +15,7 @@
 @if($hostname != 'hyogo-hoiku-kyokai.jp')
 <meta name="robots" content="noindex,nofollow"/>
 @endif
-<title>公益社団法人 兵庫県保育協会 | ユーザ新規登録</title>
+<title>公益社団法人 兵庫県保育協会 | ヘルプ</title>
 <!-- <script type="text/javascript" src="//webfont.fontplus.jp/accessor/script/fontplus.js?kZSFUtx-OUM%3D&box=93sB9wS4lok%3D&aa=1&ab=2" charset="utf-8"></script> -->
 
 <link href="{{ asset('css/web/swiper.css') }}" rel="stylesheet">
@@ -106,65 +106,66 @@ Internet Explorerの安全ではないバージョンをお使いのようです
 
     <div id="main" class="contents">
     <div class="second-mainvis-box greeting-mainvis">
-      <h1 class="second-mainvis-pagetitle"><span class="greeting-pagetitle">ユーザ新規登録</span></h1>
+      <h1 class="second-mainvis-pagetitle"><span class="greeting-pagetitle">ヘルプ</span></h1>
     </div>
 
+
     <section class="contents-section">
-        <div class="contents-section-inner fadeInUp">
-            <div class="contact-form-box">
-                <div class="contact-form-body">
+      <div class="contents-section-inner fadeInUp">
+        <article class="">
+          <header class="links-header">
+            <h2 class="links-header-h2">ユーザ登録ができない</h2>
+          </header>
+          <div class="links-body">
 
-                    <form class="form-horizontal" method="POST" action="{{ route('register') }}">
-                        {{ csrf_field() }}
-
-                        <div class="contact-form-body form-group">
-
-                            <article class="contact-box">
-                              <header class="contact-box-header">
-                                <h2 class="contact-box-header-h2">ユーザ登録の前に...</h2>
-                              </header>
-                              <div class="contact-box-body">
-                                <div style=" margin-bottom:1em">
-                                まず仮登録（メールアドレス認証）を行います。<br />
-                                仮登録時に届くメールの送信元アドレスは以下のメールアドレスです。<br /><br />
-                                <b>noreply@hyogo-hoiku-kyokai.jp</b><br /><br />
-                                携帯電話会社のメールアドレスを利用している場合は返信メールを受信できるよう<br />
-                                <b>hyogo-hoiku-kyokai.jp</b> のドメイン指定受信設定を行った上で、メールアドレスを入力、送信ください。<br>
-                                メールが届いたら、本文内の本登録用リンクから本登録をお済ませ下さい。
-                                </div>
-                                <div>
-                                返信メールが届かない方は以下をご確認ください。<br /><br />
-                                <ul style="list-style:disc inside; margin-bottom:1em">
-                                  <li style="list-style:disc inside; ">入力したメールアドレスに誤りはないか</li>
-                                  <li style="list-style:disc inside; ">ドメイン指定受信設定等を正しく行っているか</li>
-                                </ul>
-
-                                ※登録が上手く進まない方は<a href="/help">ヘルプ</a>をご参照ください。
-                                </div>
-                              </div>
-                            </article>
-
-                            <table class="tbl-normal">
-                                <tr>
-                                    <th class="th-w25prc required">メールアドレス</th>
-                                    <td>
-                                        <input id="email" type="email" class="form-textbox form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required>
-                                        @if ($errors->has('email'))
-                                            <span class="invalid-feedback">
-                                                <strong>{{ $errors->first('email') }}</strong>
-                                            </span>
-                                        @endif
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="form-submit-btn-box">
-                            <button type="submit" class="form-submit-btn">送信する</button>
-                        </div>
-                    </form>
-                </div>
+            <h3 style="font-size:1.1em; color: #40c3d9; border-left: 10px solid #40c3d9; padding: 0 10px">仮登録時の返信メールが届かない</h3>
+            <div style=" padding:1em">
+            <ul style="list-style:disc outside; margin:1em">
+                <li style="list-style:disc outside; margin-left:1em ">仮登録時に入力したメールアドレスに誤りはないかをご確認ください。</li>
+                <li style="list-style:disc outside; margin-left:1em "><a href="/help/domain" style="color:#00f">ドメイン指定受信設定を正しく行えているかをご確認ください。</a></li>
+            </ul>
             </div>
-        </div>
+
+            <h3 style="font-size:1.1em; color: #40c3d9; border-left: 10px solid #40c3d9; padding: 0 10px">仮登録時の返信メールは届いたが、本文内のURLにアクセスできない</h3>
+            <div style=" padding:1em">
+            <ul style="list-style:disc outside; margin:1em">
+                <li style="list-style:disc outside; margin-left:1em">本文内のURLが途切れている可能性があります。<a href="/help/form" style="color:#00f">お問い合わせフォーム</a>より認証URLの送信をご依頼ください。</li>
+            </ul>
+            </div>
+
+            <h3 style="font-size:1.1em; color: #40c3d9; border-left: 10px solid #40c3d9; padding: 0 10px">ヘルプを読んで対応しても、ユーザ登録が完了しない</h3>
+            <div style=" padding:1em">
+            <ul style="list-style:disc outside; margin:1em">
+                <li style="list-style:disc outside; margin-left:1em"><a href="/help/form" style="color:#00f">お問い合わせ</a>より代行登録をご依頼ください。</li>
+            </ul>
+            </div>
+
+          </div>
+        </article>
+
+      </div>
+
+      <div class="contents-section-inner fadeInUp">
+        <article class="">
+          <header class="links-header">
+            <h2 class="links-header-h2">登録済の方</h2>
+          </header>
+          <div class="links-body">
+
+            <h3 style="font-size:1.1em; color: #40c3d9; border-left: 10px solid #40c3d9; padding: 0 10px">研修申込時等システムからのメール通知が届かない</h3>
+            <div style=" padding:1em">
+            <ul style="list-style:disc inside; margin:1em">
+                <li style="list-style:disc outside; margin-left:1em "><a href="help/domain" style="color:#00f">ドメイン指定受信設定を正しく行えているかをご確認ください。</a><br />
+                メールアドレスを変更された場合は、ドメイン指定受信設定が正しくできていない事が原因と思われます。</li>
+                <li style="list-style:disc outside; margin-left:1em ">ログイン後、ユーザ情報の設定内にある「テストメール送信」を行って下さい。<br />
+                メール受信が確認できれば今後のメール通知は届きます。</li>
+            </ul>
+            </div>
+
+          </div>
+        </article>
+
+      </div>
     </section>
 
   </div><!-- main -->

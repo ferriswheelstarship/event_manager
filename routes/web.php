@@ -49,6 +49,8 @@ Route::get('info/{id}', 'PagesController@infodetail')->name('infodetail');
 Route::get('contact', 'PagesController@contact')->name('contact');
 Route::post('contact/comfirm', 'PagesController@comfirm')->name('comfirm');
 Route::post('contact/complete', 'PagesController@complete')->name('complete');
+Route::view('help','help.index');
+Route::view('help/domain','help.domain');
 
 // 退会後表示
 Route::get('afterwithdrawal', 'PagesController@afterwithdrawal')->name('afterwithdrawal');
