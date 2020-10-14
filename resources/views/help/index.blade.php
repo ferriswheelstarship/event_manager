@@ -129,8 +129,9 @@ Internet Explorerの安全ではないバージョンをお使いのようです
             <h3 style="font-size:1.1em; color: #40c3d9; border-left: 10px solid #40c3d9; padding: 0 10px">仮登録時の返信メールは届いたが、本文内のURLにアクセスできない</h3>
             <div style=" padding:1em">
             <ul style="list-style:disc outside; margin:1em">
-                <li style="list-style:disc outside; margin-left:1em">ご利用のメール環境により本文内のURLが途切れている事が考えられます。<a href="{{ route('contact') }}" style="color:#00f">お問い合わせ</a>より本登録用のURLの送信をご依頼ください。<br />
-                お急ぎの場合は<a href="{{ route('contact') }}" style="color:#00f">お問い合わせ</a>より代行登録をご依頼ください。</li>
+                <li style="list-style:disc outside; margin-left:1em">本文内のURLがハイパーリンク（青文字＋下線）になっていない場合、<br />
+                URL部分をコピーし、webブラウザへコピーしたURLを貼り付けしアクセスできるかご確認ください。<br />
+                ハイパーリンクになっているのにアクセスできない場合はURLが途中で途切れている可能性があります。</li>
             </ul>
             </div>
 

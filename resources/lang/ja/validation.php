@@ -162,6 +162,10 @@ return [
 
         'default_group' => '送信先',
         'event_group' => '研修',
+
+        'type' => 'お問い合わせ種別',
+        'registration_type' => '現在の問題',
+        'reg_email' => 'メールアドレス',
     ],
 
 ];

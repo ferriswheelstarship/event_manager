@@ -17,6 +17,7 @@ use App\Information;
 use Mail;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Validation\Rule;
 
 class PagesController extends Controller
 {
@@ -310,18 +311,135 @@ class PagesController extends Controller
     
     public function contact()
     {
-        return view('contact');
+        $types = ['general' => '一般お問い合わせ', 'regisrration' => 'ユーザ登録にお困りの方'];
+        $registration_types = ['仮登録時の返信メールが届かない','仮登録時の返信メールは届くがメールのURLにアクセスできない'];
+        $solutions = ['登録代行を依頼したい','登録は自分でするので本登録URLを送ってほしい'];
+
+        // 施設ユーザ
+        $company = User::where('role_id','3')->get();
+
+        foreach($company as $key => $item) {
+
+            if(preg_match('/郡/',$item->address)){
+                list($city,$etc) = explode("郡",$item->address);
+                $city = $city."郡";
+            } elseif(preg_match('/市/',$item->address)){
+                list($city,$etc) = explode("市",$item->address);
+                $city = $city."市";
+            } elseif(preg_match('/郡/',$item->address)){
+                list($city,$etc) = explode("郡",$item->address);
+                $city = $city."郡";
+            } else {
+                $city = $item->address;
+            }
+
+            $facilites[] = [
+                'company_profile_id' => $item['company_profile_id'],
+                'name' => $item['name'],
+                'city' => $city,
+            ];
+        }
+
+        // 都道府県
+        $pref = config('const.PREF');
+        $pref_all = config('const.PREF_ALL');
+        // 職種
+        $job = config('const.JOB');
+        // 保育士番号所持状況
+        $childminder_status = config('const.CHILDMINDER_STATUS');
+        
+        return view('contact',compact('types','registration_types','solutions',
+                                        'facilites','pref','pref_all','job','childminder_status'));
     }
 
     public function comfirm(Request $request)
     {
-        $this->validate($request, [
-            'cname' => 'required|string',
-            'name' => 'required|string',
-            'email' => 'required|email',
-            'cmail' => 'required|same:email',
-            'comment' => 'required',
-        ]);
+        //dd($request->type);
+
+        $rules = [
+            'type' => [
+                Rule::notIn(['0']),
+            ],
+        ];
+
+        if($request->type == "general") {
+            $rules += [
+                'cname' => 'required|string',
+                'name' => 'required|string',
+                'email' => 'required|email',
+                'cmail' => 'required|same:email',
+                'comment' => 'required',
+            ];
+        } elseif($request->type == "regisrration") {
+            
+            $rules += [
+                'registration_type' => [
+                    Rule::notIn(['0']),
+                ],
+            ];
+
+            // if($request->registration_type == "仮登録時の返信メールが届かない") {
+            //     $rules += [
+            //         'solution' => [
+            //             Rule::notIn(['0','登録は自分でするので本登録URLを送ってほしい']),
+            //         ],
+            //     ];
+            // } elseif($request->registration_type == "仮登録時の返信メールは届くがメールのURLにアクセスできない") {
+            //     $rules += [
+            //         'solution' => [
+            //             Rule::notIn(['0']),
+            //         ],
+            //     ];
+            // }
+
+            // if($request->solution == "登録代行を依頼したい") {
+                $rules += [
+                    'reg_email' => 'required|email|confirmed',
+                    'password' => 'required|string|min:6',
+                    'firstname' => 'required|string',
+                    'lastname' => 'required|string',
+                    'firstruby' => 'required|string|katakana',
+                    'lastruby' => 'required|string|katakana',
+                    'phone' => 'required|string',
+                    'zip' => 'required|string',
+                    'address' => 'required|string',
+                    'birth_year' => 'not_in:0',
+                    'birth_month' => 'not_in:0',
+                    'birth_day' => 'not_in:0',
+                    'company_profile_id' => 'not_in:0',
+                    'job' => 'not_in:0'
+                ];
+
+                if($request->company_profile_id === "なし") {
+                    $rules += [            
+                        'other_facility_name' => 'required|string',
+                        'other_facility_pref' => 'not_in:0',
+                        'other_facility_address' => 'required|string'
+                    ];
+                }
+
+                if($request->job === config('const.JOB.0')) {//「保育士・保育教諭」の場合
+                    $rules += [
+                        'childminder_status' => 'not_in:0'
+                    ];
+                    
+                    if($request->childminder_status == config('const.CHILDMINDER_STATUS.0')) {// 保育士番号ありの場合
+                        $rules += [
+                            'childminder_number_pref' => 'not_in:0',
+                            'childminder_number_only' => 'required|alpha_num|digits:6'
+                        ];
+                    }
+                            
+                }
+
+            // } elseif($request->solution == "登録は自分でするので本登録URLを送ってほしい") {
+            //     $rules = [
+            //         'self_email' => 'required|string|email|max:191|confirmed',
+            //     ];
+            // }
+        }
+        $request->validate($rules);
+
 
         $contact = $request->all();
 
@@ -340,32 +458,36 @@ class PagesController extends Controller
             return redirect()->route('contact');
         }
         
-        $contact = Contact::create($request->all());        
-
         // 二重送信防止
         $request->session()->regenerateToken();
 
-        if($contact) {
-            // 自動返信
-            Mail::send(new \App\Mail\Contact([
-                'to' => $request->email,
-                'subject' => '【自動返信】お問い合わせありがとうございました。',
-                'cname' => $request->cname,
-                'name' => $request->name,
-                'email' => $request->email,
-                'comment' => $request->comment
-            ]));
-        
-            // 管理者宛
-            Mail::send(new \App\Mail\Contact([
-                'to' => 'hokyo@fancy.ocn.ne.jp',
-                'subject' => '研修サイトからお問い合わせ',
-                'cname' => $request->cname,
-                'name' => $request->name,
-                'email' => $request->email,
-                'comment' => $request->comment
-            ], 'from'));
+        if($request->type == "general") {
+            $contact = Contact::create($request->all());
+
+            if($contact) {
+                // 自動返信
+                Mail::send(new \App\Mail\Contact([
+                    'to' => $request->email,
+                    'subject' => '【自動返信】お問い合わせありがとうございました。',
+                    'cname' => $request->cname,
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'comment' => $request->comment
+                ]));
+            
+                // 管理者宛
+                Mail::send(new \App\Mail\Contact([
+                    'to' => 'hokyo@fancy.ocn.ne.jp',
+                    'subject' => '研修サイトからお問い合わせ',
+                    'cname' => $request->cname,
+                    'name' => $request->name,
+                    'email' => $request->email,
+                    'comment' => $request->comment
+                ], 'from'));
+            }
         }
+
+
             
         return view('complete');
     }
