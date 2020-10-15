@@ -121,15 +121,19 @@ Internet Explorerの安全ではないバージョンをお使いのようです
             <h3 style="font-size:1.1em; color: #40c3d9; border-left: 10px solid #40c3d9; padding: 0 10px">仮登録時の返信メールが届かない</h3>
             <div style=" padding:1em">
             <ul style="list-style:disc outside; margin:1em">
-                <li style="list-style:disc outside; margin-left:1em ">仮登録時に入力したメールアドレスに誤りはないかをご確認ください。</li>
-                <li style="list-style:disc outside; margin-left:1em "><a href="/help/domain" style="color:#00f">ドメイン指定受信設定</a>を正しく行えているかをご確認ください。</li>
+                <li style="list-style:disc outside; margin-left:1em; margin-bottom:1em;">仮登録時に入力したメールアドレスに誤りはないかをご確認ください。</li>
+                <li style="list-style:disc outside; margin-left:1em ; margin-bottom:1em;"><a href="help/domain" style="color:#00f">ドメイン指定受信設定</a>を正しく行えているかをご確認ください。<br />
+                詳細は<a href="help/domain" style="color:#00f">こちら</a>をご覧下さい。</li>
+                <li style="list-style:disc outside; margin-left:1em ; margin-bottom:1em;">スマートフォンをご利用の場合で解決が難しい場合、<br />
+                携帯キャリアショップへ「hyogo-hoiku-kyokai.jp」のドメイン指定受信を行ってメールを受信できるようにしたい旨<br />
+                ご相談されることも検討下さい。</li>
             </ul>
             </div>
 
             <h3 style="font-size:1.1em; color: #40c3d9; border-left: 10px solid #40c3d9; padding: 0 10px">仮登録時の返信メールは届いたが、本文内のURLにアクセスできない</h3>
             <div style=" padding:1em">
             <ul style="list-style:disc outside; margin:1em">
-                <li style="list-style:disc outside; margin-left:1em">本文内のURLがハイパーリンク（青文字＋下線）になっていない場合、<br />
+                <li style="list-style:disc outside; margin-left:1em; margin-bottom:1em;">本文内のURLがハイパーリンク（青文字＋下線）になっていない場合、<br />
                 URL部分をコピーし、webブラウザへコピーしたURLを貼り付けしアクセスできるかご確認ください。<br />
                 ハイパーリンクになっているのにアクセスできない場合はURLが途中で途切れている可能性があります。</li>
             </ul>
@@ -138,7 +142,7 @@ Internet Explorerの安全ではないバージョンをお使いのようです
             <h3 style="font-size:1.1em; color: #40c3d9; border-left: 10px solid #40c3d9; padding: 0 10px">ヘルプを見て対応しても、ユーザ登録が完了しない</h3>
             <div style=" padding:1em">
             <ul style="list-style:disc outside; margin:1em">
-                <li style="list-style:disc outside; margin-left:1em">お急ぎの場合は<a href="{{ route('contact') }}" style="color:#00f">お問い合わせ</a>より代行登録をご依頼ください。</li>
+                <li style="list-style:disc outside; margin-left:1em; margin-bottom:1em;">お急ぎの場合は<a href="{{ route('contact') }}" style="color:#00f">お問い合わせ</a>より代行登録をご依頼ください。</li>
             </ul>
             </div>
 
@@ -157,10 +161,14 @@ Internet Explorerの安全ではないバージョンをお使いのようです
             <h3 style="font-size:1.1em; color: #40c3d9; border-left: 10px solid #40c3d9; padding: 0 10px">研修申込時等システムからのメール通知が届かない</h3>
             <div style=" padding:1em">
             <ul style="list-style:disc inside; margin:1em">
-                <li style="list-style:disc outside; margin-left:1em "><a href="help/domain" style="color:#00f">ドメイン指定受信設定</a>を正しく行えているかをご確認ください。<br />
-                メールアドレスを変更された場合は、ドメイン指定受信設定が正しくできていない事が原因と思われます。</li>
-                <li style="list-style:disc outside; margin-left:1em ">ログイン後、ユーザ情報の設定内にある「テストメール送信」を行って下さい。<br />
-                メール受信が確認できれば今後のメール通知は届きます。</li>
+                <li style="list-style:disc outside; margin-left:1em ; margin-bottom:1em;"><a href="help/domain" style="color:#00f">ドメイン指定受信設定</a>を正しく行えているかをご確認ください。<br />
+                メールアドレスを変更された場合は、ドメイン指定受信設定が正しくできていない事が原因と思われます。<br />
+                <a href="help/domain" style="color:#00f">こちら</a>をご覧下さい。</li>
+                <li style="list-style:disc outside; margin-left:1em ; margin-bottom:1em;">スマートフォンをご利用の場合で解決が難しい場合、<br />
+                携帯キャリアショップへ「hyogo-hoiku-kyokai.jp」のドメイン指定受信を行ってメールを受信できるようにしたい旨<br />
+                ご相談されることも検討下さい。</li>
+                <!-- <li style="list-style:disc outside; margin-left:1em ; margin-bottom:1em;">ログイン後、ユーザ情報の設定内にある「テストメール送信」を行って下さい。<br />
+                メール受信が確認できれば今後のメール通知は届きます。</li> -->
             </ul>
             </div>
 
