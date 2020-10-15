@@ -163,7 +163,7 @@ Internet Explorerの安全ではないバージョンをお使いのようです
             <ul style="list-style:disc inside; margin:1em">
                 <li style="list-style:disc outside; margin-left:1em ; margin-bottom:1em;"><a href="help/domain" style="color:#00f">ドメイン指定受信設定</a>を正しく行えているかをご確認ください。<br />
                 メールアドレスを変更された場合は、ドメイン指定受信設定が正しくできていない事が原因と思われます。<br />
-                <a href="help/domain" style="color:#00f">こちら</a>をご覧下さい。</li>
+                詳細は<a href="help/domain" style="color:#00f">こちら</a>をご覧下さい。</li>
                 <li style="list-style:disc outside; margin-left:1em ; margin-bottom:1em;">スマートフォンをご利用の場合で解決が難しい場合、<br />
                 携帯キャリアショップへ「hyogo-hoiku-kyokai.jp」のドメイン指定受信を行ってメールを受信できるようにしたい旨<br />
                 ご相談されることも検討下さい。</li>
