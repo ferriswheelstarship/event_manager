@@ -506,8 +506,8 @@ class PagesController extends Controller
                 'comment' => $request->comment
             ];
             $from_content = [
-                //'to' => 'hokyo@fancy.ocn.ne.jp',
-                'to' => 'ito@mj-inc.jp',
+                //'to' => 'ito@mj-inc.jp',
+                'to' => 'hokyo@fancy.ocn.ne.jp',
                 'subject' => '研修サイトからお問い合わせ',
                 'type' => $request->type,
                 'cname' => $request->cname,
@@ -555,8 +555,8 @@ class PagesController extends Controller
                 'childminder_number_only' => $request->childminder_number_only,
             ];
             $from_content = [
-                //'to' => 'hokyo@fancy.ocn.ne.jp',
-                'to' => 'ito@mj-inc.jp',
+                //'to' => 'ito@mj-inc.jp',
+                'to' => 'hokyo@fancy.ocn.ne.jp',
                 'subject' => '研修サイトからユーザ登録代行依頼',
                 'type' => $request->type,
                 'registration_type' => $request->registration_type,
