@@ -15,6 +15,7 @@ class CreateRegistrationRequestsTable extends Migration
     {
         Schema::create('registration_requests', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('registration_type');
             $table->string('reg_email');
             $table->string('password');
             $table->string('firstname');

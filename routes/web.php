@@ -255,5 +255,6 @@ Route::group(['middleware' => ['auth', 'can:system-only']], function () {
   // 問い合わせ
   Route::get('inquiry','ContactController@index')->name('inquiry.index');
   Route::get('inquiry/{id}','ContactController@show')->name('inquiry.show');
+  Route::get('registration_request/{id}','ContactController@registration_request_show')->name('registration_request.show');
   
 });
