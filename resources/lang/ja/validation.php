@@ -164,7 +164,7 @@ return [
         'event_group' => '研修',
 
         'type' => 'お問い合わせ種別',
-        'registration_type' => '現在の問題',
+        'registration_type' => '発生している問題',
         'reg_email' => 'メールアドレス',
     ],
 

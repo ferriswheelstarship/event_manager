@@ -119,21 +119,89 @@ Internet Explorerの安全ではないバージョンをお使いのようです
             <div class="contact-form-body">
               <table class="tbl-normal">
                 <tr>
-                  <th class="th-w25prc required">施設名または会社／組織名</th>
+                  <th class="th-w25prc">お問い合わせ種別</th>
+                  <td>{{ $types[$contact['type']] }}</td>
+                </tr>
+                @if($contact['type'] == 'general')
+                <tr>
+                  <th class="th-w25prc">施設名または会社／組織名</th>
                   <td>{{ $contact['cname'] }}</td>
                 </tr>
                 <tr>
-                  <th class="th-w25prc required">氏名</th>
+                  <th class="th-w25prc">氏名</th>
                   <td>{{ $contact['name'] }}</td>
                 </tr>
                 <tr>
-                  <th class="th-w25prc required">メールアドレス</th>
+                  <th class="th-w25prc">メールアドレス</th>
                   <td>{{ $contact['email'] }}</td>
                 </tr>
                 <tr>
-                  <th class="th-w25prc required">お問い合わせ内容</th>
+                  <th class="th-w25prc">お問い合わせ内容</th>
                   <td>{!! nl2br($contact['comment']) !!}</td>
                 </tr>
+                @elseif($contact['type'] == 'regisrration')
+                <tr>
+                  <th class="th-w25prc">発生している問題</th>
+                  <td>{{ $contact['registration_type'] }}</td>
+                </tr>
+                <tr>
+                  <th class="th-w25prc">メールアドレス</th>
+                  <td>{{ $contact['reg_email'] }}</td>
+                </tr>
+                <tr>
+                  <th class="th-w25prc">パスワード</th>
+                  <td>****** <br />
+                    ※セキュリティを考慮し表示されません。ログイン用に入力されたパスワードはお控え下さい。
+                  </td>
+                </tr>
+                <tr>
+                  <th class="th-w25prc">名前</th>
+                  <td>{{ $contact['firstname'].'　'.$contact['lastname'].'（'.$contact['firstruby'].'　'.$contact['lastruby'].'）' }}</td>
+                </tr>
+                <tr>
+                  <th class="th-w25prc">電話番号</th>
+                  <td>{{ $contact['phone'] }}</td>
+                </tr>
+                <tr>
+                  <th class="th-w25prc">住所</th>
+                  <td>
+                    {{ $contact['zip'] }}<br />
+                    {{ $contact['address'] }}
+                  </td>
+                </tr>
+                <tr>
+                  <th class="th-w25prc">生年月日</th>
+                  <td>{{ $contact['birth_year'] }}年{{ $contact['birth_month'] }}月{{ $contact['birth_day'] }}日</td>
+                </tr>
+                <tr>
+                  <th class="th-w25prc">所属施設</th>
+                  <td>{{ $facility }}</td>
+                </tr>
+                @if($contact['company_profile_id'] == "なし")
+                <tr>
+                  <th class="th-w25prc">所属施設所在地</th>
+                  <td>{{ $contact['other_facility_pref'].$contact['other_facility_address'] }}</td>
+                </tr>
+                @endif
+                <tr>
+                  <th class="th-w25prc">職種</th>
+                  <td>{{ $contact['job'] }}</td>
+                </tr>
+                @if($contact['job'] == "保育士・保育教諭")
+                <tr>
+                  <th class="th-w25prc">保育士番号所持状況</th>
+                  <td>{{ $contact['childminder_status'] }}</td>
+                </tr>
+                @if($contact['childminder_status'] == "保育士番号あり")
+                <tr>
+                  <th class="th-w25prc">保育士番号</th>
+                  <td>{{ $contact['childminder_number_pref'] }}{{ $contact['childminder_number_only'] }}</td>
+                </tr>
+                @endif
+                @endif
+
+
+                @endif
               </table>
             </div>            
             {!! Form::open(['url' => 'contact/complete','class' => 'text-center']) !!}
@@ -143,11 +211,12 @@ Internet Explorerの安全ではないバージョンをお使いのようです
                 {!! Form::hidden($key, $value) !!}
               @endif
             @endforeach
+            {!! Form::hidden('facility', $facility) !!}
             {!! Form::submit('戻る', ['name' => 'action', 'class' => 'form-submit-btn mini']) !!}
             {!! Form::submit('送信', ['name' => 'action', 'class' => 'form-submit-btn mini']) !!}
             {!! Form::close() !!}
           </article>
-        </form>
+        </div>
       </div>
     </section>
 

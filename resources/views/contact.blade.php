@@ -234,7 +234,7 @@ Internet Explorerの安全ではないバージョンをお使いのようです
                                 @endif ">
               <table class="tbl-normal">
                 <tr>
-                  <th class="th-w25prc required">現在の問題をお聞かせ下さい</th>
+                  <th class="th-w25prc required">発生している問題</th>
                   <td>
                     <select 
                         class="select form-control{{ $errors->has('registration_type') ? ' is-invalid' : '' }}" 
@@ -338,15 +338,9 @@ Internet Explorerの安全ではないバージョンをお使いのようです
                   <tr>
                     <th class="th-w25prc required">メールアドレス再入力</th>
                     <td>
-                      <input type="text" class="form-textbox form-control{{ $errors->has('req_email_confirmation') ? ' is-invalid' : '' }}" 
-                      name="req_email_confirmation" value=""  />
-                      @if ($errors->has('req_email_confirmation'))
-                      <span class="invalid-feedback caution">
-                        <strong>{{ $errors->first('req_email_confirmation') }}</strong>
-                      </span>
-                      @else
+                      <input type="text" class="form-textbox form-control{{ $errors->has('reg_email_confirmation') ? ' is-invalid' : '' }}" 
+                      name="reg_email_confirmation" value=""  />
                       <div class="note">※再入力してください</div>
-                      @endif
                     </td>
                   </tr>
                   <tr>
@@ -375,7 +369,7 @@ Internet Explorerの安全ではないバージョンをお使いのようです
                       <input
                           id="firstname" type="text"
                           class="form-textbox form-control{{ $errors->has('firstname') ? ' is-invalid' : '' }}"
-                          name="firstname" value="{{ old('firstname') }}" placeholder="兵庫">
+                          name="firstname" value="{{ old('firstname') }}" placeholder="兵庫" style="margin-bottom:5px">
                       <input
                           id="lastname" type="text"
                           class="form-textbox form-control{{ $errors->has('lastname') ? ' is-invalid' : '' }}"
@@ -399,8 +393,7 @@ Internet Explorerの安全ではないバージョンをお使いのようです
                     <td>
                       <input id="firstruby" type="text"
                           class="form-textbox form-control{{ $errors->has('firstruby') ? ' is-invalid' : '' }}"
-                          name="firstruby" value="{{ old('firstruby') }}" placeholder="ヒョウゴ"
-                          >
+                          name="firstruby" value="{{ old('firstruby') }}" placeholder="ヒョウゴ"  style="margin-bottom:5px">
                       @if ($errors->has('firstruby'))
                           <span class="invalid-feedback caution">
                           <strong>{{ $errors->first('firstruby') }}</strong>
@@ -441,8 +434,7 @@ Internet Explorerの安全ではないバージョンをお使いのようです
                       <input id="zip" type="text"
                               class="form-textbox form-control{{ $errors->has('zip') ? ' is-invalid' : '' }}"
                               name="zip" value="{{ old('zip') }}"
-                              placeholder="651-0062"
-                              >
+                              placeholder="651-0062"  style="margin-bottom:5px">
                       @if ($errors->has('zip'))
                           <span class="invalid-feedback caution">
                           <strong>{{ $errors->first('zip') }}</strong>
@@ -547,7 +539,7 @@ Internet Explorerの安全ではないバージョンをお使いのようです
                       <input
                           id="other_facility_name" type="text"
                           class="form-textbox form-control{{ $errors->has('other_facility_name') ? ' is-invalid' : '' }}"
-                          name="other_facility_name" value="{{ old('other_facility_name') }}" >
+                          name="other_facility_name" value="{{ old('other_facility_name') }}">
 
                       @if ($errors->has('other_facility_name'))
                           <span class="invalid-feedback caution">
@@ -562,8 +554,7 @@ Internet Explorerの安全ではないバージョンをお使いのようです
                       <select 
                       id="other_facility_pref" 
                       class="select form-control{{ $errors->has('other_facility_pref') ? ' is-invalid' : '' }}" 
-                      name="other_facility_pref"
-                      >
+                      name="other_facility_pref"  style="margin-bottom:5px">
                           <option value="0">都道府県を選択</option>
                           @foreach ($pref_all as $key => $val)
                           <option value="{{ $val }}"
@@ -650,7 +641,7 @@ Internet Explorerの安全ではないバージョンをお使いのようです
                     <td>
                       <select id="childminder_number_pref" 
                       class="select form-control{{ $errors->has('childminder_number_pref') ? ' is-invalid' : '' }}" 
-                      name="childminder_number_pref">
+                      name="childminder_number_pref" style="margin-bottom:5px">
                           <option value="0">都道府県を選択</option>
                           <option value="兵庫県" @if(old('childminder_number_pref') == "兵庫県") selected @endif>兵庫県</option>
                           @foreach ($pref as $item)

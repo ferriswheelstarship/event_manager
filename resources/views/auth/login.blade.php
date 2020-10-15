@@ -20,6 +20,7 @@
 
 <link href="{{ asset('css/web/swiper.css') }}" rel="stylesheet">
 <link href="{{ asset('css/web/style.css') }}" rel="stylesheet">
+<link href="{{ asset('css/web/add.css') }}" rel="stylesheet">
 <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"> -->
 
 </head>
@@ -130,26 +131,21 @@ Internet Explorerの安全ではないバージョンをお使いのようです
                                 <tr>
                                     <th class="th-w25prc required">メールアドレス</th>
                                     <td>
-                                        <input id="email" type="email" class="form-textbox form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required>
-                                        @if ($errors->has('email'))
-                                            <span class="invalid-feedback">
-                                                <strong>{{ $errors->first('email') }}</strong>
-                                            </span>
-                                        @endif
+                                        <input id="email" type="email" class="form-textbox form-control" name="email" value="{{ old('email') }}" required>
                                     </td>
                                 </tr>
                                 <tr>
                                     <th class="th-w25prc required">パスワード</th>
                                     <td>
-                                        <input id="password" type="password" class="form-textbox form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" value="{{ old('password') }}" required>
-                                        @if ($errors->has('password'))
-                                            <span class="invalid-feedback">
-                                                <strong>{{ $errors->first('password') }}</strong>
-                                            </span>
-                                        @endif
+                                        <input id="password" type="password" class="form-textbox form-control" name="password" value="{{ old('password') }}" required>
                                     </td>
                                 </tr>
                             </table>
+                            @if ($errors->has('email'))
+                                <span class="invalid-feedback caution">
+                                    <strong>{{ $errors->first('email') }}</strong>
+                                </span>
+                            @endif
                             <div style="text-align:center">
                                 <label>
                                     <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> ログインを記憶する

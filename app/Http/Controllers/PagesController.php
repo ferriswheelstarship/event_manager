@@ -13,6 +13,7 @@ use App\Careerup_curriculum;
 use App\Event_date;
 use App\Entry;
 use App\Contact;
+use App\Registration_request;
 use App\Information;
 use Mail;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -354,8 +355,9 @@ class PagesController extends Controller
 
     public function comfirm(Request $request)
     {
-        //dd($request->type);
+        $types = ['general' => '一般お問い合わせ', 'regisrration' => 'ユーザ登録にお困りの方'];
 
+        /* validation */
         $rules = [
             'type' => [
                 Rule::notIn(['0']),
@@ -370,6 +372,9 @@ class PagesController extends Controller
                 'cmail' => 'required|same:email',
                 'comment' => 'required',
             ];
+
+            $faclity = null;
+            
         } elseif($request->type == "regisrration") {
             
             $rules += [
@@ -437,17 +442,42 @@ class PagesController extends Controller
             //         'self_email' => 'required|string|email|max:191|confirmed',
             //     ];
             // }
+            
         }
         $request->validate($rules);
 
 
-        $contact = $request->all();
+        if($request->type == "regisrration") {
+            if($request->company_profile_id != "なし") {
+                // 施設ユーザ
+                $company = User::where('company_profile_id',$request->company_profile_id)->first();
+                if(preg_match('/郡/',$company->address)){
+                    list($city,$etc) = explode("郡",$company->address);
+                    $city = $city."郡";
+                } elseif(preg_match('/市/',$company->address)){
+                    list($city,$etc) = explode("市",$company->address);
+                    $city = $city."市";
+                } else {
+                    $city = $item->address;
+                }
+                $facility = "【". $city ."】".$company->name;
 
-        return view('comfirm',compact('contact'));
+            } else {
+                $facility = $request->other_facility_name;
+            }
+        } else {
+            $facility = null;
+        }
+
+        $contact = $request->all();
+        //dd($contact);
+
+        return view('comfirm',compact('contact','types','facility'));
     }
 
     public function complete(Request $request)
     {
+
         $input = $request->except('action');
         
         if($request->action === '戻る') {
@@ -461,32 +491,107 @@ class PagesController extends Controller
         // 二重送信防止
         $request->session()->regenerateToken();
 
+        //dd($input,$request);
+
         if($request->type == "general") {
             $contact = Contact::create($request->all());
 
+            $to_content = [
+                'to' => $request->email,
+                'subject' => '【自動返信】お問い合わせありがとうございました。',
+                'type' => $request->type,
+                'cname' => $request->cname,
+                'name' => $request->name,
+                'email' => $request->email,
+                'comment' => $request->comment
+            ];
+            $from_content = [
+                //'to' => 'hokyo@fancy.ocn.ne.jp',
+                'to' => 'ito@mj-inc.jp',
+                'subject' => '研修サイトからお問い合わせ',
+                'type' => $request->type,
+                'cname' => $request->cname,
+                'name' => $request->name,
+                'email' => $request->email,
+                'comment' => $request->comment
+            ];
+
             if($contact) {
                 // 自動返信
-                Mail::send(new \App\Mail\Contact([
-                    'to' => $request->email,
-                    'subject' => '【自動返信】お問い合わせありがとうございました。',
-                    'cname' => $request->cname,
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'comment' => $request->comment
-                ]));
+                Mail::send(new \App\Mail\Contact($to_content));
             
                 // 管理者宛
-                Mail::send(new \App\Mail\Contact([
-                    'to' => 'hokyo@fancy.ocn.ne.jp',
-                    'subject' => '研修サイトからお問い合わせ',
-                    'cname' => $request->cname,
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'comment' => $request->comment
-                ], 'from'));
+                Mail::send(new \App\Mail\Contact($from_content,'from'));
             }
-        }
 
+        } elseif($request->type == "regisrration") {
+            $contact = Registration_request::create($request->all());
+
+            $to_content = [
+                'to' => $request->reg_email,
+                'subject' => '【自動返信】ユーザ登録代行を承りました。',
+                'type' => $request->type,
+                'registration_type' => $request->registration_type,
+                'reg_email' => $request->reg_email,
+                'password' => $request->password,
+                'firstname' => $request->firstname,
+                'lastname' => $request->lastname,
+                'firstruby' => $request->firstruby,
+                'lastruby' => $request->lastruby,
+                'phone' => $request->phone,
+                'zip' => $request->zip,
+                'address' => $request->address,
+                'birth_year' => $request->birth_year,
+                'birth_month' => $request->birth_month,
+                'birth_day' => $request->birth_day,
+                'facility' => $request->facility,
+                'company_profile_id' => $request->company_profile_id,
+                'other_facility_name' => $request->other_facility_name,
+                'other_facility_pref' => $request->other_facility_pref,
+                'other_facility_address' => $request->other_facility_address,
+                'job' => $request->job,
+                'childminder_status' => $request->childminder_status,
+                'childminder_number_pref' => $request->childminder_number_pref,
+                'childminder_number_only' => $request->childminder_number_only,
+            ];
+            $from_content = [
+                //'to' => 'hokyo@fancy.ocn.ne.jp',
+                'to' => 'ito@mj-inc.jp',
+                'subject' => '研修サイトからユーザ登録代行依頼',
+                'type' => $request->type,
+                'registration_type' => $request->registration_type,
+                'reg_email' => $request->reg_email,
+                'password' => $request->password,
+                'firstname' => $request->firstname,
+                'lastname' => $request->lastname,
+                'firstruby' => $request->firstruby,
+                'lastruby' => $request->lastruby,
+                'phone' => $request->phone,
+                'zip' => $request->zip,
+                'address' => $request->address,
+                'birth_year' => $request->birth_year,
+                'birth_month' => $request->birth_month,
+                'birth_day' => $request->birth_day,
+                'facility' => $request->facility,
+                'company_profile_id' => $request->company_profile_id,
+                'other_facility_name' => $request->other_facility_name,
+                'other_facility_pref' => $request->other_facility_pref,
+                'other_facility_address' => $request->other_facility_address,
+                'job' => $request->job,
+                'childminder_status' => $request->childminder_status,
+                'childminder_number_pref' => $request->childminder_number_pref,
+                'childminder_number_only' => $request->childminder_number_only,
+            ];
+
+            if($contact) {
+                // 自動返信
+                Mail::send(new \App\Mail\Registration_request($to_content));
+            
+                // 管理者宛
+                Mail::send(new \App\Mail\Registration_request($from_content,'from'));
+            }
+
+        }
 
             
         return view('complete');
