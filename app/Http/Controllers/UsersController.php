@@ -14,6 +14,8 @@ use App\Profile;
 use App\Company_profile;
 use App\Updated_history;
 use App\Http\Traits\Csv;
+use Mail;
+use App\Mail\Sendmail;
 
 
 class UsersController extends Controller
@@ -707,6 +709,34 @@ class UsersController extends Controller
         //session()->flash('status', 'ユーザ情報の変更が完了しました。'); 
         return redirect('/account/edit/'.$id)->with('status','ユーザ情報の変更が完了しました。');
 
+    }
+
+
+    public function testmail(Request $request)
+    {
+        if(Gate::denies('system-only')){ // 特権ユーザ以外は
+            if (Auth::id() != $request->user_id) { // 認証済（自分の）IDのみ許可
+                return redirect('/account/edit/'.Auth::id());
+            }
+        }
+        $user = User::find($request->user_id);
+
+        $personalizations[0]['to'] = [
+            'email' => $user->email
+        ];
+        $body = 'こちらのメールを受信できている場合はシステムからの通知メールの受信は可能です。
+        https://hyogo-hoiku-kyokai.jp';
+
+        $data = [
+            'title' => '【兵庫県保育協会】研修サイトからテストメール',
+            'body' => $body,
+            'to' => $personalizations,
+        ];
+        $emails = new Sendmail($data);
+        Mail::send($emails);
+
+        return redirect('/account/edit/'.$user->id)->with('status','テストメールの送信が完了しました。');
+        
     }
 
     public function trimcompany($id) {

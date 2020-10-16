@@ -50,6 +50,12 @@
                                         name="email" 
                                         value="{{ old('email',$user->email) }}" required>
 
+                                    <div style=" margin:1em 0; font-size:.8em">※メールアドレス変更でシステムからのメールが届かなくなる可能性があります。<br />
+                                    <a href="/help" target="_blank">ヘルプページ</a>で状況の確認をお願い致します。<br />
+                                    テストメール送信でシステムからのメール受信ができるかどうかの確認も可能です。<br /><br />
+                                    <button type="button" class="testmail-confirm btn btn-sm btn-success"
+                                    data-toggle="modal" data-target="#confirm-testmail">テストメール送信</button></div>
+                                    
                                     @if ($errors->has('email'))
                                         <span class="invalid-feedback">
                                         <strong>{{ $errors->first('email') }}</strong>
@@ -572,6 +578,32 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="confirm-testmail" tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <form role="form" class="form-inline" method="POST" action="{{ route('testmail') }}">
+            {{ csrf_field() }}
+
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">テストメール送信</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {{ $user->email }}にシステムからのメールが届くかのテストメールを送信します。<br />
+                <input type="hidden" name="user_id" value="{{ $user->id }}">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+                <button type="submit" class="btn btn-primary">テストメールを送信</button>
+            </div>
+            </div>
+            </form>
+        </div>
+    </div>
+
 @endsection
 
 @section('each-js')

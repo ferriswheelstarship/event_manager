@@ -79,6 +79,9 @@ Route::group(['middleware' => ['auth', 'can:user-higher']], function () {
   Route::get('account/edit/{user_id}', 'UsersController@edit')->name('account.edit');
   Route::post('account/edit/{user_id}', 'UsersController@update')->name('account.post');
 
+  // テストメール送信
+  Route::post('account/testmail', 'UsersController@testmail')->name('testmail');
+
   // 研修
   // Route::get('event', 'EventsController@index')->name('event.index');
   // Route::get('event/{id}', 'EventsController@show')->name('event.show');
