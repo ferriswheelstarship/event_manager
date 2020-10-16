@@ -124,6 +124,11 @@ Internet Explorerの安全ではないバージョンをお使いのようです
                 <li style="list-style:disc outside; margin-left:1em; margin-bottom:1em;">仮登録時に入力したメールアドレスに誤りはないかをご確認ください。</li>
                 <li style="list-style:disc outside; margin-left:1em ; margin-bottom:1em;"><a href="help/domain" style="color:#00f">ドメイン指定受信設定</a>を正しく行えているかをご確認ください。<br />
                 詳細は<a href="help/domain" style="color:#00f">こちら</a>をご覧下さい。</li>
+                <li style="list-style:disc outside; margin-left:1em; margin-bottom:1em;">迷惑メールフォルダに該当するメールがないかをご確認下さい。</li>
+                <li style="list-style:disc outside; margin-left:1em; margin-bottom:1em;">ご利用のメールサービスの利用可能容量に達しているかどうかご確認下さい。<br />
+                容量がいっぱいの場合は受送信メールの整理（削除）をすることで受信できるようになります。</li>
+                <li style="list-style:disc outside; margin-left:1em; margin-bottom:1em;">パソコンからをご利用の場合、セキュリティ対策ソフトが原因となっているケースも想定されます。<br />
+                詳細はご利用のセキュリティ対策ソフトのマニュアル、ヘルプ等をご確認下さい。</li>                
                 <li style="list-style:disc outside; margin-left:1em ; margin-bottom:1em;">スマートフォンをご利用の場合で解決が難しい場合、<br />
                 携帯キャリアショップへ「hyogo-hoiku-kyokai.jp」のドメイン指定受信を行ってメールを受信できるようにしたい旨<br />
                 ご相談されることも検討下さい。</li>
@@ -164,6 +169,11 @@ Internet Explorerの安全ではないバージョンをお使いのようです
                 <li style="list-style:disc outside; margin-left:1em ; margin-bottom:1em;"><a href="help/domain" style="color:#00f">ドメイン指定受信設定</a>を正しく行えているかをご確認ください。<br />
                 メールアドレスを変更された場合は、ドメイン指定受信設定が正しくできていない事が原因と思われます。<br />
                 詳細は<a href="help/domain" style="color:#00f">こちら</a>をご覧下さい。</li>
+                <li style="list-style:disc outside; margin-left:1em; margin-bottom:1em;">迷惑メールフォルダに該当するメールがないかをご確認下さい。</li>
+                <li style="list-style:disc outside; margin-left:1em; margin-bottom:1em;">ご利用のメールサービスの利用可能容量に達しているかどうかご確認下さい。<br />
+                容量がいっぱいの場合は受送信メールの整理（削除）をすることで受信できるようになります。</li>
+                <li style="list-style:disc outside; margin-left:1em; margin-bottom:1em;">パソコンからをご利用の場合、セキュリティ対策ソフトが原因となっているケースも想定されます。<br />
+                詳細はご利用のセキュリティ対策ソフトのマニュアル、ヘルプ等をご確認下さい。</li>                
                 <li style="list-style:disc outside; margin-left:1em ; margin-bottom:1em;">スマートフォンをご利用の場合で解決が難しい場合、<br />
                 携帯キャリアショップへ「hyogo-hoiku-kyokai.jp」のドメイン指定受信を行ってメールを受信できるようにしたい旨<br />
                 ご相談されることも検討下さい。</li>
