@@ -127,7 +127,7 @@ Internet Explorerの安全ではないバージョンをお使いのようです
                 <li style="list-style:disc outside; margin-left:1em; margin-bottom:1em;">迷惑メールフォルダに該当するメールがないかをご確認下さい。</li>
                 <li style="list-style:disc outside; margin-left:1em; margin-bottom:1em;">ご利用のメールサービスの利用可能容量に達しているかどうかご確認下さい。<br />
                 容量がいっぱいの場合は受送信メールの整理（削除）をすることで受信できるようになります。</li>
-                <li style="list-style:disc outside; margin-left:1em; margin-bottom:1em;">パソコンからをご利用の場合、セキュリティ対策ソフトが原因となっているケースも想定されます。<br />
+                <li style="list-style:disc outside; margin-left:1em; margin-bottom:1em;">パソコンをご利用の場合、セキュリティ対策ソフトが原因となっているケースも想定されます。<br />
                 詳細はご利用のセキュリティ対策ソフトのマニュアル、ヘルプ等をご確認下さい。</li>                
                 <li style="list-style:disc outside; margin-left:1em ; margin-bottom:1em;">スマートフォンをご利用の場合で解決が難しい場合、<br />
                 携帯キャリアショップへ「hyogo-hoiku-kyokai.jp」のドメイン指定受信を行ってメールを受信できるようにしたい旨<br />
@@ -172,7 +172,7 @@ Internet Explorerの安全ではないバージョンをお使いのようです
                 <li style="list-style:disc outside; margin-left:1em; margin-bottom:1em;">迷惑メールフォルダに該当するメールがないかをご確認下さい。</li>
                 <li style="list-style:disc outside; margin-left:1em; margin-bottom:1em;">ご利用のメールサービスの利用可能容量に達しているかどうかご確認下さい。<br />
                 容量がいっぱいの場合は受送信メールの整理（削除）をすることで受信できるようになります。</li>
-                <li style="list-style:disc outside; margin-left:1em; margin-bottom:1em;">パソコンからをご利用の場合、セキュリティ対策ソフトが原因となっているケースも想定されます。<br />
+                <li style="list-style:disc outside; margin-left:1em; margin-bottom:1em;">パソコンをご利用の場合、セキュリティ対策ソフトが原因となっているケースも想定されます。<br />
                 詳細はご利用のセキュリティ対策ソフトのマニュアル、ヘルプ等をご確認下さい。</li>                
                 <li style="list-style:disc outside; margin-left:1em ; margin-bottom:1em;">スマートフォンをご利用の場合で解決が難しい場合、<br />
                 携帯キャリアショップへ「hyogo-hoiku-kyokai.jp」のドメイン指定受信を行ってメールを受信できるようにしたい旨<br />
