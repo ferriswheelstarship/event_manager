@@ -572,7 +572,38 @@ class EntryController extends Controller
         if(Gate::denies('area-higher')) {
             return redirect()->route('event.index');
         }
- 
+
+        // 研修
+        $event = Event::find($request->event_id);
+        $event_dates = $event->event_dates()->get();
+        $event_careerup_curriculums = $event->careerup_curriculums()->get(); 
+
+
+        $event_dates_length = count($event_dates);
+        $event_dates_no = 0;
+        $event_date = null;
+        foreach($event_dates as $key => $item) {
+            $event_date .= date('Y年m月d日', strtotime($item['event_date']));
+            
+            $event_dates_no++;
+
+            if($event_dates_no != $event_dates_length) {
+                $event_date .= ',';
+            }
+        }
+        $event_careerup_curriculums_length = count($event_careerup_curriculums); 
+        $event_careerup_curriculums_no = 0;
+        $event_careerup_curriculum = null;
+        foreach($event_careerup_curriculums as $key => $item) {
+            $event_careerup_curriculum .= $item['parent_curriculum'].' - '.$item['child_curriculum'];
+
+            $event_careerup_curriculums_no++;
+
+            if($event_careerup_curriculums_no != $event_careerup_curriculums_length) {
+                $event_careerup_curriculum .= ',';
+            }
+        }
+
         // 申込完了者
         $entrys_y = Entry::select('user_id','created_at','ticket_status')
                         ->where('event_id',$request->event_id)
@@ -607,17 +638,20 @@ class EntryController extends Controller
                 $lists[] = [
                     $status,
                     $entry['created_at'],
+                    $user->profile->childminder_number,
+                    $user->profile->job,
                     $user->name,
                     $user->ruby,
-                    $user->email,
                     $user->profile->birth_year."年".$user->profile->birth_month."月".$user->profile->birth_day."日",
-                    $user->profile->job,
-                    $user->profile->childminder_number,
+                    $user->email,
                     $user->zip,
                     $user->address,
                     $company_name,
                     $company_address,
                     $company_email,
+                    $event_careerup_curriculum,
+                    $event_date,
+                    $event->title,
                 ];
             }
         } else {
@@ -628,7 +662,7 @@ class EntryController extends Controller
         $file = Csv::createCsv($filename);
 
         // 見出し
-        $heading = ['状況','申込日時','名前','フリガナ','メールアドレス','生年月日','職種','保育士番号','個人の郵便番号','個人の住所','所属施設名','所属施設住所','所属施設メールアドレス'];
+        $heading = ['状況','申込日時','保育士番号','職種','名前','フリガナ','生年月日','メールアドレス','個人の郵便番号','個人の住所','所属施設名','所属施設住所','所属施設メールアドレス','研修分野','研修受講日','研修タイトル'];
 
         Csv::write($file,$heading); 
 
