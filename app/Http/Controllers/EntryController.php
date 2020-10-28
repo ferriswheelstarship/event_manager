@@ -577,7 +577,7 @@ class EntryController extends Controller
         $event = Event::find($request->event_id);
         $event_dates = $event->event_dates()->get();
         $event_careerup_curriculums = $event->careerup_curriculums()->get(); 
-
+        $event_careerup_parernt_curriculums = $event_careerup_curriculums->groupBy('parent_curriculum');
 
         $event_dates_length = count($event_dates);
         $event_dates_no = 0;
@@ -591,16 +591,16 @@ class EntryController extends Controller
                 $event_date .= ',';
             }
         }
-        $event_careerup_curriculums_length = count($event_careerup_curriculums); 
-        $event_careerup_curriculums_no = 0;
-        $event_careerup_curriculum = null;
-        foreach($event_careerup_curriculums as $key => $item) {
-            $event_careerup_curriculum .= $item['parent_curriculum'].' - '.$item['child_curriculum'];
+        $event_careerup_parernt_curriculums_length = count($event_careerup_parernt_curriculums); 
+        $event_careerup_parernt_curriculums_no = 0;
+        $event_careerup_parernt_curriculum = null;
+        foreach($event_careerup_parernt_curriculums as $key => $item) {
+            $event_careerup_parernt_curriculum .= $key;
 
-            $event_careerup_curriculums_no++;
+            $event_careerup_parernt_curriculums_no++;
 
-            if($event_careerup_curriculums_no != $event_careerup_curriculums_length) {
-                $event_careerup_curriculum .= ',';
+            if($event_careerup_parernt_curriculums_no != $event_careerup_parernt_curriculums_length) {
+                $event_careerup_parernt_curriculum .= ',';
             }
         }
 
@@ -649,7 +649,7 @@ class EntryController extends Controller
                     $company_name,
                     $company_address,
                     $company_email,
-                    $event_careerup_curriculum,
+                    $event_careerup_parernt_curriculum,
                     $event_date,
                     $event->title,
                 ];
